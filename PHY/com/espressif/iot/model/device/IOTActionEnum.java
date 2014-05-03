@@ -1,0 +1,16 @@
+package com.espressif.iot.model.device;
+
+/*
+ * this enum is used to explore the action to the developer
+ */
+public enum IOTActionEnum {
+	IOT_ACTION_SWITCH_ON,
+	IOT_ACTION_SWITCH_OFF,
+	IOT_ACTION_GET_SWITCH,
+	IOT_ACTION_GET_INFO,
+	IOT_ACTION_SET_WIFI_CONFIGURE,
+	IOT_ACTION_GET_WIFI_CONFIGURE,
+	IOT_ACTION_SET_STA_CONFIGURE,
+	IOT_ACTION_SET_SOFTAP_CONFIGURE,
+	IOT_ACTION_GET_STA_SOFTAP_CONFIGURE
+}

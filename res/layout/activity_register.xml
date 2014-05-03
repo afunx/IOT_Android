@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/logo_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+        <ImageButton 
+            android:id="@+id/register_img_btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/quit"/>
+
+        <TextView
+            android:id="@+id/register_tv_account"
+            android:layout_width="wrap_content"
+            android:layout_height="35dip"
+            android:layout_marginLeft="12dip"
+            android:layout_marginTop="10dip"
+            android:gravity="bottom"
+            android:text="帐号:"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/register_edt_account"
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:layout_below="@id/register_tv_account"
+            android:layout_marginLeft="12dip"
+            android:layout_marginRight="10dip" />
+
+        <TextView
+            android:id="@+id/register_tv_password"
+            android:layout_width="wrap_content"
+            android:layout_height="35dip"
+            android:layout_below="@id/register_edt_account"
+            android:layout_marginLeft="12dip"
+            android:layout_marginTop="10dip"
+            android:gravity="bottom"
+            android:text="请输入密码:"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/register_edt_password"
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:layout_below="@id/register_tv_password"
+            android:layout_marginLeft="12dip"
+            android:layout_marginRight="10dip"
+            android:maxLines="200"
+            android:password="true"
+            android:scrollHorizontally="true" />
+        
+        <TextView
+            android:id="@+id/register_tv_password_again"
+            android:layout_width="wrap_content"
+            android:layout_height="35dip"
+            android:layout_below="@id/register_edt_password"
+            android:layout_marginLeft="12dip"
+            android:layout_marginTop="10dip"
+            android:gravity="bottom"
+            android:text="再输入一次:"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/register_edt_password_again"
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:layout_below="@id/register_tv_password_again"
+            android:layout_marginLeft="12dip"
+            android:layout_marginRight="10dip"
+            android:maxLines="200"
+            android:password="true"
+            android:scrollHorizontally="true" />
+
+        
+         <TextView
+            android:id="@+id/register_tv_mailbox"
+            android:layout_width="wrap_content"
+            android:layout_height="35dip"
+            android:layout_below="@id/register_edt_password_again"
+            android:layout_marginLeft="12dip"
+            android:layout_marginTop="10dip"
+            android:gravity="bottom"
+            android:text="邮箱:"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/register_edt_mailbox"
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:layout_below="@id/register_tv_mailbox"
+            android:layout_marginLeft="12dip"
+            android:layout_marginRight="10dip"
+            android:maxLines="200"
+            android:scrollHorizontally="true" />
+        <Button
+            android:id="@+id/register_btn_register"
+            android:layout_width="80dip"
+            android:layout_height="40dip"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/register_edt_mailbox"
+            android:layout_marginRight="10dip"
+            android:gravity="center"
+            android:text="注册"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+        
+    </RelativeLayout>
+
+</LinearLayout>

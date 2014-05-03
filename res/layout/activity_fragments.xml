@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+	
+    <fragment
+        android:id="@+id/fragement_device"
+        android:name="com.espressif.iot.ui.android.device.FragmentDevice"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="20" />
+	
+    <fragment
+        android:id="@+id/fragement_config"
+        android:name="com.espressif.iot.ui.android.config.FragmentConfig"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="20" />
+	
+    <fragment
+        android:id="@+id/fragement_more"
+        android:name="com.espressif.iot.ui.android.more.FragmentMore"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="20" />
+	
+    <RadioGroup
+        android:id="@+id/rgBottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+		
+        <RadioButton
+            android:id="@+id/rbDevice"
+            android:checked="true"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/custom_fragment_device_selector"/>
+		
+        <RadioButton
+            android:id="@+id/rbConfig"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+           	android:gravity="center"
+            android:background="@drawable/custom_fragment_config_selector"/>
+		
+        <RadioButton
+            android:id="@+id/rbMore"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+			android:gravity="center"
+			android:background="@drawable/custom_fragment_more_selector"/>
+        
+        <RadioButton
+            android:id="@+id/rbUser"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+			android:gravity="center"
+			android:background="@drawable/custom_fragment_user_selector"/>
+    </RadioGroup>
+    
+</LinearLayout>

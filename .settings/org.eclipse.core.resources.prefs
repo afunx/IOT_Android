@@ -1,0 +1,9 @@
+eclipse.preferences.version=1
+encoding//PHY/com/espressif/iot/model/internet/IOTDeviceHelper.java=UTF-8
+encoding//PHY/com/espressif/iot/model/internet/LoginResponse.java=UTF-8
+encoding//UI/com/espressif/iot/ui/android/config/FragmentConfig.java=UTF-8
+encoding//UI/com/espressif/iot/ui/android/device/DeviceSettingProgressActivity.java=UTF-8
+encoding//UI/com/espressif/iot/ui/android/device/DeviceTemHumControlInternetActivity.java=UTF-8
+encoding//UI/com/espressif/iot/ui/android/login/LoginActivity.java=UTF-8
+encoding//UI/com/espressif/iot/ui/android/login/RegisterActivity.java=UTF-8
+encoding//UI/com/espressif/iot/ui/esp/iotdevice/EspUIDevice.java=UTF-8

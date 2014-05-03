@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/bg_white"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/titlebar_height"
+        android:background="@color/bg_bar" >
+
+        <Button
+            android:id="@+id/device_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/back_selector" />
+
+        <TextView
+            android:id="@+id/device_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_20" />
+
+        <ImageView
+            android:id="@+id/protect_help_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:src="@drawable/help_selector" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/wifiEnhanceLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_gray" >
+
+            <TextView
+                android:id="@+id/wifiEnhance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dimen_size_10"
+                android:text="wifiEnhance"
+                android:textColor="@color/light_gray"
+                android:textSize="@dimen/text_size_18" />
+
+            <CheckBox
+                android:id="@+id/wifiEnhanceBtn"
+                android:layout_width="@dimen/dimen_size_60"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="@dimen/dimen_size_5"
+                android:layout_marginRight="@dimen/dimen_size_15"
+                android:layout_marginTop="@dimen/dimen_size_6"
+                android:button="@drawable/simplebtn_selector" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.0dip"
+                android:layout_below="@id/wifiEnhanceBtn" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/wifiEnhanceView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/dimen_size_25"
+            android:layout_marginTop="@dimen/dimen_size_25"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:src="@drawable/wifi_enhance_off" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_gray" >
+
+            <TextView
+                android:id="@+id/protectDevice"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dimen_size_10"
+                android:text="protectDevice"
+                android:textColor="@color/light_gray"
+                android:textSize="@dimen/text_size_18" />
+
+            <CheckBox
+                android:id="@+id/button_protect"
+                android:layout_width="@dimen/dimen_size_60"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="@dimen/dimen_size_5"
+                android:layout_marginRight="@dimen/dimen_size_15"
+                android:layout_marginTop="@dimen/dimen_size_6"
+                android:button="@drawable/simplebtn_selector" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.0dip"
+                android:layout_below="@id/button_protect" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/electricityPic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/dimen_size_15"
+            android:layout_marginTop="@dimen/dimen_size_40"
+            android:contentDescription="@null"
+            android:src="@drawable/e_0" />
+
+        <TextView
+            android:id="@+id/showNowElectricity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#ff000000"
+            android:textSize="@dimen/text_size_15" />
+    </LinearLayout>
+
+</LinearLayout>

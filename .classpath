@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="UI"/>
+	<classpathentry kind="src" path="PHY"/>
+	<classpathentry kind="src" path="TASKPHY"/>
+	<classpathentry kind="src" path="BLL"/>
+	<classpathentry kind="src" path="TASKNET"/>
+	<classpathentry kind="src" path="NET"/>
+	<classpathentry kind="src" path="CORE"/>
+	<classpathentry kind="src" path="OPTION"/>
+	<classpathentry kind="src" path="CONSTANTS"/>
+	<classpathentry kind="src" path="DB"/>
+	<classpathentry kind="src" path="src-gen"/>
+	<classpathentry kind="src" path="UTIL"/>
+	<classpathentry kind="src" path="TEST"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>
