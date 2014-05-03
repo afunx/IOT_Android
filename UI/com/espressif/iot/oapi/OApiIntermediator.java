@@ -12,6 +12,8 @@ import com.espressif.iot.model.manager.Administrator;
 import com.espressif.iot.net.lan.wifi.WifiAdmin;
 import com.espressif.iot.net.lan.wifi.WifiScanResult;
 
+// test branch changed
+
 /**
  * it is used for secondary developing in the future
  * @author afunx
