@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.espressif.iot.R;
 import com.espressif.iot.ui.android.AbsFragment;
 
-
 /**
  * it is used to store the older FragmentMore,
  * and the FragmentMore will be used to implement a demo via WAN 
