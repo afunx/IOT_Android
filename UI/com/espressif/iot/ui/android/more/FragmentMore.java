@@ -15,6 +15,7 @@ import com.espressif.iot.ui.android.AbsFragment;
  * @author afunx
  *
  */
+
 public class FragmentMore extends AbsFragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
