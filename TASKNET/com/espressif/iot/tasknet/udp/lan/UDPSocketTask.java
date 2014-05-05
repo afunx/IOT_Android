@@ -43,7 +43,7 @@ public class UDPSocketTask extends AbsTaskSyn<List<IOTAddress>> {
 	private static final int RECEIVE_LEN = 64;
 	
 	private static final String PLUG = "Plug";
-	private static final String TEMHUM = "Temp";
+	private static final String TEMHUM = "Humiture";
 	
 	private static final int PLUG_RESPONSE_IP_RUBBISH_LEN = ("I'm "+PLUG+".98:fe:34:77:ce:00 ").length();
 	

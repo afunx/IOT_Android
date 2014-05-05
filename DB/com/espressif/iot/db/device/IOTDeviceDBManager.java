@@ -25,6 +25,24 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+
+
+/**
+ * the database structure:
+ * 
+ * device_table
+ * id,key,etc...
+ * 
+ * (Maybe user_table is useless for the moment)
+ * user_table
+ * id,key,etc...
+ * 
+ * user_device_table
+ * devId,userId,isOwner,token
+ * 
+ * @author afunx
+ *
+ */
 public class IOTDeviceDBManager {
 	private static final String TAG = "DBDeviceManager";
 	private SQLiteDatabase db;
@@ -94,6 +112,7 @@ public class IOTDeviceDBManager {
 			return userId;
 		}
 	}
+	
 	public TokenIsOwner getTokenIsOwner(long deviceId,long userId){
 		Query<user__device> query = user_device_dao
 				.queryBuilder()
@@ -101,14 +120,18 @@ public class IOTDeviceDBManager {
 						.eq(userId),
 						com.espressif.iot.db.greenrobot.daoDevice.user__deviceDao.Properties.DeviceId
 								.eq(deviceId)).build();
-		List<user__device> result = query.list();
-		if(result.isEmpty()){
+//		List<user__device> result = query.list();
+		user__device result = query.unique();
+//		if(result.isEmpty()){
+		if(result==null){
 			Log.e(TAG, "getTokenIsOwner: deviceId:"+deviceId+",userId:"+userId+" fail");
 			return null;
 		}
 		else{
-			String token = result.get(0).getToken();
-			boolean isOwner = result.get(0).getIsOwner();
+//			String token = result.get(0).getToken();
+//			boolean isOwner = result.get(0).getIsOwner();
+			String token = result.getToken();
+			boolean isOwner = result.getIsOwner();
 			TokenIsOwner tokenIsOwner = new TokenIsOwner();
 			tokenIsOwner.setIsOwner(isOwner);
 			tokenIsOwner.setToken(token);
@@ -192,6 +215,7 @@ public class IOTDeviceDBManager {
 		user__device user_device = getUserDevice(deviceId, userId);
 		user_device_dao.delete(user_device);
 	}
+	
 	public boolean isDeviceExistByBSSID(String BSSID){
 		Query<DeviceDB> query = deviceDao.queryBuilder().where(
 				com.espressif.iot.db.greenrobot.daoDevice.DeviceDBDao.Properties.Bssid.eq(BSSID)).build();
@@ -205,7 +229,7 @@ public class IOTDeviceDBManager {
 	private DeviceDB getDeviceDB(long deviceId){
 		Query<DeviceDB> query = deviceDao.queryBuilder().where(
 				com.espressif.iot.db.greenrobot.daoDevice.DeviceDBDao.Properties.Id.eq(deviceId)).build();
-		return query.list().get(0);
+		return query.uniqueOrThrow();
 	}
 	
 	/**
@@ -227,7 +251,6 @@ public class IOTDeviceDBManager {
 			result.add(getDeviceDB(deviceId));
 		}
 		return result;
-//		return (List<DeviceDB>)deviceDao.loadAll();
 	}
 	public void deleteAllUsers(){
 		userDao.deleteAll();

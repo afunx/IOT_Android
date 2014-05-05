@@ -17,7 +17,7 @@ public class STAConnectHelper {
 
 	private static InetAddress broadcastAddress;
 
-	private static final String data = "Are You Espressif IOT Smart Plug?";
+	private static final String data = "Are You Espressif IOT Smart Device?";
 
 	private static final TimeUnit TimeoutUnit = TimeUnit.MILLISECONDS;
 

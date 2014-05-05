@@ -367,9 +367,11 @@ public class DeviceSettingProgressActivity extends Activity {
 							ConfigState.isIOTDeviceLocalSucceed = Reflect.Retry(5, CLASS_NAME,
 									DeviceSettingProgressActivity.this,
 									"checkIOTDeviceLocal", 0);
+//							ConfigState.isIOTDeviceLocalSucceed = true;
 							ConfigState.isIOTDeviceLocalFinished = true;
 							
 							Log.e(TAG, "localSuc=" + ConfigState.isIOTDeviceLocalSucceed);
+							
 							// local succeed
 							if(ConfigState.isIOTDeviceLocalSucceed){
 								ConfigState.isIOTDeviceInternetSucceed = Reflect.Retry(5, CLASS_NAME,

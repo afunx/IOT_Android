@@ -108,7 +108,7 @@
                 android:background="@drawable/bar_bg_new"
                 android:hint="请输入WiFi密码"
                 android:inputType="textPassword"
-                android:text="integration_by_parts"
+                android:text="canyoufeelme"
                 android:textColor="@color/light_gray"
                 android:textColorHint="@color/light_gray_ts"
                 android:textSize="@dimen/text_size_17" />
