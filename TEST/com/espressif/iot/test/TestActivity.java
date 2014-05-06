@@ -3,6 +3,8 @@ package com.espressif.iot.test;
 import java.util.List;
 
 import com.espressif.iot.R;
+import com.espressif.iot.model.device.IOTDevice;
+import com.espressif.iot.model.device.IOTDevice.TYPE;
 import com.espressif.iot.model.internet.IOTDeviceHelper;
 import com.espressif.iot.model.internet.TemHumData;
 
@@ -33,7 +35,9 @@ public class TestActivity extends Activity {
 						e.printStackTrace();
 					}
 					System.out.println("hello");
-					testGetTemHumDataList();
+					testGetMetadata();
+//					testPutMetadata();
+//					testGetTemHumDataList();
 //					testGetTemHumData();
 //					testPlugSwitch();
 				}
@@ -57,6 +61,18 @@ public class TestActivity extends Activity {
 		else{
 			Log.d(TAG, "testGetTemHumDataList() suc");
 		}
+	}
+	private void testPutMetadata(){
+		String bssid = "ff:ff:ff:77:85:00";
+//		String type = IOTDevice.getIOTDeviceType(TYPE.PLUG);
+		String token = "ab2819caf9a87f61c2004097c251c8a010cca276";
+		IOTDeviceHelper.putMetadata(token, bssid, TYPE.PLUG);
+	}
+	
+	private void testGetMetadata(){
+		IOTDevice device = IOTDevice.createIOTDevice(null);
+		String token = "ab2819caf9a87f61c2004097c251c8a010cca277";
+		IOTDeviceHelper.getMetadata(token, device);
 	}
 	
 }

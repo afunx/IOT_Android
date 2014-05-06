@@ -30,6 +30,18 @@ public class IOTDevice {
 	public static String getIOTDeviceType(IOTDevice.TYPE type){
 		return TypeStr[type.ordinal()];
 	}
+	public static TYPE getIOTDeviceType(String typeStr){
+		if(typeStr.equals(TypeStr[0])){
+			return TYPE.PLUG;
+		}
+		else if(typeStr.equals(TypeStr[1])){
+			return TYPE.LIGHT;
+		}
+		else if(typeStr.endsWith(TypeStr[2])){
+			return TYPE.TEMPERATURE;
+		}
+		return null;
+	}
 	private TYPE mType;
 	public void setTypeStr(String typeStr){
 		for(int i=0;i<TypeStr.length;i++){

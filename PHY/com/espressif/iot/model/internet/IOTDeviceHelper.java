@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.espressif.iot.model.device.IOTAddress;
 import com.espressif.iot.model.device.IOTDevice;
 import com.espressif.iot.model.device.IOTDevice.TYPE;
 import com.espressif.iot.tasknet.rest.RestGetHelper;
@@ -52,6 +53,8 @@ public class IOTDeviceHelper{
 	private static final String Password = "password";
 	private static final String Token = "token";
 	private static final String Key = "key";
+	private static final String Metadata = "metadata";
+	private static final String Device = "device";
 	private static final String Datapoint = "datapoint";
 	private static final String UrlAuthorize = "http://114.215.177.97/v1/key/authorize/";
 	private static final String UrlGetUserKey = "http://114.215.177.97/v1/keys";
@@ -60,6 +63,9 @@ public class IOTDeviceHelper{
 	private static final String UrlPlugStatus = "http://114.215.177.97/v1/datastreams/plug-status/datapoint/";
 	private static final String UrlTemHumDataPoint = "http://114.215.177.97/v1/datastreams/tem_hum/datapoint/";
 	private static final String UrlTemHumDataPoints = "http://114.215.177.97/v1/datastreams/tem_hum/datapoints/";
+	
+	private static final String UrlDeviceMetadataPut = "http://114.215.177.97/v1/device/?method=PUT";
+	private static final String UrlDeviceMetadataGet = "http://114.215.177.97/v1/device/";
 	
 	private static boolean isStatusOK(int status){
 		if(status/100==2)
@@ -458,4 +464,116 @@ public class IOTDeviceHelper{
 		return resultList;
 	}
 	
+	/**
+	 * (using post command to do PUT action)
+	 * POST url: 114.215.177.97/v1/device/?method=PUT
+	 * 
+	 * header: Authorization : token 20dd316acf9c3f0f9347c27fab14d77bd98458ac
+	 * 
+	 * {"device": {"metadata":  "7c:80:88:33:44:66 plug/light/temperature"}}
+	 * "plug/light/temperature" means "plug" or "light" or "temperature"
+	 * 
+	 * put meta data to the device on the Internet Server,
+	 * for the reason, it don's support bssid's store and device's type storation
+	 * @param token		device's token
+	 * @param bssid		device's bssid
+	 * @param type		device's type
+	 * @return			whether the action is succeed
+	 */
+	public static boolean putMetadata(String token, String bssid, TYPE type){
+		
+		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObjectMetadata = new JSONObject();
+		String headerKey = Authorization;
+		String headerValue = "token " + token;
+		String typeStr = IOTDevice.getIOTDeviceType(type);
+		String metadata = bssid+" "+typeStr;
+		
+		JSONObject result = null;
+		
+		try {
+			jsonObjectMetadata.put( Metadata, metadata);
+			jsonObject.put(Device, jsonObjectMetadata);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		result = restPostHelper.restPostJSONSyn(UrlDeviceMetadataPut, jsonObject,
+				headerKey, headerValue);
+		
+		int status = -1;
+		try {
+			if(result!=null)
+				status = Integer.parseInt(result.getString("status"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (HttpStatus.SC_OK==status) {
+			Log.d(TAG, "putMetadata() ok");
+			return true;
+		} else {
+			Log.w(TAG, "putMetadata() err");
+			return false;
+		}
+	}
+	
+	/**
+	 * GET url: 114.215.177.97/v1/device/?method=GET
+	 * 
+	 * {
+    "device": {
+        "metadata": "ff:ff:ff:77:85:00 plug"
+    },
+    "status": 200
+}
+
+	 * 
+	 * header: Authorization : token 20dd316acf9c3f0f9347c27fab14d77bd98458ac
+	 * 
+	 * @param token
+	 * @param device
+	 * @return
+	 */
+	public static boolean getMetadata(String token, IOTDevice device){
+		String headerKey = Authorization;
+		String headerValue = "token " + token;
+		JSONObject result = null;
+		result = restGetHelper.restGetJSONSyn(UrlDeviceMetadataGet, headerKey, headerValue);
+		if(result!=null){
+			int status = -1;
+			try {
+				if(result!=null)
+					status = Integer.parseInt(result.getString("status"));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			if (HttpStatus.SC_OK==status) {
+				Log.d(TAG, "getMetadata() ok");
+				String metadata = null;
+				try {
+					metadata = result.getJSONObject(Device).getString(Metadata);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Log.d(TAG, "metadata is: " + metadata);
+				// "ff:ff:ff:77:85:00" 's length() is 17
+				String bssid = metadata.substring(0, 18);
+				String typeStr = metadata.substring(18);
+				IOTAddress iotAddress = new IOTAddress(bssid,null);
+				device.setIOTAddress(iotAddress);
+				device.setTypeStr(typeStr);
+				return true;
+			} else {
+				Log.w(TAG, "getMetadata() err");
+				return false;
+			}
+		}
+		
+		return false;
+	}
 }

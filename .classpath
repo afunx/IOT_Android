@@ -13,6 +13,7 @@
 	<classpathentry kind="src" path="src-gen"/>
 	<classpathentry kind="src" path="UTIL"/>
 	<classpathentry kind="src" path="TEST"/>
+	<classpathentry kind="src" path="OPEN"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
