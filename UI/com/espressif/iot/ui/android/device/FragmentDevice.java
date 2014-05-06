@@ -21,6 +21,8 @@ import android.widget.ScrollView;
 
 
 import com.espressif.iot.R;
+import com.espressif.iot.constants.CONSTANTS;
+import com.espressif.iot.constants.CONSTANTS_DYNAMIC;
 import com.espressif.iot.db.device.IOTDeviceDBManager;
 import com.espressif.iot.db.device.model.TokenIsOwner;
 import com.espressif.iot.db.greenrobot.daoDevice.DeviceDB;
@@ -312,12 +314,30 @@ public class FragmentDevice extends AbsFragment {
 		 * !NOTE: temperature shouldn't have local status
 		 */
 		if (!type.equals(IOTDevice.getIOTDeviceType(TYPE.TEMPERATURE))) {
-			for (int tryTime = 0; tryTime < 3; tryTime++) {
+			for (int tryTime = 0; tryTime < 5; tryTime++) {
+				Log.e(TAG, "tryTime="+tryTime);
+				switch (tryTime) {
+				case 0:
+					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 12;
+					break;
+				case 1:
+					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 6;
+					break;
+				case 2:
+					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 2;
+					break;
+				case 3:
+					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT;
+					break;
+				case 4:
+					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT * 2;
+				}
 				if (checkIOTDeviceLocal(BSSID)) {
 					isLocal = true;
 					break;
 				}
 			}
+			CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT;
 		}
 		
 		/**

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.espressif.iot.constants.CONSTANTS;
+import com.espressif.iot.constants.CONSTANTS_DYNAMIC;
 import com.espressif.iot.model.device.IOTAddress;
 import com.espressif.iot.thread.AbsTaskSyn;
 import com.espressif.iot.thread.FixedThreadPool;
@@ -65,7 +66,7 @@ public class STAConnectHelper {
 		AbsTaskSyn<List<IOTAddress>> udpSocketTask = new UDPSocketTask(
 				"connect task", -1, true, broadcastAddress, data);
 
-		mThreadPool.executeSyn(udpSocketTask, CONSTANTS.UDP_BROADCAST_TIMEOUT, TimeoutUnit);
+		mThreadPool.executeSyn(udpSocketTask, CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC, TimeoutUnit);
 
 		List<IOTAddress>responseList = udpSocketTask.getResult();
 

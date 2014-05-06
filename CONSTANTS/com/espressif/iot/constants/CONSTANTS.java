@@ -18,7 +18,8 @@ public interface CONSTANTS {
 	// *************WifiScanResultManager.java*************
 
 	// *************STAConnectHelper.java*************
-	final int UDP_BROADCAST_TIMEOUT = 6000;
+//	final int UDP_BROADCAST_TIMEOUT = 3000;
+	final int UDP_BROADCAST_TIMEOUT = 3000;
 	final int UDP_UNICAST_TIMEOUT = 500;
 	// *************STAConnectHelper.java*************
 

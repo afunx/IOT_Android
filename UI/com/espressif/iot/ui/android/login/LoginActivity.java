@@ -5,6 +5,7 @@ import org.apache.http.HttpStatus;
 import com.espressif.iot.R;
 import com.espressif.iot.model.internet.IOTDeviceHelper;
 import com.espressif.iot.model.internet.LoginResponse;
+import com.espressif.iot.model.internet.User;
 import com.espressif.iot.ui.android.MyFragmentsActivity;
 import com.espressif.iot.ui.android.UtilActivity;
 
@@ -73,6 +74,13 @@ public class LoginActivity extends Activity {
 			editor.putString(PASSWORD, mPasswordStr);
 			editor.commit();
 		}
+		
+		/**
+		 * synchronized devices from server
+		 */
+		SynchronizeServerLocalHelper.init(this);
+		SynchronizeServerLocalHelper.synchronize(User.token);
+		
 		/**
 		 * change to the activity which is the main activity
 		 */

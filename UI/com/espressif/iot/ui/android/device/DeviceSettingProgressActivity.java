@@ -394,9 +394,26 @@ public class DeviceSettingProgressActivity extends Activity {
 									// add by afunx
 									boolean isOwner= mIotDeviceCurrent.getIsOwner();
 									long deviceId = mIotDeviceCurrent.getDeviceId();
+									
+									/**
+									 * put the bssid and device type via device's metadata on Server
+									 * !NOTE: we assume it should suc in 10 times,
+									 * although i think there're many potential problems here,
+									 * it is just used temporarily
+									 */
+									boolean suc = IOTDeviceHelper.putMetadata(deviceKey, BSSID, type);
+									for(int retry = 0;retry<9;retry++){
+										if(suc)
+											break;
+										suc = IOTDeviceHelper.putMetadata(deviceKey, BSSID, type);
+									}
+									
+									// add the device to local db
 									mIOTDeviceDBManager.
 									addDevice(BSSID, typeStr, status, isOwner, deviceKey, true, deviceId
 											,User.id );
+									
+									
 								}
 								else{
 									Log.e(TAG, "checkIOTDeviceInternet() fail");

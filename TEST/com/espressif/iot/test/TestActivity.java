@@ -35,6 +35,7 @@ public class TestActivity extends Activity {
 						e.printStackTrace();
 					}
 					System.out.println("hello");
+					testPutMetadata();
 					testGetMetadata();
 //					testPutMetadata();
 //					testGetTemHumDataList();
@@ -65,7 +66,7 @@ public class TestActivity extends Activity {
 	private void testPutMetadata(){
 		String bssid = "ff:ff:ff:77:85:00";
 //		String type = IOTDevice.getIOTDeviceType(TYPE.PLUG);
-		String token = "ab2819caf9a87f61c2004097c251c8a010cca276";
+		String token = "ab2819caf9a87f61c2004097c251c8a010cca277";
 		IOTDeviceHelper.putMetadata(token, bssid, TYPE.PLUG);
 	}
 	
