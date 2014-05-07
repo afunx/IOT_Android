@@ -5,6 +5,8 @@ import com.espressif.iot.model.device.IOTActionEnum;
 import com.espressif.iot.model.device.IOTDevice;
 import com.espressif.iot.model.internet.IOTDeviceHelper;
 import com.espressif.iot.ui.android.MessageStatic;
+import com.espressif.iot.ui.android.UtilActivity;
+import com.espressif.iot.ui.android.share.CreateQRImageActivity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ public class DevicePlugControlInternetActivity extends Activity {
 	private boolean isBtnOpPressed;
 	private IOTDevice iotDevice;
 	private String token;
+	private Button btnShare;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +37,35 @@ public class DevicePlugControlInternetActivity extends Activity {
 		init();
 	}
 
+private void share(){
+		
+		CreateQRImageActivity.shareKey = "www.baidu.com";
+		UtilActivity.transferActivity(
+				DevicePlugControlInternetActivity.this,
+				CreateQRImageActivity.class, false);
+		
+	}
+	
+	private void initBtnShare(){
+		btnShare = (Button) findViewById(R.id.btn_device_plug_control_share);
+		if (iotDevice.getIsOwner()) {
+			btnShare.setVisibility(View.VISIBLE);
+			btnShare.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					share();
+				}
+
+			});
+		}
+		else{
+			btnShare.setVisibility(View.GONE);
+		}
+	}
 	private void init(){
+		initBtnShare();
 		btnBack = (Button) findViewById(R.id.btn_device_plug_control_back);
 		btnBack.setOnClickListener(new OnClickListener(){
 			@Override

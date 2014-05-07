@@ -19,7 +19,7 @@ public interface CONSTANTS {
 
 	// *************STAConnectHelper.java*************
 //	final int UDP_BROADCAST_TIMEOUT = 3000;
-	final int UDP_BROADCAST_TIMEOUT = 3000;
+	final int UDP_BROADCAST_TIMEOUT = 6000;
 	final int UDP_UNICAST_TIMEOUT = 500;
 	// *************STAConnectHelper.java*************
 
@@ -42,7 +42,7 @@ public interface CONSTANTS {
 	// *************Administrator.java*************
 	// it is different from CHECK_AP_CONNECTED_TIMEOUT_SECONDS,
 	// it is remained to change a better name
-	final int CHECK_AP_CONNECTED_TIMEOUT_SECONDS_2 = 20;
+	final int CHECK_AP_CONNECTED_TIMEOUT_SECONDS_2 = 30;
 	// *************Administrator.java*************
 	
 	// *************MonetSnifferWAN.java*************

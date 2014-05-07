@@ -194,7 +194,7 @@ public class DeviceSettingProgressActivity extends Activity {
 	private boolean connectAPSyn(){
 		// 2s at most estimated by me
 		oApiIntermediator.disconnectWifiSyn(mWifiAdmin);
-		Log.e(TAG, "connect should be false, result is " + oApiIntermediator.isAPConnectedSyn(mWifiAdmin));
+//		Log.e(TAG, "connect should be false, result is " + oApiIntermediator.isAPConnectedSyn(mWifiAdmin));
 		oApiIntermediator.connectAPAsyn(mWifiAdmin, MessageStatic.device_ap_connected_ssid, 
 				MessageStatic.device_ap_connected_password, MessageStatic.device_ap_type);
 		// 20s at most set by me

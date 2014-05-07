@@ -56,6 +56,8 @@ public class IOTDeviceHelper{
 	private static final String Metadata = "metadata";
 	private static final String Device = "device";
 	private static final String Datapoint = "datapoint";
+	private static final String Name = "name";
+	private static final String Scope = "scope";
 	private static final String UrlAuthorize = "http://114.215.177.97/v1/key/authorize/";
 	private static final String UrlGetUserKey = "http://114.215.177.97/v1/keys";
 	private static final String UrlJoin = "http://114.215.177.97/v1/user/join/";
@@ -66,6 +68,7 @@ public class IOTDeviceHelper{
 	
 	private static final String UrlDeviceMetadataPut = "http://114.215.177.97/v1/device/?method=PUT";
 	private static final String UrlDeviceMetadataGet = "http://114.215.177.97/v1/device/";
+	private static final String UrlDeviceShare = "http://114.215.177.97/v1/key/share/";
 	
 	private static boolean isStatusOK(int status){
 		if(status/100==2)
@@ -108,7 +111,7 @@ public class IOTDeviceHelper{
 					is_owner_key = true;
 				Log.d(TAG, "is_owner_key:" + is_owner_key);
 				iotDevice.setIsOwner(is_owner_key);
-				long id = Long.parseLong(key.getString("id"));
+				long id = Long.parseLong(key.getString("device_id"));
 				iotDevice.setDeviceId(id);
 //				iotDevice.setType(TYPE.PLUG);
 				Log.d(TAG, "deviceId:" + id);
@@ -574,6 +577,71 @@ public class IOTDeviceHelper{
 			}
 		}
 		
+		return false;
+	}
+	
+	/**
+	 * POST: url: http://114.215.177.97/v1/key/share/
+	 * 
+	 * header: Authorization : token ab2819caf9a87f61c2004097c251c8a010cca277
+	 * {"name": "share test name", "scope": "device"}
+	 * 
+	 * { "status": 200, "message": "shared token", "result": "success", "token":
+	 * "2ae05df31ad0b909b3f6e4e290d9b7235a8ee893" }
+	 * 
+	 * share device to other users, gennerate the share key
+	 * 
+	 * @param ownerKey
+	 *            the ownerKey, only the owner could share the device
+	 * @return shareDey, if suc, null , if fail
+	 */
+	public static String genShareKey(String ownerKey){
+//		UrlDeviceSharePost
+		String headerKey = Authorization;
+		String headerValue = "token " + ownerKey;
+		JSONObject jsonObject = new JSONObject();
+		JSONObject result = null;
+		try {
+			jsonObject.put(Name, "share test name");
+			jsonObject.put(Scope, Device);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		result = restPostHelper.restPostJSONSyn(UrlDeviceShare, jsonObject,
+				headerKey, headerValue);
+		int status = -1;
+		try {
+			if(result!=null)
+				status = Integer.parseInt(result.getString("status"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (HttpStatus.SC_OK==status) {
+			Log.d(TAG, "shareDevice() ok");
+			String shareKey = null;
+			try {
+				shareKey = result.getString(Token);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return shareKey;
+		} else {
+			Log.w(TAG, "shareDevice() err");
+			return null;
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * @param userKey
+	 * @param shareKey
+	 * @return
+	 */
+	public boolean shareDevice(String userKey, String shareKey){
 		return false;
 	}
 }

@@ -318,19 +318,19 @@ public class FragmentDevice extends AbsFragment {
 				Log.e(TAG, "tryTime="+tryTime);
 				switch (tryTime) {
 				case 0:
-					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 12;
+					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 24;
 					break;
 				case 1:
-					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 6;
+					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 12;
 					break;
 				case 2:
-					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 2;
+					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 4;
 					break;
 				case 3:
-					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT;
+					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 2;
 					break;
 				case 4:
-					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT * 2;
+					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT ;
 				}
 				if (checkIOTDeviceLocal(BSSID)) {
 					isLocal = true;
@@ -343,7 +343,7 @@ public class FragmentDevice extends AbsFragment {
 		/**
 		 * JUST FOR TEST
 		 */
-//		isLocal = false;
+		isLocal = false;
 		
 		if(isLocal){
 			device = IOTDevice.createIOTDevice(mLocalIOTAddress);
@@ -381,6 +381,10 @@ public class FragmentDevice extends AbsFragment {
 			}
 //			}
 		}
+		
+		device.setDeviceKey(tokenIsOwner.getToken());
+		device.setIsOwner(tokenIsOwner.getIsOwner());
+		
 		lock.lock();
 //		mIOTDeviceConnectingList.remove(index);
 		mIOTDeviceConnectingList.remove(toRemovedDevice);

@@ -35,8 +35,9 @@ public class TestActivity extends Activity {
 						e.printStackTrace();
 					}
 					System.out.println("hello");
-					testPutMetadata();
-					testGetMetadata();
+					testShareDevice();
+//					testPutMetadata();
+//					testGetMetadata();
 //					testPutMetadata();
 //					testGetTemHumDataList();
 //					testGetTemHumData();
@@ -76,4 +77,10 @@ public class TestActivity extends Activity {
 		IOTDeviceHelper.getMetadata(token, device);
 	}
 	
+	private void testShareDevice(){
+		String shareKey = null;
+		String ownerKey = "ab2819caf9a87f61c2004097c251c8a010cca277";
+		shareKey = IOTDeviceHelper.genShareKey(ownerKey);
+		Log.d(TAG, "shareKey = " + shareKey);
+	}
 }

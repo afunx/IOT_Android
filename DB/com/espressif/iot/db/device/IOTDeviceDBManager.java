@@ -31,7 +31,7 @@ import android.util.Log;
  * the database structure:
  * 
  * device_table
- * id,key,etc...
+ * id,etc...
  * 
  * (Maybe user_table is useless for the moment)
  * user_table
@@ -166,7 +166,10 @@ public class IOTDeviceDBManager {
 							.eq(userId),
 							com.espressif.iot.db.greenrobot.daoDevice.user__deviceDao.Properties.DeviceId
 									.eq(deviceId)).build();
-			user_device_dao.delete(query.uniqueOrThrow());
+			// maybe the device is exist, but don't belong to other users
+			user__device queryResult = query.unique();
+			if(queryResult!=null)
+				user_device_dao.delete(query.unique());
 //			user_device_dao.delete(user_device);
 			
 			user_device_dao.insert(user_device);

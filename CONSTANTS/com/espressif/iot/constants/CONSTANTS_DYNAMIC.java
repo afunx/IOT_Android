@@ -9,7 +9,7 @@ package com.espressif.iot.constants;
  */
 public class CONSTANTS_DYNAMIC {
 	// *************STAConnectHelper.java*************
-	public static int UDP_BROADCAST_TIMEOUT_DYNAMIC = 3000;
+	public static int UDP_BROADCAST_TIMEOUT_DYNAMIC = 6000;
 	static int UDP_UNICAST_TIMEOUT_DYNAMIC = 500;
 	// *************STAConnectHelper.java*************
 }
