@@ -27,7 +27,7 @@ public class TestActivity extends Activity {
 		System.out.println("test:"+IOTDeviceHelper.Test );
 		new Thread(){
 			public void run(){
-				while(true){
+//				while(true){
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
@@ -42,7 +42,7 @@ public class TestActivity extends Activity {
 //					testGetTemHumDataList();
 //					testGetTemHumData();
 //					testPlugSwitch();
-				}
+//				}
 			}
 		}.start();
 	}
@@ -77,10 +77,22 @@ public class TestActivity extends Activity {
 		IOTDeviceHelper.getMetadata(token, device);
 	}
 	
+	private void testShareDeviceGenShareKey(){
+		String shareKey = null;
+		String ownerKey = "ab2819caf9a87f61c2004097c251c8a010cca277";
+		shareKey = IOTDeviceHelper.genShareKey(ownerKey);
+		Log.d(TAG, "shareKey = " + shareKey);
+	}
+	
 	private void testShareDevice(){
 		String shareKey = null;
 		String ownerKey = "ab2819caf9a87f61c2004097c251c8a010cca277";
 		shareKey = IOTDeviceHelper.genShareKey(ownerKey);
 		Log.d(TAG, "shareKey = " + shareKey);
+		
+		// test010
+		String userKey = "ae66aff6ffbd4c5569d37f2fb22d5bd9992a8cf4";
+		boolean suc = IOTDeviceHelper.shareDeviceAuthorize(userKey, shareKey);
+		Log.d(TAG, "share is suc = " + suc);
 	}
 }

@@ -49,6 +49,7 @@ public class IOTDeviceHelper{
 	private static final String Authorization = "Authorization";
 	private static final String Encrypt_method = "encrypt_method";
 	private static final String Plain = "PLAIN";
+	private static final String Email = "email";
 	private static final String Username = "username";
 	private static final String Password = "password";
 	private static final String Token = "token";
@@ -58,8 +59,10 @@ public class IOTDeviceHelper{
 	private static final String Datapoint = "datapoint";
 	private static final String Name = "name";
 	private static final String Scope = "scope";
+	// for User is a class name, to avoid collapse, use "USER" instead of "User"
+	private static final String USER = "user";
 	private static final String UrlAuthorize = "http://114.215.177.97/v1/key/authorize/";
-	private static final String UrlGetUserKey = "http://114.215.177.97/v1/keys";
+	private static final String UrlGetUserKey = "http://114.215.177.97/v1/keys/";
 	private static final String UrlJoin = "http://114.215.177.97/v1/user/join/";
 	private static final String UrlValidate = "http://114.215.177.97/v1/user/join/validate/";
 	private static final String UrlPlugStatus = "http://114.215.177.97/v1/datastreams/plug-status/datapoint/";
@@ -69,6 +72,7 @@ public class IOTDeviceHelper{
 	private static final String UrlDeviceMetadataPut = "http://114.215.177.97/v1/device/?method=PUT";
 	private static final String UrlDeviceMetadataGet = "http://114.215.177.97/v1/device/";
 	private static final String UrlDeviceShare = "http://114.215.177.97/v1/key/share/";
+	private static final String UrlDeviceShareAuthorize = "http://114.215.177.97/v1/key/authorize/";
 	
 	private static boolean isStatusOK(int status){
 		if(status/100==2)
@@ -129,26 +133,34 @@ public class IOTDeviceHelper{
 	/**
 	 * !NOTE: if fail, it will return null
 	 * 
+	 * curl -d
+	 * '{"email":"cloudzhou@163.com","password":"espressif","scope":"user"}'
+	 * http://114.215.177.97/v1/keys/
+	 * 
 	 * get the user key
-	 * @param username		the username
-	 * @param password		the password
-	 * @return				the response from the server
+	 * 
+	 * @param email
+	 *            the email
+	 * @param password
+	 *            the password
+	 * @return the response from the server
 	 */
-	public static LoginResponse getUserKey(String username,String password){
+	public static LoginResponse getUserKey(String email,String password){
 		LoginResponse result = new LoginResponse();
 		JSONObject jsonObject = new JSONObject();
-		JSONObject temp = new JSONObject();
+//		JSONObject temp = new JSONObject();
 		try {
 			jsonObject = new JSONObject();
-			jsonObject.put(Username, username);
+			jsonObject.put(Email, email);
 			jsonObject.put(Password, password);
-			temp.put(Authorization, jsonObject);
+			jsonObject.put(Scope, USER);
+//			temp.put(Authorization, jsonObject);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		JSONObject jsonObjectResult = restPostHelper.restPostJSONSyn(UrlGetUserKey, temp);
+		JSONObject jsonObjectResult = restPostHelper.restPostJSONSyn(UrlGetUserKey, jsonObject);
 		if(jsonObjectResult!=null){
 			try {
 //				JSONObject key = (JSONObject) jsonObjectResult.getJSONArray("keys").get(0);
@@ -579,6 +591,13 @@ public class IOTDeviceHelper{
 		
 		return false;
 	}
+
+	/**
+	 * for share, there are three steps:
+	 * 1.	genShareKey : get the device key
+	 * 2.	shareDeviceAuthorize : get the device_id, the user_id ( who is shared to)
+	 * 3.	synchronize from server
+	 */
 	
 	/**
 	 * POST: url: http://114.215.177.97/v1/key/share/
@@ -593,7 +612,7 @@ public class IOTDeviceHelper{
 	 * 
 	 * @param ownerKey
 	 *            the ownerKey, only the owner could share the device
-	 * @return shareDey, if suc, null , if fail
+	 * @return shareDey, if suc; null , if fail
 	 */
 	public static String genShareKey(String ownerKey){
 //		UrlDeviceSharePost
@@ -637,11 +656,41 @@ public class IOTDeviceHelper{
 	
 	/**
 	 * 
-	 * @param userKey
-	 * @param shareKey
+	 * curl -H "Authorization: token 3c84ebe6a9eb554b2810ade3f381d9c75fbf9204"
+	 * -d '{"token": "90436cf90322d39de51565b1df9c6989e9ace6bf"}'
+	 * http://114.215.177.97/v1/key/authorize/
+	 * 
+	 * @param userKey		the user's userkey, who's shared
+	 * @param shareKey		the shareKey, get from genShareKey
 	 * @return
 	 */
-	public boolean shareDevice(String userKey, String shareKey){
-		return false;
+	public static boolean shareDeviceAuthorize(String userKey, String shareKey){
+		String headerKey = Authorization;
+		String headerValue = "token " + userKey;
+		JSONObject jsonObject = new JSONObject();
+		JSONObject result = null;
+		try {
+			jsonObject.put(Token, shareKey);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		result = restPostHelper.restPostJSONSyn(UrlDeviceShareAuthorize, jsonObject,
+				headerKey, headerValue);
+		int status = -1;
+		try {
+			if(result!=null)
+				status = Integer.parseInt(result.getString("status"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (HttpStatus.SC_OK==status) {
+			Log.d(TAG, "shareDeviceAuthorize() ok");
+			return true;
+		} else {
+			Log.w(TAG, "shareDeviceAuthorize() err");
+			return false;
+		}
 	}
 }

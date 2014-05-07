@@ -11,11 +11,20 @@
         android:layout_gravity="top"
         android:background="@color/bg_bar" >
 
+        <Button
+            android:id="@+id/btn_device_hum_tem_control_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="分享设备" />
+
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_alignBaseline="@+id/btn_device_hum_tem_control_share"
+            android:layout_alignBottom="@+id/btn_device_hum_tem_control_share"
+            android:layout_alignParentLeft="true"
             android:gravity="center"
             android:text="温湿度计"
             android:textColor="@color/white"

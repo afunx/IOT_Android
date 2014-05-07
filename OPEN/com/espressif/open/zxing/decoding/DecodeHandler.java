@@ -17,7 +17,7 @@
 package com.espressif.open.zxing.decoding;
 
 import com.espressif.iot.R;
-import com.espressif.iot.open.zxing.CaptureActivity;
+import com.espressif.iot.ui.android.share.ShareCaptureActivity;
 import com.espressif.open.zxing.camera.CameraManager;
 import com.espressif.open.zxing.camera.PlanarYUVLuminanceSource;
 import com.google.zxing.BinaryBitmap;
@@ -39,10 +39,10 @@ final class DecodeHandler extends Handler {
 
   private static final String TAG = DecodeHandler.class.getSimpleName();
 
-  private final CaptureActivity activity;
+  private final ShareCaptureActivity activity;
   private final MultiFormatReader multiFormatReader;
 
-  DecodeHandler(CaptureActivity activity, Hashtable<DecodeHintType, Object> hints) {
+  DecodeHandler(ShareCaptureActivity activity, Hashtable<DecodeHintType, Object> hints) {
     multiFormatReader = new MultiFormatReader();
     multiFormatReader.setHints(hints);
     this.activity = activity;

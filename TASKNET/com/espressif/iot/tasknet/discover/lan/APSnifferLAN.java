@@ -29,6 +29,10 @@ public class APSnifferLAN implements IntAPSnifferLAN<WifiScanResult> {
 	public List<WifiScanResult> sniffSyn(WifiAdmin wifiAdmin, boolean isEspDevice) {
 		// TODO Auto-generated method stub
 		List<ScanResult> scanResultList = wifiAdmin.scan();
+		//!NOTE modify roughly
+		if(scanResultList==null){
+			return new CopyOnWriteArrayList<WifiScanResult>();
+		}
 		for(ScanResult scan : scanResultList){
 			if(scan.SSID.equals(""))
 				Log.e("APSnifferLAN", "scan SSID is null");

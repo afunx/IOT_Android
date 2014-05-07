@@ -1,7 +1,6 @@
 package com.espressif.iot.ui.android.device;
 
 import com.espressif.iot.R;
-import com.espressif.iot.model.device.IOTActionEnum;
 import com.espressif.iot.model.device.IOTDevice;
 import com.espressif.iot.model.internet.IOTDeviceHelper;
 import com.espressif.iot.ui.android.MessageStatic;
@@ -37,13 +36,14 @@ public class DevicePlugControlInternetActivity extends Activity {
 		init();
 	}
 
-private void share(){
-		
-		CreateQRImageActivity.shareKey = "www.baidu.com";
+	private void share(){
+		CreateQRImageActivity.shareKey = IOTDeviceHelper.genShareKey(iotDevice.getDeviceKey());
+		if(CreateQRImageActivity.shareKey!=null){
+			Log.d(TAG, "shareKey is: " + CreateQRImageActivity.shareKey);
 		UtilActivity.transferActivity(
 				DevicePlugControlInternetActivity.this,
 				CreateQRImageActivity.class, false);
-		
+		}
 	}
 	
 	private void initBtnShare(){

@@ -31,16 +31,16 @@ import android.widget.Toast;
 
 public class LoginActivity extends Activity {
 
-	private EditText mEdtAccount, mEdtPassword;
+	private EditText mEdtEmail, mEdtPassword;
 	private CheckBox mCbRememberPassword, cbAutoLogin;
 	private Button mBtnLogin;
 	private Button mBtnRegister;
 	private ImageButton mImgBtnBack;
-	private String mAccountStr, mPasswordStr;
+	private String mEmailStr, mPasswordStr;
 	private SharedPreferences mSp;
 	private ProgressDialog mProgressDialog;
 
-	private static final String ACCOUNT = "ACCOUNT";
+	private static final String EMAIL = "EMAIL";
 	private static final String PASSWORD = "PASSWORD";
 
 	private static final String REMEMBER_PASSWORD = "REMEMBER_PASSWORD";
@@ -70,7 +70,7 @@ public class LoginActivity extends Activity {
 		if (mCbRememberPassword.isChecked()) {
 			// remember the account and mEdtPassword
 			Editor editor = mSp.edit();
-			editor.putString(ACCOUNT, mAccountStr);
+			editor.putString(EMAIL, mEmailStr);
 			editor.putString(PASSWORD, mPasswordStr);
 			editor.commit();
 		}
@@ -118,7 +118,7 @@ public class LoginActivity extends Activity {
 		if (mSp.getBoolean(REMEMBER_PASSWORD, false)) {
 			// set the default state is remembered
 			mCbRememberPassword.setChecked(true);
-			mEdtAccount.setText(mSp.getString(ACCOUNT, ""));
+			mEdtEmail.setText(mSp.getString(EMAIL, ""));
 			mEdtPassword.setText(mSp.getString(PASSWORD, ""));
 			// check whether the auto login is enabled
 			if (mSp.getBoolean(LOGIN_AUTO, false)) {
@@ -137,7 +137,7 @@ public class LoginActivity extends Activity {
 	}
 	
 	private void login(){
-		mAccountStr = mEdtAccount.getText().toString();
+		mEmailStr = mEdtEmail.getText().toString();
 		mPasswordStr = mEdtPassword.getText().toString();
 
 		/**
@@ -147,7 +147,7 @@ public class LoginActivity extends Activity {
 				"登陆中...", "请等待...");
 		new Thread() {
 			public void run() {
-				LoginResponse response = IOTDeviceHelper.getUserKey(mAccountStr, mPasswordStr);
+				LoginResponse response = IOTDeviceHelper.getUserKey(mEmailStr, mPasswordStr);
 				boolean suc = response.getStatus() == HttpStatus.SC_OK;
 				String message = response.getMessage();
 				loginMessage = message;
@@ -166,7 +166,7 @@ public class LoginActivity extends Activity {
 	private void init() {
 		// set the instance
 		mSp = this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-		mEdtAccount = (EditText) findViewById(R.id.login_edt_account);
+		mEdtEmail = (EditText) findViewById(R.id.login_edt_account);
 		mEdtPassword = (EditText) findViewById(R.id.login_edt_password);
 		mCbRememberPassword = (CheckBox) findViewById(R.id.login_cb_password_remember);
 		cbAutoLogin = (CheckBox) findViewById(R.id.login_cb_auto_login);

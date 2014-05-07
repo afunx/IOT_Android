@@ -4,8 +4,12 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.espressif.iot.R;
+import com.espressif.iot.model.device.IOTDevice;
 import com.espressif.iot.model.internet.IOTDeviceHelper;
 import com.espressif.iot.model.internet.TemHumData;
+import com.espressif.iot.ui.android.MessageStatic;
+import com.espressif.iot.ui.android.UtilActivity;
+import com.espressif.iot.ui.android.share.CreateQRImageActivity;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -13,6 +17,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -24,14 +32,50 @@ public class DeviceTemHumControlInternetActivity extends Activity{
 	private List<TemHumData> mTemHumDataList;
 	private volatile boolean mIsRunning;
 	public static String token;
+	private Button btnShare;
+	private IOTDevice iotDevice;
+	private static final String TAG = "DeviceTemHumControlInternetActivity";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		iotDevice = MessageStatic.currentIOTDevice;
 		setContentView(R.layout.activity_device_hum_tem_control);
 		init();
 	}
+	
+	private void share(){
+		CreateQRImageActivity.shareKey = IOTDeviceHelper.genShareKey(iotDevice.getDeviceKey());
+		if(CreateQRImageActivity.shareKey!=null){
+			Log.d(TAG, "shareKey is: " + CreateQRImageActivity.shareKey);
+		UtilActivity.transferActivity(
+				DeviceTemHumControlInternetActivity.this,
+				CreateQRImageActivity.class, false);
+		}
+		
+	}
+	
+	private void initBtnShare(){
+		btnShare = (Button) findViewById(R.id.btn_device_hum_tem_control_share);
+		if (iotDevice.getIsOwner()) {
+			btnShare.setVisibility(View.VISIBLE);
+			btnShare.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					share();
+				}
+
+			});
+		}
+		else{
+			btnShare.setVisibility(View.GONE);
+		}
+	}
 	private void init(){
+		initBtnShare();
+		
 		mEspUIRefreshableView = (PullToRefreshScrollView) findViewById(R.id.refreshable_device_hum_tem_control);
 
 		mEspUIRefreshableView.setOnRefreshListener(new OnRefreshListener<ScrollView>(){

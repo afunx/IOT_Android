@@ -185,6 +185,7 @@ public class EspUIDevice extends LinearLayout {
 							DevicePlugControlInternetActivity.class, false);
 					break;
 				case TEMPERATURE:
+					MessageStatic.currentIOTDevice = mEspUIDevice.mIOTDevice;
 					DeviceTemHumControlInternetActivity.token = mEspUIDevice.mIOTDevice.getDeviceKey();
 					Log.e(TAG, "temperature:token:"+DeviceTemHumControlInternetActivity.token );
 					UtilActivity.transferActivity(mEspUIDevice.getActivity(),

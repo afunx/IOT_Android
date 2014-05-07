@@ -15,7 +15,9 @@ import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -38,6 +40,9 @@ import com.espressif.iot.net.lan.wifi.WifiScanResult;
 import com.espressif.iot.oapi.OApiIntermediator;
 import com.espressif.iot.ui.android.AbsFragment;
 import com.espressif.iot.ui.android.MessageStatic;
+import com.espressif.iot.ui.android.UtilActivity;
+import com.espressif.iot.ui.android.share.CreateQRImageActivity;
+import com.espressif.iot.ui.android.share.ShareCaptureActivity;
 import com.espressif.iot.ui.esp.iotdevice.EspUIDevice;
 import com.espressif.iot.util.BSSIDUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -267,6 +272,7 @@ public class FragmentDevice extends AbsFragment {
 			Log.i(TAG, "currentBSSID(device):"+currentBSSID+", BSSID(receive):"+BSSID);
 			if(BSSID.equals(currentBSSID)){
 				mLocalIOTAddress = iotAddress;
+				Log.i(TAG, "checkIOTDeviceLocal() is true");
 				return true;
 			}
 		}
@@ -343,7 +349,7 @@ public class FragmentDevice extends AbsFragment {
 		/**
 		 * JUST FOR TEST
 		 */
-		isLocal = false;
+//		isLocal = false;
 		
 		if(isLocal){
 			device = IOTDevice.createIOTDevice(mLocalIOTAddress);
@@ -612,6 +618,24 @@ public class FragmentDevice extends AbsFragment {
 		// TODO Auto-generated method stub
 		mLayout = (LinearLayout) view.findViewById(R.id.linearlayout_device);
 		mLayoutLeak = mLayout;
+		
+		initShareButton(view);
 	}
+	
+	private void initShareButton(View view){
+		btnShare = (Button) view.findViewById(R.id.btn_device_list_share);
+		btnShare.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				UtilActivity.transferActivity(
+						FragmentDevice.this.getActivity(),
+						ShareCaptureActivity.class, false);
+				}
+			
+		});
+	}
+	private Button btnShare;
 	
 }
