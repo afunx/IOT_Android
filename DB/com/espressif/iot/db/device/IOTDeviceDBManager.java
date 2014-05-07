@@ -201,7 +201,6 @@ public class IOTDeviceDBManager {
 		return query.uniqueOrThrow();
 	}
 	
-	// NOTE: it should only delete one item each time
 	public void deleteDeviceByBSSID(String BSSID, long userId){
 		Log.i(TAG, "deleteDeviceByBSSID(): BSSID:" + BSSID);
 		Query<DeviceDB> query = deviceDao.queryBuilder().where(
