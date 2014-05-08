@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.espressif.iot.net.wan.NetChecker;
 import com.espressif.iot.thread.AbsTaskSyn;
+import com.espressif.iot.util.Logger;
 
 /**
  * 
@@ -55,7 +56,7 @@ public class CheckInternetAvailableTask extends AbsTaskSyn<Boolean>{
 	protected void doAfterFailed() {
 		// TODO Auto-generated method stub
 		process[0].destroy();
-		Log.d(TAG, "fail");
+		Logger.d(TAG, "fail");
 	}
 
 	@Override

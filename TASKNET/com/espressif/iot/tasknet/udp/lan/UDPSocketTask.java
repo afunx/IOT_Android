@@ -13,6 +13,7 @@ import java.util.Random;
 import com.espressif.iot.model.device.IOTAddress;
 import com.espressif.iot.model.device.IOTDevice.TYPE;
 import com.espressif.iot.thread.AbsTaskSyn;
+import com.espressif.iot.util.Logger;
 
 
 import android.util.Log;
@@ -87,7 +88,7 @@ public class UDPSocketTask extends AbsTaskSyn<List<IOTAddress>> {
 	 */
 	private void allocPort(int hostPort) {
 
-		Log.d(TAG+":"+taskName, "allocPort() entrance");
+		Logger.d(TAG+":"+taskName, "allocPort() entrance");
 
 		boolean success = false;
 
@@ -96,11 +97,11 @@ public class UDPSocketTask extends AbsTaskSyn<List<IOTAddress>> {
 			try {
 				socket = new DatagramSocket(hostPort);
 				success = true;
-				Log.d(TAG+":"+taskName, "port is : " + hostPort);
+				Logger.d(TAG+":"+taskName, "port is : " + hostPort);
 				return;
 			} catch (SocketException e) {
 				// TODO Auto-generated catch block
-				Log.w(TAG+":"+taskName, "allocPort(): the hostPort:" + hostPort + " is used");
+				Logger.w(TAG+":"+taskName, "allocPort(): the hostPort:" + hostPort + " is used");
 				e.printStackTrace();
 			}
 		}
@@ -111,10 +112,10 @@ public class UDPSocketTask extends AbsTaskSyn<List<IOTAddress>> {
 				hostPort = 1024 + new Random().nextInt(65536 - 1024);
 				socket = new DatagramSocket(hostPort);
 				success = true;
-				Log.d(TAG+":"+taskName, "hostPort is : " + hostPort);
+				Logger.d(TAG+":"+taskName, "hostPort is : " + hostPort);
 			} catch (SocketException e) {
 				// TODO Auto-generated catch block
-				Log.e(TAG+":"+taskName, "allocPort(): the hostPort:" + hostPort + " is occupied");
+				Logger.e(TAG+":"+taskName, "allocPort(): the hostPort:" + hostPort + " is occupied");
 				e.printStackTrace();
 			}
 		} while (!success);
@@ -205,30 +206,30 @@ public class UDPSocketTask extends AbsTaskSyn<List<IOTAddress>> {
 		responseList = new ArrayList<IOTAddress>();
 		
 		try {
-			Log.d(TAG+":"+taskName, "socket() entrance:");
+			Logger.d(TAG+":"+taskName, "socket() entrance:");
 			
 			DatagramPacket pack = new DatagramPacket(data.getBytes(), data.length(),
 					inetAddress, IOT_PORT);
-			Log.d(TAG+":"+taskName, "send socket");
+			Logger.d(TAG+":"+taskName, "send socket");
 			socket.send(pack);
 			pack.setData(buf_receive);
-			Log.d(TAG+":"+taskName, "socket receive...");
+			Logger.d(TAG+":"+taskName, "socket receive...");
 			do {
 				socket.receive(pack);
-				Log.d(TAG+":"+taskName, "one socket received");
-				Log.d(TAG+":"+taskName, new String(pack.getData(), pack.getOffset(),
+				Logger.d(TAG+":"+taskName, "one socket received");
+				Logger.d(TAG+":"+taskName, new String(pack.getData(), pack.getOffset(),
 						pack.getLength()));
 				
 				TYPE type = filterType(pack.getData());
 				if(type==null){
-					Log.e(TAG, "type is null, we don't support the device type.");
+					Logger.e(TAG, "type is null, we don't support the device type.");
 					continue;
 				}
 				
 				InetAddress responseAddr = InetAddress.getByName(filterIpAddress(pack.getData(),type));
-				Log.d(TAG,pack.getData().toString());
+				Logger.d(TAG,pack.getData().toString());
 				String responseBSSID = filterBSSID(pack.getData(),type);
-				Log.d(TAG+":"+taskName, "responseAddr = " + responseAddr +",responseBSSID = " + responseBSSID);
+				Logger.d(TAG+":"+taskName, "responseAddr = " + responseAddr +",responseBSSID = " + responseBSSID);
 				// add one response to the response list
 //				responseList.add(response);
 				IOTAddress iotAddress = new IOTAddress(responseBSSID,responseAddr);
@@ -237,22 +238,22 @@ public class UDPSocketTask extends AbsTaskSyn<List<IOTAddress>> {
 			} while (isMulticast);
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
-			Log.d(TAG+":"+taskName, "SocketException");
+			Logger.d(TAG+":"+taskName, "SocketException");
 //			e.printStackTrace();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
-			Log.d(TAG+":"+taskName, "UnknownHostException");
+			Logger.d(TAG+":"+taskName, "UnknownHostException");
 //			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			Log.d(TAG+":"+taskName, "IOException");
+			Logger.d(TAG+":"+taskName, "IOException");
 //			e.printStackTrace();
 		} finally {
 			if (socket != null) {
 				socket.close();
-				Log.d(TAG+":"+taskName, "socket closed in finally");
+				Logger.d(TAG+":"+taskName, "socket closed in finally");
 			} else {
-				Log.e(TAG+":"+taskName, "socket is null");
+				Logger.e(TAG+":"+taskName, "socket is null");
 			}
 		}
 	}
@@ -260,10 +261,10 @@ public class UDPSocketTask extends AbsTaskSyn<List<IOTAddress>> {
 	@Override
 	protected void doAfterFailed() {
 		// TODO Auto-generated method stub
-		Log.d(TAG+":"+taskName, " doAfterFailed(): the failed reason is: " + reason);
+		Logger.d(TAG+":"+taskName, " doAfterFailed(): the failed reason is: " + reason);
 		while (socket != null&&!socket.isClosed())
 			socket.close();
-		Log.d(TAG+":"+taskName, "the socket is closed in doAfterFailed().");
+		Logger.d(TAG+":"+taskName, "the socket is closed in doAfterFailed().");
 	}
 
 	@Override

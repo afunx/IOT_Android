@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.espressif.iot.net.rest.RestGet;
 import com.espressif.iot.thread.AbsTaskSyn;
+import com.espressif.iot.util.Logger;
 
 public class RestGetJsonTask extends AbsTaskSyn<JSONObject>{
 
@@ -56,7 +57,7 @@ public class RestGetJsonTask extends AbsTaskSyn<JSONObject>{
 	@Override
 	protected void doAfterFailed() {
 		// TODO Auto-generated method stub
-		Log.d(TAG, "fail");
+		Logger.d(TAG, "fail");
 	}
 
 	@Override

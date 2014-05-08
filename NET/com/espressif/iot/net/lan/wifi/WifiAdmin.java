@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.espressif.iot.constants.CONSTANTS;
 import com.espressif.iot.constants.WIFI_ENUM;
+import com.espressif.iot.util.Logger;
 
 
 import android.content.Context;
@@ -251,7 +252,7 @@ public class WifiAdmin {
 	
 	public boolean connect( String SSID, String password, WIFI_ENUM.WifiCipherType type) {
 		// readWepConfig();
-		Log.d(TAG, "connect--SSID:" + SSID + ",Password:" + password + ",Type:"
+		Logger.d(TAG, "connect--SSID:" + SSID + ",Password:" + password + ",Type:"
 				+ type);
 		// mWifiManager.disconnect();
 		// wifi is not open, return false
@@ -264,9 +265,9 @@ public class WifiAdmin {
 		if(netId!=-1){
 			boolean	bRemove = mWifiManager.removeNetwork(netId);
 			if(!bRemove)
-				Log.e(TAG, "old netId " + netId + " is removed " + "failed");
+				Logger.e(TAG, "old netId " + netId + " is removed " + "failed");
 			else
-				Log.d(TAG, "old netId " + netId + " is removed " + "succeed");
+				Logger.d(TAG, "old netId " + netId + " is removed " + "succeed");
 		}
 		
 		WifiConfiguration wifiConfig = createWifiInfo(SSID, password, type);
@@ -275,7 +276,7 @@ public class WifiAdmin {
 //		netId = mWifiManager.addNetwork(wifiConfig);
 		
 		netId = mWifiManager.addNetwork(wifiConfig);
-		Log.d(TAG, "netId=" + netId + " is added into the network.");
+		Logger.d(TAG, "netId=" + netId + " is added into the network.");
 		// return mWifiManager.enableNetwork(netID, true);
 		// mWifiManager.disconnect();
 		// mWifiManager.enableNetwork(netID, true);
@@ -285,7 +286,7 @@ public class WifiAdmin {
 	}
 
 	public boolean connect(String SSID, boolean isNoPassword) {
-		Log.d(TAG, "connect--SSID:" + SSID);
+		Logger.d(TAG, "connect--SSID:" + SSID);
 		int netId = indexOfSSID(SSID);
 		// SSID doesn't exist
 		if (netId==-1) {
@@ -293,20 +294,20 @@ public class WifiAdmin {
 				WifiConfiguration wifiConfig = createWifiInfo(SSID, "",
 						WIFI_ENUM.WifiCipherType.WIFICIPHER_NOPASS);
 				if (wifiConfig == null) {
-					Log.e(TAG, "the wifiConfig created failed.");
+					Logger.e(TAG, "the wifiConfig created failed.");
 					return false;
 				}
 				netId = mWifiManager.addNetwork(wifiConfig);
-				Log.d(TAG, "the new no password wifi configuration is added,netId = " + netId);
+				Logger.d(TAG, "the new no password wifi configuration is added,netId = " + netId);
 				return mWifiManager.enableNetwork(netId, true);
 			}
 			else {
-			Log.d(TAG, "the AP isn't in mWificonfigurations");
+			Logger.d(TAG, "the AP isn't in mWificonfigurations");
 				return false;
 			}
 		}
 		else{
-			Log.d(TAG, "netId="+netId);
+			Logger.d(TAG, "netId="+netId);
 			boolean result =  mWifiManager.enableNetwork(netId, true);
 			return result;
 		}
@@ -330,7 +331,7 @@ public class WifiAdmin {
 		for (WifiConfiguration wifiConfiguration : mWifiConfigurations) {
 			if (wifiConfiguration.SSID != null
 					&& wifiConfiguration.SSID.equals(ssid)) {
-				Log.d(TAG,
+				Logger.d(TAG,
 						"isEnabled() status = "
 								+ WifiConfiguration.Status.strings[wifiConfiguration.status]);
 				switch (wifiConfiguration.status) {
@@ -355,7 +356,7 @@ public class WifiAdmin {
 		for (WifiConfiguration wifiConfiguration : mWifiConfigurations) {
 			if (wifiConfiguration.SSID != null
 					&& wifiConfiguration.SSID.equals(ssid)) {
-				Log.d(TAG,
+				Logger.d(TAG,
 						"isEnabled() status = "
 								+ WifiConfiguration.Status.strings[wifiConfiguration.status]);
 				if (wifiConfiguration.status == WifiConfiguration.Status.DISABLED)
@@ -386,7 +387,7 @@ public class WifiAdmin {
 		mWifiManager.startScan();
 		for (int i = 0; i < CONSTANTS.WIFI_RETRY_TIMES; i++) {
 			mWifiList = mWifiManager.getScanResults();
-			// Log.i(TAG, "startScan(): scanlist = " + mWifiList);
+			// Logger.i(TAG, "startScan(): scanlist = " + mWifiList);
 			if (mWifiList != null && !mWifiList.isEmpty()){
 				for(ScanResult scanResult: mWifiList){
 					if(!scanResult.SSID.equals("")){
@@ -443,56 +444,56 @@ public class WifiAdmin {
 		WifiManager wifi = mWifiManager;
 		List<WifiConfiguration> item = wifi.getConfiguredNetworks();
 		int i = item.size();
-		Log.d("WifiPreference", "NO OF CONFIG " + i);
+		Logger.d("WifiPreference", "NO OF CONFIG " + i);
 		WifiConfiguration config = item.get(7);
-		Log.d("WifiPreference", "SSID:" + config.SSID);
-		Log.d("WifiPreference", "PASSWORD:" + config.preSharedKey);
-		Log.d("WifiPreference", "--ALLOWED ALGORITHMS--");
-		Log.d("WifiPreference",
+		Logger.d("WifiPreference", "SSID:" + config.SSID);
+		Logger.d("WifiPreference", "PASSWORD:" + config.preSharedKey);
+		Logger.d("WifiPreference", "--ALLOWED ALGORITHMS--");
+		Logger.d("WifiPreference",
 				"LEAP:" + config.allowedAuthAlgorithms.get(AuthAlgorithm.LEAP));
-		Log.d("WifiPreference",
+		Logger.d("WifiPreference",
 				"OPEN:" + config.allowedAuthAlgorithms.get(AuthAlgorithm.OPEN));
-		Log.d("WifiPreference",
+		Logger.d("WifiPreference",
 				"SHARED:"
 						+ config.allowedAuthAlgorithms
 								.get(AuthAlgorithm.SHARED));
-		Log.d("WifiPreference", "--GROUP CIPHERS--");
-		Log.d("WifiPreference",
+		Logger.d("WifiPreference", "--GROUP CIPHERS--");
+		Logger.d("WifiPreference",
 				"CCMP:" + config.allowedGroupCiphers.get(GroupCipher.CCMP));
-		Log.d("WifiPreference",
+		Logger.d("WifiPreference",
 				"TKIP:" + config.allowedGroupCiphers.get(GroupCipher.TKIP));
-		Log.d("<WifiPreference",
+		Logger.d("<WifiPreference",
 				"WEP104:" + config.allowedGroupCiphers.get(GroupCipher.WEP104));
-		Log.d("WifiPreference",
+		Logger.d("WifiPreference",
 				"WEP40:" + config.allowedGroupCiphers.get(GroupCipher.WEP40));
-		Log.d("WifiPreference", "--KEYMGMT--");
-		Log.d("WifiPreference",
+		Logger.d("WifiPreference", "--KEYMGMT--");
+		Logger.d("WifiPreference",
 				"IEEE8021X"
 						+ config.allowedKeyManagement.get(KeyMgmt.IEEE8021X));
-		Log.d("WifiPreference",
+		Logger.d("WifiPreference",
 				"NONE" + config.allowedKeyManagement.get(KeyMgmt.NONE));
-		Log.d("WifiPreference",
+		Logger.d("WifiPreference",
 				"WPA_EAP" + config.allowedKeyManagement.get(KeyMgmt.WPA_EAP));
-		Log.d("WifiPreference",
+		Logger.d("WifiPreference",
 				"WPA_PSK" + config.allowedKeyManagement.get(KeyMgmt.WPA_PSK));
-		Log.d("WifiPreference", "--PairWiseCipher--");
-		Log.d("WifiPreference",
+		Logger.d("WifiPreference", "--PairWiseCipher--");
+		Logger.d("WifiPreference",
 				"CCMP" + config.allowedPairwiseCiphers.get(PairwiseCipher.CCMP));
-		Log.d("WifiPreference",
+		Logger.d("WifiPreference",
 				"NONE" + config.allowedPairwiseCiphers.get(PairwiseCipher.NONE));
-		Log.d("WifiPreference",
+		Logger.d("WifiPreference",
 				"TKIP" + config.allowedPairwiseCiphers.get(PairwiseCipher.TKIP));
-		Log.d("WifiPreference", "--Protocols--");
-		Log.d("WifiPreference",
+		Logger.d("WifiPreference", "--Protocols--");
+		Logger.d("WifiPreference",
 				"RSN" + config.allowedProtocols.get(Protocol.RSN));
-		Log.d("WifiPreference",
+		Logger.d("WifiPreference",
 				"WPA" + config.allowedProtocols.get(Protocol.WPA));
-		Log.d("WifiPreference", "--WEP Key Strings--");
+		Logger.d("WifiPreference", "--WEP Key Strings--");
 		String[] wepKeys = config.wepKeys;
-		Log.d("WifiPreference", "WEP KEY 0" + wepKeys[0]);
-		Log.d("WifiPreference", "WEP KEY 1" + wepKeys[1]);
-		Log.d("WifiPreference", "WEP KEY 2" + wepKeys[2]);
-		Log.d("WifiPreference", "WEP KEY 3" + wepKeys[3]);
+		Logger.d("WifiPreference", "WEP KEY 0" + wepKeys[0]);
+		Logger.d("WifiPreference", "WEP KEY 1" + wepKeys[1]);
+		Logger.d("WifiPreference", "WEP KEY 2" + wepKeys[2]);
+		Logger.d("WifiPreference", "WEP KEY 3" + wepKeys[3]);
 	}
 
 }

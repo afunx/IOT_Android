@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,10 +40,10 @@ import com.espressif.iot.oapi.OApiIntermediator;
 import com.espressif.iot.ui.android.AbsFragment;
 import com.espressif.iot.ui.android.MessageStatic;
 import com.espressif.iot.ui.android.UtilActivity;
-import com.espressif.iot.ui.android.share.CreateQRImageActivity;
 import com.espressif.iot.ui.android.share.ShareCaptureActivity;
 import com.espressif.iot.ui.esp.iotdevice.EspUIDevice;
 import com.espressif.iot.util.BSSIDUtil;
+import com.espressif.iot.util.Logger;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
@@ -76,15 +75,11 @@ public class FragmentDevice extends AbsFragment {
 	private volatile List<IOTDevice> mIOTDeviceConnectingList = new CopyOnWriteArrayList<IOTDevice>();
 	// the position of where the IOTDeviceConnecting belong to List<IOTDeviceDB>
 	private volatile List<Integer> mIOTDeviceConnectingPosList = new CopyOnWriteArrayList<Integer>();
+//	private EspCopyOnWriteArrayList<IOTDevice> mIOTDeviceConnectingList = new EspCopyOnWriteArrayList<IOTDevice>();
+//	private EspCopyOnWriteArrayList<Integer> mIOTDeviceConnectingPosList = new EspCopyOnWriteArrayList<Integer>();
 	
 	private final ReentrantLock lock = new ReentrantLock();
-	
-	private void addConnectingList(IOTDevice device){
-		mIOTDeviceConnectingList.add(device);
-	}
-	private void removeConnectingList(IOTDevice device){
-//		mIOTDeviceConnectingList.
-	}
+//	private final Object lock = new Object();
 	
 	private LinearLayout mLayout;
 
@@ -112,7 +107,7 @@ public class FragmentDevice extends AbsFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		Log.d(TAG, "onCreate");
+		Logger.d(TAG, "onCreate");
 		oApiIntermediator = OApiIntermediator.getInstance();
 		mWifiAdmin = new WifiAdmin(getActivity());
 		View view = inflater
@@ -170,7 +165,7 @@ public class FragmentDevice extends AbsFragment {
 		@Override
 		protected String[] doInBackground(Void... params) {
 			// Simulates a background job.
-			Log.d(TAG, "GetDataTask1");
+			Logger.d(TAG, "GetDataTask1");
 			while(sIOTDeviceDBManager==null){
 				try {
 					Thread.sleep(100);
@@ -239,14 +234,14 @@ public class FragmentDevice extends AbsFragment {
 		String token = device.getDeviceKey();
 		if(type.equals(IOTDevice.getIOTDeviceType(TYPE.PLUG))){
 			isOnline = IOTDeviceHelper.plugSwitch(false, token, false);
-			Log.d(TAG,"checkIOTDeviceInternet() PLUG is " + isOnline);
+			Logger.d(TAG,"checkIOTDeviceInternet() PLUG is " + isOnline);
 //			return isOnline;
 		}
 		else if(type.equals(IOTDevice.getIOTDeviceType(TYPE.TEMPERATURE))){
 //			isOnline = IOTDeviceHelper.getTemHumDataList(token)!=null;
 			isOnline = device.executeAction(IOTActionEnum.IOT_ACTION_GET_TEM_HUM_100_INTERNET);
 //			isOnline = IOTDeviceHelper.getTemHumData(token)!=null;
-			Log.d(TAG,"checkIOTDeviceInternet() TEMPERATURE is " + isOnline);
+			Logger.d(TAG,"checkIOTDeviceInternet() TEMPERATURE is " + isOnline);
 //			return isOnline;
 		}
 		return isOnline;
@@ -266,16 +261,16 @@ public class FragmentDevice extends AbsFragment {
 		// connect to the AP the mIotDeviceCurrent is connected to
 		// check whether the device is exist on the AP
 		List<IOTAddress> iotAddressList = oApiIntermediator.scanSTAsLANSyn();
-		Log.e(TAG, "iotAddressList.size = " + iotAddressList.size());
+		Logger.e(TAG, "iotAddressList.size = " + iotAddressList.size());
 		for(IOTAddress iotAddress : iotAddressList){
 			// iotAddress's BSSID is the same as mIotDeviceCurrent
 			// there's something wrong for BSSID, so we use SSID at present
 //			String BSSID = BSSIDUtil.restoreRealBSSID(iotAddress.getBSSID());
 			String BSSID = iotAddress.getBSSID();
-			Log.i(TAG, "currentBSSID(device):"+currentBSSID+", BSSID(receive):"+BSSID);
+			Logger.i(TAG, "currentBSSID(device):"+currentBSSID+", BSSID(receive):"+BSSID);
 			if(BSSID.equals(currentBSSID)){
 				mLocalIOTAddress = iotAddress;
-				Log.i(TAG, "checkIOTDeviceLocal() is true");
+				Logger.i(TAG, "checkIOTDeviceLocal() is true");
 				return true;
 			}
 		}
@@ -293,14 +288,18 @@ public class FragmentDevice extends AbsFragment {
 		mIOTDeviceInternetPosList.clear();
 		mIOTDeviceConnectingList.clear();
 		mIOTDeviceConnectingPosList.clear();
+		
+//		threadFinishedList.clear();
 	}
 	
-	private void classifyStatus(int index){
+	private void classifyStatus(int index, IOTDevice targetDevice, Integer targetIndex){
 		/**
 		 * add by afunx, to modify the concurrent error
 		 */
-		IOTDevice toRemovedDevice = mIOTDeviceConnectingList.get(index);
-		Integer toRemovedDevicePos = mIOTDeviceConnectingPosList.get(index);
+//		IOTDevice toRemovedDevice = mIOTDeviceConnectingList.get(index);
+//		Integer toRemovedDevicePos = mIOTDeviceConnectingPosList.get(index);
+		IOTDevice toRemovedDevice = targetDevice;
+		Integer toRemovedDevicePos = targetIndex;
 		
 		DeviceDB iotDeviceDB = mIOTDeviceDBList.get(index);
 		String BSSID = iotDeviceDB.getBssid();
@@ -325,7 +324,7 @@ public class FragmentDevice extends AbsFragment {
 		 */
 		if (!type.equals(IOTDevice.getIOTDeviceType(TYPE.TEMPERATURE))) {
 			for (int tryTime = 0; tryTime < 5; tryTime++) {
-				Log.e(TAG, "tryTime="+tryTime);
+				Logger.e(TAG, "tryTime="+tryTime);
 				switch (tryTime) {
 				case 0:
 					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 24;
@@ -360,13 +359,17 @@ public class FragmentDevice extends AbsFragment {
 		device.setDeviceKey(deviceKey);
 		device.setIsOwner(isOwner);
 		
+//		lock.lock();
+		
 		if(isLocal){
 //			device = IOTDevice.createIOTDevice(mLocalIOTAddress);
 			device.setIOTAddress(mLocalIOTAddress);
 			device.setStatus(STATUS.LOCAL);
 //			device.setTypeStr(type);
+			lock.lock();
 			mIOTDeviceLocalList.add(device);
 			mIOTDeviceLocalPosList.add(index);
+			lock.unlock();
 		}
 		// check whether it is Internet
 		else{
@@ -380,8 +383,10 @@ public class FragmentDevice extends AbsFragment {
 //					device = IOTDevice.createIOTDevice(iotAddress);
 					device.setStatus(STATUS.INTERNET);
 //					device.setTypeStr(type);
+					lock.lock();
 					mIOTDeviceInternetList.add(device);
 					mIOTDeviceInternetPosList.add(index);
+					lock.unlock();
 //					mHandler.sendEmptyMessage(0);
 //					return;
 				}
@@ -393,8 +398,10 @@ public class FragmentDevice extends AbsFragment {
 //				device = IOTDevice.createIOTDevice(iotAddress);
 				device.setStatus(STATUS.OFFLINE);
 //				device.setTypeStr(type);
+				lock.lock();
 				mIOTDeviceOfflineList.add(device);
 				mIOTDeviceOfflinePosList.add(index);
+				lock.unlock();
 			}
 //			}
 		}
@@ -403,11 +410,21 @@ public class FragmentDevice extends AbsFragment {
 //		device.setIsOwner(tokenIsOwner.getIsOwner());
 		
 		lock.lock();
+		
+//		synchronized(lock){
 //		mIOTDeviceConnectingList.remove(index);
-		mIOTDeviceConnectingList.remove(toRemovedDevice);
+		boolean deviceDelete = mIOTDeviceConnectingList.remove(toRemovedDevice);
+		if(!deviceDelete){
+			Logger.w(TAG, "device delete fail");
+		}
 //		mIOTDeviceConnectingPosList.remove(index);
-		mIOTDeviceConnectingPosList.remove(toRemovedDevicePos);
+		boolean posDelete = mIOTDeviceConnectingPosList.remove(toRemovedDevicePos);
+		if(!posDelete){
+			Logger.w(TAG, "pos delete fail");
+		}
 		lock.unlock();
+//		}
+		
 		mHandler.sendEmptyMessage(0);
 	}
 	
@@ -453,8 +470,10 @@ public class FragmentDevice extends AbsFragment {
 	
 	private void scanAction(){
 		lock.lock();
+//		synchronized(lock){
 		clearList();
-		lock.unlock();
+//		}
+//		lock.unlock();
 //		// add from db
 		mIOTDeviceDBList = sIOTDeviceDBManager.getIOTDeviceDBList(User.id);
 		// add from scan
@@ -477,7 +496,7 @@ public class FragmentDevice extends AbsFragment {
 				e.printStackTrace();
 			}
 			IOTAddress iotAddress = new IOTAddress(BSSID,inetAddress);
-			Log.e(TAG, "SSID:"+SSID+",BSSID:"+BSSID);
+			Logger.e(TAG, "SSID:"+SSID+",BSSID:"+BSSID);
 			IOTDevice device = IOTDevice.createIOTDevice(iotAddress);
 			// only set the SoftAP's SSID for connecting to the device later
 			device.getIOTSoftAP().setSSID(SSID);
@@ -526,29 +545,48 @@ public class FragmentDevice extends AbsFragment {
 			 * !NOTE: we should store the info while activate the device
 			 * for the moment, we just assume it is PLUG
 			 */
-			lock.lock();
+//			lock.lock();
+//			synchronized(lock){
 			mIOTDeviceConnectingList.add(device);
 			mIOTDeviceConnectingPosList.add(index);
-			lock.unlock();
+//			}
+//			lock.unlock();
 			new Thread(){
 				public void run(){
 //					mThreadNumber++;
 					if(threadFinishedList.get(indexFinal)){
 						threadFinishedList.set(indexFinal, false);
-						classifyStatus(indexFinal);
+						lock.lock();
+						
+//						mIOTDeviceConnectingList.add(device);
+//						mIOTDeviceConnectingPosList.add(index);
+						if(indexFinal<mIOTDeviceConnectingList.size()&&
+								indexFinal<mIOTDeviceConnectingPosList.size()){
+						IOTDevice targetDevice = mIOTDeviceConnectingList.get(indexFinal);
+						Integer targetPos = mIOTDeviceConnectingPosList.get(indexFinal);
+						
+						lock.unlock();
+						classifyStatus(indexFinal,targetDevice,targetPos);
+						}
+						else{
+							lock.unlock();
+						}
+//						lock.unlock();
 						threadFinishedList.set(indexFinal, true);
 					}
 //					mThreadNumber--;
 				}
 			}.start();
 		}
+		lock.unlock();
 	}
 	
 	private void scanUI(){
-		Log.d(TAG, "scanUI()");
+		Logger.d(TAG, "scanUI()");
 		mLayout.removeAllViews();
 		MessageStatic.clearIOTDeviceList();
 		
+		lock.lock();
 		// Device new
 		for(int index=0;index<mIOTDeviceNewList.size();index++){
 			WifiScanResult wifiScanResult = mWifiScanResultList.get(mIOTDeviceNewPosList.get(index));
@@ -559,11 +597,22 @@ public class FragmentDevice extends AbsFragment {
 			espUIDevice.setEspStatusNew();
 			mLayout.addView(espUIDevice);
 		}
-		lock.lock();
+//		lock.lock();
+//		synchronized(lock){
 		// Device connecting
-		for(int index=0;index<mIOTDeviceConnectingList.size();index++){
-			if(mIOTDeviceConnectingPosList.isEmpty())
+		for(int index=0;index<mIOTDeviceConnectingList.size()
+				&& index < mIOTDeviceConnectingPosList.size();index++){
+//			if(mIOTDeviceConnectingPosList.isEmpty()||mIOTDeviceConnectingPosList.size()<index)
+			/*
+			if(!(mIOTDeviceConnectingPosList.size()>index))
 				break;
+			*/
+			if(mIOTDeviceConnectingList.size()!=mIOTDeviceConnectingPosList.size()){
+				Logger.w(TAG,"NOT EQUAL");
+				Logger.w(TAG, "device size is " + mIOTDeviceConnectingList.size()
+						+",pos size is " + mIOTDeviceConnectingPosList.size());
+			}
+			
 			int position = mIOTDeviceConnectingPosList.get(index);
 			
 			DeviceDB iotDeviceDB = mIOTDeviceDBList.get(position);
@@ -574,7 +623,8 @@ public class FragmentDevice extends AbsFragment {
 			espUIDevice.setEspStatusConnecting();
 			mLayout.addView(espUIDevice);
 		}
-		lock.unlock();
+//		}
+//		lock.unlock();
 		// Device local
 		for(int index=0;index<mIOTDeviceLocalList.size();index++){
 			DeviceDB iotDeviceDB = mIOTDeviceDBList.get(mIOTDeviceLocalPosList.get(index));
@@ -617,7 +667,7 @@ public class FragmentDevice extends AbsFragment {
 			espUIDevice.setEspStatusOffline();
 			mLayout.addView(espUIDevice);
 		}
-		
+		lock.unlock();
 		/**
 		 * add the simulating device, it should be removed later
 		 */

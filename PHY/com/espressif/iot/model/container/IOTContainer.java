@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import android.util.Log;
 
 import com.espressif.iot.model.device.IOTDevice;
+import com.espressif.iot.util.Logger;
 
 /**
  * this class is a Singleton class, which is used to store the IOTGroup
@@ -64,7 +65,7 @@ public class IOTContainer {
 	}
 	
 	public void clear(){
-		Log.d(TAG,"clear()");
+		Logger.d(TAG,"clear()");
 		for(IOTGroup group: mGroupList){
 			group.clear();
 		}

@@ -28,6 +28,7 @@ import com.espressif.iot.model.internet.IOTDeviceHelper;
 import com.espressif.iot.model.internet.User;
 import com.espressif.iot.ui.android.login.LoginActivity;
 import com.espressif.iot.ui.android.login.SynchronizeServerLocalHelper;
+import com.espressif.iot.util.Logger;
 import com.espressif.open.zxing.camera.CameraManager;
 import com.espressif.open.zxing.decoding.CaptureActivityHandler;
 import com.espressif.open.zxing.decoding.InactivityTimer;
@@ -190,7 +191,7 @@ public class ShareCaptureActivity extends Activity implements Callback
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
-				Log.d(TAG, "cancel()");
+				Logger.d(TAG, "cancel()");
 //				Intent intent = new Intent();
 //				intent.setAction("android.intent.action.VIEW");
 //				Uri content_url = Uri.parse(obj.getText());
@@ -204,13 +205,13 @@ public class ShareCaptureActivity extends Activity implements Callback
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
-				Log.d(TAG, "confirm()");
+				Logger.d(TAG, "confirm()");
 				String shareKey = obj.getText();
-				Log.d(TAG, "shareKey is : " + shareKey);
+				Logger.d(TAG, "shareKey is : " + shareKey);
 				String userKey = User.token;
-				Log.d(TAG, "userKey is : " + userKey);
+				Logger.d(TAG, "userKey is : " + userKey);
 				boolean suc = IOTDeviceHelper.shareDeviceAuthorize(userKey, shareKey);
-				Log.d(TAG, "share is suc = " + suc);
+				Logger.d(TAG, "share is suc = " + suc);
 				if(suc){
 					SynchronizeServerLocalHelper.synchronize(userKey);
 					Toast.makeText(ShareCaptureActivity.this, "分享成功,下拉刷新即可获得新设备",
@@ -231,12 +232,12 @@ public class ShareCaptureActivity extends Activity implements Callback
 		String shareKey = null;
 		String ownerKey = "ab2819caf9a87f61c2004097c251c8a010cca277";
 		shareKey = IOTDeviceHelper.genShareKey(ownerKey);
-		Log.d(TAG, "shareKey = " + shareKey);
+		Logger.d(TAG, "shareKey = " + shareKey);
 		
 		// test010
 		String userKey = "ae66aff6ffbd4c5569d37f2fb22d5bd9992a8cf4";
 		boolean suc = IOTDeviceHelper.shareDeviceAuthorize(userKey, shareKey);
-		Log.d(TAG, "share is suc = " + suc);
+		Logger.d(TAG, "share is suc = " + suc);
 	}
 	
 	

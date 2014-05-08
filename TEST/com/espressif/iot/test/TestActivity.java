@@ -7,6 +7,7 @@ import com.espressif.iot.model.device.IOTDevice;
 import com.espressif.iot.model.device.IOTDevice.TYPE;
 import com.espressif.iot.model.internet.IOTDeviceHelper;
 import com.espressif.iot.model.internet.TemHumData;
+import com.espressif.iot.util.Logger;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -53,16 +54,16 @@ public class TestActivity extends Activity {
 	}
 	private void testGetTemHumData(){
 		TemHumData result = IOTDeviceHelper.getTemHumData("20dd316acf9c3f0f9347c27fab14d77bd98458ac");
-		Log.d(TAG,"result: at="+result.getAt() + "x="+result.getX()+"y="+result.getY());
+		Logger.d(TAG,"result: at="+result.getAt() + "x="+result.getX()+"y="+result.getY());
 	}
 	private void testGetTemHumDataList(){
 		/*
 		List<TemHumData> result = IOTDeviceHelper.getTemHumDataList("20dd316acf9c3f0f9347c27fab14d77bd98458ac");
 		if(result.isEmpty()){
-			Log.d(TAG, "testGetTemHumDataList() fail");
+			Logger.d(TAG, "testGetTemHumDataList() fail");
 		}
 		else{
-			Log.d(TAG, "testGetTemHumDataList() suc");
+			Logger.d(TAG, "testGetTemHumDataList() suc");
 		}
 		*/
 	}
@@ -83,18 +84,18 @@ public class TestActivity extends Activity {
 		String shareKey = null;
 		String ownerKey = "ab2819caf9a87f61c2004097c251c8a010cca277";
 		shareKey = IOTDeviceHelper.genShareKey(ownerKey);
-		Log.d(TAG, "shareKey = " + shareKey);
+		Logger.d(TAG, "shareKey = " + shareKey);
 	}
 	
 	private void testShareDevice(){
 		String shareKey = null;
 		String ownerKey = "ab2819caf9a87f61c2004097c251c8a010cca277";
 		shareKey = IOTDeviceHelper.genShareKey(ownerKey);
-		Log.d(TAG, "shareKey = " + shareKey);
+		Logger.d(TAG, "shareKey = " + shareKey);
 		
 		// test010
 		String userKey = "ae66aff6ffbd4c5569d37f2fb22d5bd9992a8cf4";
 		boolean suc = IOTDeviceHelper.shareDeviceAuthorize(userKey, shareKey);
-		Log.d(TAG, "share is suc = " + suc);
+		Logger.d(TAG, "share is suc = " + suc);
 	}
 }

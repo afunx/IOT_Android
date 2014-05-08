@@ -6,6 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import android.util.Log;
 
 import com.espressif.iot.constants.CONSTANTS;
+import com.espressif.iot.util.Logger;
 
 public class IOTDevicesManager {
 
@@ -67,7 +68,7 @@ public class IOTDevicesManager {
 				if ((elementOther.getIOTAddress().getBSSID()).equals(element
 						.getIOTAddress().getBSSID())) {
 					isContained = true;
-					Log.d(TAG, "list contains,BSSID:"
+					Logger.d(TAG, "list contains,BSSID:"
 							+ element.getIOTAddress().getBSSID());
 					// !!!NOTE: update(may be on statistics in the future)
 					// Because at this moment, we think the IOT device will not
@@ -83,7 +84,7 @@ public class IOTDevicesManager {
 			if (!isContained) {
 				element.missOnce();
 				if (element.getMissTime() >= CONSTANTS.STA_MAX_MISS_TIME) {
-					Log.d(TAG, "list remove,BSSID:"
+					Logger.d(TAG, "list remove,BSSID:"
 							+ element.getIOTAddress().getBSSID());
 					mList.remove(element);
 				}
@@ -91,12 +92,12 @@ public class IOTDevicesManager {
 		}
 		// mList doesn't contain
 		for (IOTDevice elementOther : list) {
-			Log.d(TAG, "list add,BSSID:"
+			Logger.d(TAG, "list add,BSSID:"
 					+ elementOther.getIOTAddress().getBSSID());
 			mList.add(elementOther);
 			elementOther.clearMissTime();
 		}
-		Log.d(TAG, "mList.size()=" + mList.size());
+		Logger.d(TAG, "mList.size()=" + mList.size());
 	}
 
 	

@@ -13,6 +13,7 @@ import com.espressif.iot.model.device.IOTDevice;
 import com.espressif.iot.model.device.IOTDevice.STATUS;
 import com.espressif.iot.model.internet.User;
 import com.espressif.iot.tasknet.rest.RestGetHelper;
+import com.espressif.iot.util.Logger;
 
 /**
  * curl -H "Authorization: token be5077fe3222f165f16e0ecd7736131e0f9f4f6e"
@@ -71,7 +72,7 @@ public class SynchronizeServerLocalHelper {
 			try {
 				int status = Integer.parseInt(jsonObjectResult.getString("status"));
 				if(status==HttpStatus.SC_OK){
-					Log.d(TAG, "getJSONArrayDeviceInfo() suc");
+					Logger.d(TAG, "getJSONArrayDeviceInfo() suc");
 					JSONArray jsonArray = jsonObjectResult.getJSONArray("devices");
 					return jsonArray;
 				}
@@ -80,7 +81,7 @@ public class SynchronizeServerLocalHelper {
 				e.printStackTrace();
 			}
 		}
-		Log.w(TAG, "getJSONArrayDeviceInfo() fail");
+		Logger.w(TAG, "getJSONArrayDeviceInfo() fail");
 		return null;
 	}
 

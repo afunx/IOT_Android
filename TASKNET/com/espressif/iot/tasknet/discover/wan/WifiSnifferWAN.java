@@ -6,6 +6,7 @@ import android.util.Log;
 import com.espressif.iot.constants.CONSTANTS;
 import com.espressif.iot.net.wan.NetChecker;
 import com.espressif.iot.tasknet.net.wan.InternetAvailableHelper;
+import com.espressif.iot.util.Logger;
 
 public class WifiSnifferWAN implements IntWifiSnifferWAN {
 
@@ -30,21 +31,21 @@ public class WifiSnifferWAN implements IntWifiSnifferWAN {
 		boolean result = false;
 		for (int i = 0; i < CONSTANTS.INTERNET_AVAILABLE_RETRY && !result; i++) {
 			if (netChecker.isWifiAvailable(context)) {
-				Log.d(TAG, "wifi has connected to some AP(network).");
+				Logger.d(TAG, "wifi has connected to some AP(network).");
 //				if (netChecker.isInternetAvailable("www.baidu.com")) {
 				if (InternetAvailableHelper.isInternetAvailableSyn()) {
-					Log.d(TAG,
+					Logger.d(TAG,
 							"wifi is accessed to the Internet, wifi sniffer = true");
 					// return true;
 					result = true;
 				} else {
-					Log.d(TAG,
+					Logger.d(TAG,
 							"wifi isn't accessed to the Internet, wifi sniffer = false");
 					// return false;
 					result = false;
 				}
 			} else {
-				Log.d(TAG,
+				Logger.d(TAG,
 						"wifi hasn't connected to any AP(network), wifi sniffer = false");
 				// return false;
 				result = false;

@@ -11,6 +11,7 @@ import com.espressif.iot.net.lan.wifi.WifiAdmin;
 import com.espressif.iot.net.lan.wifi.WifiScanResult;
 import com.espressif.iot.net.lan.wifi.WifiScanResultListCreater;
 import com.espressif.iot.net.lan.wifi.WifiScanResultManager;
+import com.espressif.iot.util.Logger;
 
 public class APSnifferLAN implements IntAPSnifferLAN<WifiScanResult> {
 
@@ -35,7 +36,7 @@ public class APSnifferLAN implements IntAPSnifferLAN<WifiScanResult> {
 		}
 		for(ScanResult scan : scanResultList){
 			if(scan.SSID.equals(""))
-				Log.e("APSnifferLAN", "scan SSID is null");
+				Logger.e("APSnifferLAN", "scan SSID is null");
 		}
 		// succeed
 		if(scanResultList!=null){

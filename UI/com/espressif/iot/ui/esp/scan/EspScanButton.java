@@ -6,6 +6,7 @@ import com.espressif.iot.net.lan.wifi.WifiAdmin;
 import com.espressif.iot.net.lan.wifi.WifiScanResult;
 import com.espressif.iot.oapi.OApiIntermediator;
 import com.espressif.iot.thread.single.SingleTaskWifiConnectAsyn;
+import com.espressif.iot.util.Logger;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -32,7 +33,7 @@ public class EspScanButton extends Button{
 	 */
 //	public void setEspWifiStatus(WIFI_ENUM.WifiStatus wifiStatus){
 //		this.mWifiStatus = wifiStatus;
-//		Log.d(TAG, mWifiScanResult.getScanResult().SSID + "'s wifiStatus is "
+//		Logger.d(TAG, mWifiScanResult.getScanResult().SSID + "'s wifiStatus is "
 //				+ wifiStatus);
 //	}
 //	public WIFI_ENUM.WifiStatus getEspWifiStatus(){
@@ -86,26 +87,26 @@ public class EspScanButton extends Button{
 		switch(wifiStatus){
 		case WIFISTATUS_CURRENT:
 			// do nothing
-			Log.d(TAG, "wifi is the current, do nothing");
+			Logger.d(TAG, "wifi is the current, do nothing");
 			return true;
 //			break;
 		case WIFISTATUS_DISABLE:
 		case WIFISTATUS_ENABLE:
 			switch(mWifiScanResult.getWifiCipherType()){
 			case WIFICIPHER_WPA:
-				Log.d(TAG, "WIFICIPHER_WPA");
+				Logger.d(TAG, "WIFICIPHER_WPA");
 				wifiConnect.connect(SSID, false, WIFI_ENUM.WifiCipherType.WIFICIPHER_WPA);
 				break;
 			case WIFICIPHER_NOPASS:
-				Log.d(TAG, "WIFICIPHER_NOPASS");
+				Logger.d(TAG, "WIFICIPHER_NOPASS");
 				wifiConnect.connect(SSID, true, WIFI_ENUM.WifiCipherType.WIFICIPHER_NOPASS);
 				break;
 			case WIFICIPHER_WEP:
-				Log.d(TAG, "WIFICIPHER_WEP");
+				Logger.d(TAG, "WIFICIPHER_WEP");
 				wifiConnect.connect(SSID, false,WIFI_ENUM.WifiCipherType.WIFICIPHER_WEP);
 				break;
 			default:
-				Log.e(TAG, "WIFICIPHER_INVALID");
+				Logger.e(TAG, "WIFICIPHER_INVALID");
 			}
 			break;
 		}

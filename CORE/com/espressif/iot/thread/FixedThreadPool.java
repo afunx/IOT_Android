@@ -7,6 +7,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import com.espressif.iot.util.Logger;
+
 import android.util.Log;
 
 public class FixedThreadPool {
@@ -32,7 +34,7 @@ public class FixedThreadPool {
 	}
 
 	public void execute(Runnable runnable) {
-		Log.e(TAG,
+		Logger.e(TAG,
 				"this method is exist while debugging, before releasing, it should delete.");
 		exec.execute(runnable);
 	}
@@ -44,7 +46,7 @@ public class FixedThreadPool {
 	 *            the asyn task
 	 */
 	public void executeAsyn(AbsTaskAsyn task) {
-		Log.d(TAG + ":" + task.getClass(), task.getTaskName());
+		Logger.d(TAG + ":" + task.getClass(), task.getTaskName());
 		exec.execute(task);
 	}
 
@@ -60,7 +62,7 @@ public class FixedThreadPool {
 	 * @return
 	 */
 	public boolean executeSyn(AbsTaskSyn<?> task, int timeout, TimeUnit unit) {
-		Log.d(TAG + ":" + task.getClass(), task.getTaskName() + ",submit():"
+		Logger.d(TAG + ":" + task.getClass(), task.getTaskName() + ",submit():"
 				+ "timeout=" + timeout + ",unit is " + unit);
 		boolean taskResult = false;
 		Future<Boolean> future = exec.submit(task);
@@ -68,25 +70,25 @@ public class FixedThreadPool {
 			taskResult = future.get(timeout, unit);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
-			Log.w(TAG + ":" + task.getTaskName(), "InterruptedException");
+			Logger.w(TAG + ":" + task.getTaskName(), "InterruptedException");
 			task.setReason("InterruptedException");
 			// e.printStackTrace();
 		} catch (ExecutionException e) {
 			// TODO Auto-generated catch block
-			Log.w(TAG + ":" + task.getTaskName(), "ExecutionException");
+			Logger.w(TAG + ":" + task.getTaskName(), "ExecutionException");
 			task.setReason("ExecutionException");
 			// e.printStackTrace();
 		} catch (TimeoutException e) {
 			// TODO Auto-generated catch block
-			Log.w(TAG + ":" + task.getTaskName(), "TimeoutException");
+			Logger.w(TAG + ":" + task.getTaskName(), "TimeoutException");
 			task.setReason("TimeoutException");
 			// e.printStackTrace();
 		}
 		if (taskResult) {
-			Log.d(TAG + ":" + task.getTaskName(), "taskResult = " + taskResult);
+			Logger.d(TAG + ":" + task.getTaskName(), "taskResult = " + taskResult);
 		} else {
 			task.doAfterFailed();
-			Log.w(TAG + ":" + task.getTaskName(), "taskResult = " + taskResult);
+			Logger.w(TAG + ":" + task.getTaskName(), "taskResult = " + taskResult);
 		}
 		return taskResult;
 	}

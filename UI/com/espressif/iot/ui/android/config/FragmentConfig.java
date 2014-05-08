@@ -17,6 +17,7 @@ import com.espressif.iot.ui.android.MyFragmentsActivityUI.FRAG_TYPE;
 import com.espressif.iot.ui.android.UtilActivity;
 import com.espressif.iot.ui.android.device.DeviceSettingActivity;
 import com.espressif.iot.ui.android.device.DeviceSettingProgressActivity;
+import com.espressif.iot.util.Logger;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
 import android.os.AsyncTask;
@@ -88,7 +89,7 @@ public class FragmentConfig extends AbsFragment {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				// back to the device fragment
-				Log.d(TAG, "back button is pressed");
+				Logger.d(TAG, "back button is pressed");
 				MyFragmentsActivityUI.switchFragment(FRAG_TYPE.DEVICE);
 			}
 

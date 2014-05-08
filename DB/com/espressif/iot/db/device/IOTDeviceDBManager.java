@@ -16,6 +16,7 @@ import com.espressif.iot.db.greenrobot.daoDevice.user__deviceDao;
 //import com.espressif.iot.db.greenrobot.daoDevice.UserDBDao.Properties;
 import com.espressif.iot.db.greenrobot.daoDevice.UserDB;
 import com.espressif.iot.db.greenrobot.daoDevice.UserDBDao;
+import com.espressif.iot.util.Logger;
 
 import de.greenrobot.dao.query.Query;
 
@@ -104,11 +105,11 @@ public class IOTDeviceDBManager {
 		boolean isUserExist = isUserExist(userId);
 		if(!isUserExist){
 			UserDB user = new UserDB(userId , key);
-			Log.e(TAG, "User [key="+key+"] is added in the DB");
+			Logger.e(TAG, "User [key="+key+"] is added in the DB");
 			return userDao.insert(user);
 		}
 		else{
-			Log.e(TAG, "User [key="+key+"] is already exist in the DB");
+			Logger.e(TAG, "User [key="+key+"] is already exist in the DB");
 			return userId;
 		}
 	}
@@ -124,7 +125,7 @@ public class IOTDeviceDBManager {
 		user__device result = query.unique();
 //		if(result.isEmpty()){
 		if(result==null){
-			Log.e(TAG, "getTokenIsOwner: deviceId:"+deviceId+",userId:"+userId+" fail");
+			Logger.e(TAG, "getTokenIsOwner: deviceId:"+deviceId+",userId:"+userId+" fail");
 			return null;
 		}
 		else{
@@ -135,7 +136,7 @@ public class IOTDeviceDBManager {
 			TokenIsOwner tokenIsOwner = new TokenIsOwner();
 			tokenIsOwner.setIsOwner(isOwner);
 			tokenIsOwner.setToken(token);
-			Log.d(TAG, "getTokenIsOwner: deviceId:"+deviceId+",userId:"+userId+" suc");
+			Logger.d(TAG, "getTokenIsOwner: deviceId:"+deviceId+",userId:"+userId+" suc");
 			return tokenIsOwner;
 		}
 	}
@@ -144,7 +145,7 @@ public class IOTDeviceDBManager {
 	/**
 	public void addUser(long userId,String key){
 		UserDB user = new UserDB(userId,key);
-		Log.d(TAG, "User [userId="+userId+"][key="+key+"] is added in the UserDB.");
+		Logger.d(TAG, "User [userId="+userId+"][key="+key+"] is added in the UserDB.");
 		userDao.insert(user);
 	}
 	*/
@@ -157,7 +158,7 @@ public class IOTDeviceDBManager {
 		// device exist, update it
 		if (isDeviceExistByBSSID(BSSID)) {
 			deviceDao.update(device);
-			Log.i(TAG, "IOTDevice [deviceId=" + deviceId + "][BSSID=" + BSSID
+			Logger.i(TAG, "IOTDevice [deviceId=" + deviceId + "][BSSID=" + BSSID
 					+ "][type=" + type + "][status=" + status
 					+ "] is updated in the DeviceDB.");
 			Query<user__device> query = user_device_dao
@@ -173,7 +174,7 @@ public class IOTDeviceDBManager {
 //			user_device_dao.delete(user_device);
 			
 			user_device_dao.insert(user_device);
-			Log.i(TAG, "user_device [userId=" + userId + "][deviceId="
+			Logger.i(TAG, "user_device [userId=" + userId + "][deviceId="
 					+ deviceId + "][isOwner=" + isOwner + "][key=" + key
 					+ "] is updated in the user__deviceDB.");
 		}
@@ -181,11 +182,11 @@ public class IOTDeviceDBManager {
 		else {
 			
 			deviceDao.insert(device);
-			Log.i(TAG, "IOTDevice [deviceId=" + deviceId + "][BSSID=" + BSSID
+			Logger.i(TAG, "IOTDevice [deviceId=" + deviceId + "][BSSID=" + BSSID
 					+ "][type=" + type + "][status=" + status
 					+ "] is added in the DeviceDB.");
 			user_device_dao.insert(user_device);
-			Log.i(TAG, "user_device [userId=" + userId + "][deviceId="
+			Logger.i(TAG, "user_device [userId=" + userId + "][deviceId="
 					+ deviceId + "][isOwner=" + isOwner + "][key=" + key
 					+ "] is added in the user__deviceDB.");
 		}
@@ -202,11 +203,11 @@ public class IOTDeviceDBManager {
 	}
 	
 	public void deleteDeviceByBSSID(String BSSID, long userId){
-		Log.i(TAG, "deleteDeviceByBSSID(): BSSID:" + BSSID);
+		Logger.i(TAG, "deleteDeviceByBSSID(): BSSID:" + BSSID);
 		Query<DeviceDB> query = deviceDao.queryBuilder().where(
 				com.espressif.iot.db.greenrobot.daoDevice.DeviceDBDao.Properties.Bssid.eq(BSSID)).build();
 //		List<DeviceDB> deviceList = query.list();
-//		Log.i(TAG, deviceList.size()+" devices are deleted");
+//		Logger.i(TAG, deviceList.size()+" devices are deleted");
 //		for(DeviceDB device: deviceList){
 //			deviceDao.deleteByKey(device.getId());
 //		}

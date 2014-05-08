@@ -7,6 +7,7 @@ import android.net.wifi.ScanResult;
 import android.util.Log;
 
 import com.espressif.iot.net.lan.wifi.WifiScanResult;
+import com.espressif.iot.util.Logger;
 
 public class IOTDeviceListCreator {
 
@@ -25,7 +26,7 @@ public class IOTDeviceListCreator {
 			List<IOTAddress> iotAddressList) {
 		List<IOTDevice> returnList = new CopyOnWriteArrayList<IOTDevice>();
 		if (iotAddressList == null) {
-			Log.e(TAG, "iotDeviceList=null");
+			Logger.e(TAG, "iotDeviceList=null");
 		}
 		for (int i = 0; i < iotAddressList.size(); i++) {
 			IOTAddress elementSrc = iotAddressList.get(i);

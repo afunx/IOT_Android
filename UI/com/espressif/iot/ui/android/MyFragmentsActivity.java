@@ -5,6 +5,7 @@ import java.lang.ref.WeakReference;
 import com.espressif.iot.constants.WIFI_ENUM;
 import com.espressif.iot.net.lan.wifi.WifiAdmin;
 import com.espressif.iot.thread.single.SingleTaskWifiConnectAsyn;
+import com.espressif.iot.util.Logger;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -63,14 +64,14 @@ public class MyFragmentsActivity extends MyFragmentsActivityUI {
 			String SSID;
 			switch (msg.what) {
 			case MessageCenter.CONSTANTS.MSG_POP_PASSWORD_SETTING:
-				Log.d(TAG, "MSG_POP_PASSWORD_SETTING");
+				Logger.d(TAG, "MSG_POP_PASSWORD_SETTING");
 				SSID = msg.getData().getString("SSID");
 				WIFI_ENUM.WifiCipherType type = getType(msg.getData()
 						.getString("type"));
 				theActivity.popPasswordSetting(SSID , type);
 				break;
 			case MessageCenter.CONSTANTS.MSG_WIFI_CONNECTED_SUCCEED:
-				Log.d(TAG, "MSG_WIFI_CONNECTED_SUCCEED");
+				Logger.d(TAG, "MSG_WIFI_CONNECTED_SUCCEED");
 				SSID = msg.getData().getString("SSID");
 				break;
 			}

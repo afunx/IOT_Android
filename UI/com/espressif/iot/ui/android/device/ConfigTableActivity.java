@@ -128,15 +128,15 @@ public class ConfigTableActivity extends Activity {
 				if(scan.getScanResult().SSID.equals(staSSID)){
 					if(scan.getWifiCipherType()==WIFI_ENUM.WifiCipherType.WIFICIPHER_WEP){
 						// WEP
-						Log.d(TAG, "WEP");
+						Logger.d(TAG, "WEP");
 //						staPassword = procWepPassword(staPassword);
-						Log.e(TAG, "staPassword="+staPassword);
+						Logger.e(TAG, "staPassword="+staPassword);
 //						iotDevice.getIOTSta().setPassword(procWepPassword(staPassword));
 						break;
 					}
 					else if(scan.getWifiCipherType()==WIFI_ENUM.WifiCipherType.WIFICIPHER_WPA){
 						// WPA
-						Log.d(TAG, "WPA");
+						Logger.d(TAG, "WPA");
 //						iotDevice.getIOTSta().setPassword(staPassword);
 						break;
 					}
@@ -157,7 +157,7 @@ public class ConfigTableActivity extends Activity {
 			softAPAuthmode = "WPAPSK/WPA2PSK";
 		}
 //		if (rgSoftAPPasswordExist.getCheckedRadioButtonId() == R.id.rb_config_Softap_password_no) {
-//			Log.d(TAG, "OPEN");
+//			Logger.d(TAG, "OPEN");
 //			softAPAuthmode = "OPEN";
 //		} else {
 //			List<WifiScanResult> scanList = oApiIntermediator.scanAPsLANSyn(mWifiAdmin, "");
@@ -166,14 +166,14 @@ public class ConfigTableActivity extends Activity {
 //				if(scan.getScanResult().SSID.equals(staSSID)){
 //					if(scan.getWifiCipherType()==WIFI_ENUM.WifiCipherType.WIFICIPHER_WEP){
 //						// WEP
-//						Log.d(TAG, "WEP");
+//						Logger.d(TAG, "WEP");
 //						softAPAuthmode = "WEP";
 //						iotDevice.getIOTSta().setPassword(procWepPassword(staPassword));
 //						break;
 //					}
 //					else if(scan.getWifiCipherType()==WIFI_ENUM.WifiCipherType.WIFICIPHER_WPA){
 //						// WPA
-//						Log.d(TAG, "WPA");
+//						Logger.d(TAG, "WPA");
 //						softAPAuthmode = "WPAPSK/WPA2PSK";
 //						break;
 //					}

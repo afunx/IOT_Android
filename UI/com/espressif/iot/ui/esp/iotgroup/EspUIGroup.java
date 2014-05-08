@@ -3,6 +3,7 @@ package com.espressif.iot.ui.esp.iotgroup;
 import com.espressif.iot.R;
 import com.espressif.iot.model.container.IOTGroup;
 import com.espressif.iot.model.device.IOTDevice;
+import com.espressif.iot.util.Logger;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -20,7 +21,7 @@ public class EspUIGroup extends LinearLayout{
 	public EspUIGroup(Context context, IOTGroup iotGroup) {
 		super(context);
 		this.mIOTGroup = iotGroup;
-		Log.d(TAG, "EspUIGroup()");
+		Logger.d(TAG, "EspUIGroup()");
 		View view = LayoutInflater.from(context).inflate(R.layout.esp_iot_group, this);
 	}
 	

@@ -22,6 +22,8 @@ import android.util.Log;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.espressif.iot.util.Logger;
+
 /**
  * This class is used to activate the weak light on some camera phones (not flash)
  * in order to illuminate surfaces for scanning. There is no official way to do this,
@@ -44,9 +46,9 @@ final class FlashlightManager {
     iHardwareService = getHardwareService();
     setFlashEnabledMethod = getSetFlashEnabledMethod(iHardwareService);
     if (iHardwareService == null) {
-      Log.v(TAG, "This device does supports control of a flashlight");
+      Logger.v(TAG, "This device does supports control of a flashlight");
     } else {
-      Log.v(TAG, "This device does not support control of a flashlight");
+      Logger.v(TAG, "This device does not support control of a flashlight");
     }
   }
 
@@ -97,7 +99,7 @@ final class FlashlightManager {
       // OK
       return null;
     } catch (RuntimeException re) {
-      Log.w(TAG, "Unexpected error while finding class " + name, re);
+      Logger.w(TAG, "Unexpected error while finding class " + name, re);
       return null;
     }
   }
@@ -109,7 +111,7 @@ final class FlashlightManager {
       // OK
       return null;
     } catch (RuntimeException re) {
-      Log.w(TAG, "Unexpected error while finding method " + name, re);
+      Logger.w(TAG, "Unexpected error while finding method " + name, re);
       return null;
     }
   }
@@ -118,13 +120,14 @@ final class FlashlightManager {
     try {
       return method.invoke(instance, args);
     } catch (IllegalAccessException e) {
-      Log.w(TAG, "Unexpected error while invoking " + method, e);
+    	
+      Logger.w(TAG, "Unexpected error while invoking " + method, e);
       return null;
     } catch (InvocationTargetException e) {
-      Log.w(TAG, "Unexpected error while invoking " + method, e.getCause());
+      Logger.w(TAG, "Unexpected error while invoking " + method, e.getCause());
       return null;
     } catch (RuntimeException re) {
-      Log.w(TAG, "Unexpected error while invoking " + method, re);
+      Logger.w(TAG, "Unexpected error while invoking " + method, re);
       return null;
     }
   }

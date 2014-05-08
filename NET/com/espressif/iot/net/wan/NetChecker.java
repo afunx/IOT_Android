@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
+import com.espressif.iot.util.Logger;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -100,18 +102,18 @@ public class NetChecker {
 		int status = -1;
 		try {
 			String command = "/system/bin/ping -c 1 -w 2 " + pingAddress;
-			Log.d("NetChecker", "command =" + command);
+			Logger.d("NetChecker", "command =" + command);
 			process[0] = Runtime.getRuntime().exec(command);
 			status = process[0].waitFor();
 			if (status == 0) {
-				Log.d(TAG, "isInternetAvailable() = true");
+				Logger.d(TAG, "isInternetAvailable() = true");
 				return true;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Log.d(TAG, "isInternetAvailable() = false");
+		Logger.d(TAG, "isInternetAvailable() = false");
 		return false;
 	}
 }

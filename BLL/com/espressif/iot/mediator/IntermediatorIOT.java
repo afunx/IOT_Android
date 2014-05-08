@@ -20,6 +20,7 @@ import com.espressif.iot.model.device.sta.IOTSta;
 import com.espressif.iot.model.device.sta_softap.IOTCommonStatus;
 import com.espressif.iot.tasknet.rest.RestGetHelper;
 import com.espressif.iot.tasknet.rest.RestPostHelper;
+import com.espressif.iot.util.Logger;
 
 /**
  * Mediator Pattern
@@ -78,7 +79,7 @@ public class IntermediatorIOT {
 		case IOT_ACTION_GET_STA_SOFTAP_CONFIGURE:
 			return "http:/" + addr + "/" + "config?command=wifi";
 		default:
-			Log.e(TAG, "parseRestUri() don't support it");
+			Logger.e(TAG, "parseRestUri() don't support it");
 			break;
 		}
 		return null;
@@ -113,7 +114,7 @@ public class IntermediatorIOT {
 			wifiConfigureSoftAp.setChannel(device.getIOTSoftAP().getChannel());
 			return JsonParser.parse(wifiConfigureSoftAp);
 		default:
-			Log.e(TAG, "parsePostJsonObject() don't support it");
+			Logger.e(TAG, "parsePostJsonObject() don't support it");
 			break;
 		}
 		return null;
@@ -163,7 +164,7 @@ public class IntermediatorIOT {
 			iotSta.setSSID(wifiConfigureStaSoftAp.getStaSSID());
 			break;
 		default:
-			Log.e(TAG, "parseGetJsonObject() don't support it");
+			Logger.e(TAG, "parseGetJsonObject() don't support it");
 			break;
 		}
 	}
@@ -181,8 +182,8 @@ public class IntermediatorIOT {
 		String uri = parseRestUri(device, action);
 		JSONObject jsonObject;
 		boolean succeed = false;
-		Log.d(TAG, "executeIOTAction action: " + action);
-		Log.d(TAG, "executeIOTAction uri: " + uri);
+		Logger.d(TAG, "executeIOTAction action: " + action);
+		Logger.d(TAG, "executeIOTAction uri: " + uri);
 		switch (action) {
 		case IOT_ACTION_SWITCH_ON:
 		case IOT_ACTION_SWITCH_OFF:
@@ -205,7 +206,7 @@ public class IntermediatorIOT {
 			}
 			break;
 		default:
-			Log.e(TAG, "executeIOTAction() don't support it");
+			Logger.e(TAG, "executeIOTAction() don't support it");
 			break;
 		}
 		return succeed;

@@ -7,6 +7,7 @@ import com.espressif.iot.model.internet.IOTDeviceHelper;
 import com.espressif.iot.ui.android.MessageStatic;
 import com.espressif.iot.ui.android.UtilActivity;
 import com.espressif.iot.ui.android.share.CreateQRImageActivity;
+import com.espressif.iot.util.Logger;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -38,7 +39,7 @@ public class DevicePlugControlLocalActivity extends Activity {
 	private void share(){
 		CreateQRImageActivity.shareKey = IOTDeviceHelper.genShareKey(iotDevice.getDeviceKey());
 		if(CreateQRImageActivity.shareKey!=null){
-			Log.d(TAG, "shareKey is: " + CreateQRImageActivity.shareKey);
+			Logger.d(TAG, "shareKey is: " + CreateQRImageActivity.shareKey);
 		UtilActivity.transferActivity(
 				DevicePlugControlLocalActivity.this,
 				CreateQRImageActivity.class, false);
@@ -85,14 +86,14 @@ public class DevicePlugControlLocalActivity extends Activity {
 				// TODO Auto-generated method stub
 				if(isBtnOpPressed){
 					isBtnOpPressed = false;
-					Log.d(TAG, "Switch off");
+					Logger.d(TAG, "Switch off");
 					iotDevice.executeAction(IOTActionEnum.IOT_ACTION_SWITCH_OFF);
 					btnOp.setBackgroundResource(R.drawable.key_off);
 					imgStatus.setBackgroundResource(R.drawable.img_off);
 				}
 				else{
 					isBtnOpPressed = true;
-					Log.d(TAG, "Switch on");
+					Logger.d(TAG, "Switch on");
 					iotDevice.executeAction(IOTActionEnum.IOT_ACTION_SWITCH_ON);
 					btnOp.setBackgroundResource(R.drawable.key_on);
 					imgStatus.setBackgroundResource(R.drawable.img_on);

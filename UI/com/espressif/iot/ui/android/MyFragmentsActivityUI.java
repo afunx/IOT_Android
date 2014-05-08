@@ -5,6 +5,7 @@ import com.espressif.iot.R;
 import com.espressif.iot.ui.android.config.FragmentConfig;
 import com.espressif.iot.ui.android.device.FragmentDevice;
 import com.espressif.iot.ui.android.more.FragmentMore;
+import com.espressif.iot.util.Logger;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -92,7 +93,7 @@ public class MyFragmentsActivityUI extends FragmentActivity {
 			break;
 		}
 		
-		Log.d(TAG, "index=" + index);
+		Logger.d(TAG, "index=" + index);
 
 		// check the index according to the saved value
 		switch (index) {
@@ -168,25 +169,25 @@ public class MyFragmentsActivityUI extends FragmentActivity {
 						.hide(mFragmentMore);
 				switch (checkedId) {
 				case R.id.rbDevice:
-					Log.d(TAG, "rbOne is clicked");
+					Logger.d(TAG, "rbOne is clicked");
 					fragmentTransaction.show(mFragmentDevice).commit();
 					index = FRAG_DEVICE;
 					// whether it need refreshing
 					if(refresh)
 						FragmentDevice.onResumeAlike();
-					Log.d(TAG, "index = 0");
+					Logger.d(TAG, "index = 0");
 					break;
 				case R.id.rbConfig:
-					Log.d(TAG, "rbTwo is clicked");
+					Logger.d(TAG, "rbTwo is clicked");
 					fragmentTransaction.show(mFragmentConfig).commit();
 					index = FRAG_CONFIG;
-					Log.d(TAG, "index = 1");
+					Logger.d(TAG, "index = 1");
 					break;
 				case R.id.rbMore:
-					Log.d(TAG, "rbThree is clicked");
+					Logger.d(TAG, "rbThree is clicked");
 					fragmentTransaction.show(mFragmentMore).commit();
 					index = FRAG_MORE;
-					Log.d(TAG, "index = 2");
+					Logger.d(TAG, "index = 2");
 					break;
 				default:
 					break;

@@ -2,6 +2,7 @@ package com.espressif.iot.net.lan.wifi;
 
 
 import com.espressif.iot.constants.WIFI_ENUM;
+import com.espressif.iot.util.Logger;
 
 import android.net.wifi.ScanResult;
 import android.util.Log;
@@ -25,7 +26,7 @@ public class WifiScanResult {
 	}
 	public void missOnce(){
 		missTime++;
-		Log.i(TAG, "BSSID:"+mScanResult.BSSID+",miss time="+missTime);
+		Logger.i(TAG, "BSSID:"+mScanResult.BSSID+",miss time="+missTime);
 	}
 	public int getMissTime(){
 		return missTime;

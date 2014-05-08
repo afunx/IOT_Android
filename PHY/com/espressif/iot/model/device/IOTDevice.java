@@ -17,6 +17,7 @@ import com.espressif.iot.model.device.sta_softap.IOTActionSwitchOn;
 import com.espressif.iot.model.device.sta_softap.IOTCommonStatus;
 import com.espressif.iot.model.internet.IOTActionGetTemHumInternet;
 import com.espressif.iot.util.BSSIDUtil;
+import com.espressif.iot.util.Logger;
 
 public class IOTDevice {
 	
@@ -204,7 +205,7 @@ public class IOTDevice {
 	
 	public void missOnce(){
 		missTime++;
-		Log.i(TAG, "BSSID:"+mIotAddress.getBSSID()+",miss time="+missTime);
+		Logger.i(TAG, "BSSID:"+mIotAddress.getBSSID()+",miss time="+missTime);
 	}
 	public int getMissTime(){
 		return missTime;
@@ -302,7 +303,7 @@ public class IOTDevice {
 			mAction = new IOTActionGetTemHumInternet(this);
 			break;
 		default:
-			Log.e(TAG,
+			Logger.e(TAG,
 					"it should never happen: the actionEnum is not supported.");
 			return false;
 

@@ -2,6 +2,8 @@ package com.espressif.iot.ui.android.config.question;
 
 
 
+import com.espressif.iot.util.Logger;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -27,7 +29,7 @@ public class MyFragmentPageAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-		Log.e("getItem ", ""+position);
+		Logger.e("getItem ", ""+position);
 		switch (position) {
 		case 0:
 			return MyFragment.newInstance(position);

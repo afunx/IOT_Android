@@ -3,6 +3,8 @@ package com.espressif.iot.net.lan.wifi;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.espressif.iot.util.Logger;
+
 import android.net.wifi.ScanResult;
 import android.util.Log;
 
@@ -50,7 +52,7 @@ public class WifiScanResultListCreater {
 			List<ScanResult> scanResultList, boolean isEspDevice) {
 		List<WifiScanResult> returnList = new CopyOnWriteArrayList<WifiScanResult>();
 		if(scanResultList==null){
-			Log.e(TAG, "scanResultList=null");
+			Logger.e(TAG, "scanResultList=null");
 		}
 		for(int i=0;i<scanResultList.size();i++){
 			ScanResult elementSrc = scanResultList.get(i);

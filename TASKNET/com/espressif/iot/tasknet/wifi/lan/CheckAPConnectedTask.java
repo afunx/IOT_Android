@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.espressif.iot.net.lan.wifi.WifiAdmin;
 import com.espressif.iot.thread.AbsTaskSyn;
+import com.espressif.iot.util.Logger;
 
 /**
  * it is used to check whether the wifi is connected, it will poll until the
@@ -60,7 +61,7 @@ public class CheckAPConnectedTask extends AbsTaskSyn<Boolean> {
 	@Override
 	protected void doAfterFailed() {
 		// TODO Auto-generated method stub
-		Log.d(TAG, "fail");
+		Logger.d(TAG, "fail");
 	}
 
 	@Override

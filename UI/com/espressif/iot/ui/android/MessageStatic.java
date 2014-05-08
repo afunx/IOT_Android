@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.espressif.iot.constants.WIFI_ENUM;
 import com.espressif.iot.model.device.IOTDevice;
+import com.espressif.iot.util.Logger;
 
 /**
  * this class is used to store information,which should be removed. it exist
@@ -35,24 +36,24 @@ public class MessageStatic {
 	private static List<IOTDevice> IOTDeviceList = new ArrayList<IOTDevice>();
 	private static int IOTDeviceListIndex = 0;
 	private static void displayAll(){
-		Log.i(TAG, "displayALL() start");
+		Logger.i(TAG, "displayALL() start");
 		for(IOTDevice iotDevice:IOTDeviceList){
-			Log.i(TAG, "iotDevice's bssid:" + iotDevice.getIOTAddress().getBSSID());
+			Logger.i(TAG, "iotDevice's bssid:" + iotDevice.getIOTAddress().getBSSID());
 		}
-		Log.i(TAG, "displayALL() end");
+		Logger.i(TAG, "displayALL() end");
 	}
 	public static void clearIOTDeviceList(){
-		Log.i(TAG, "clearIOTDeviceList()");
+		Logger.i(TAG, "clearIOTDeviceList()");
 		IOTDeviceList.clear();
 		displayAll();
 	}
 	public static void addIOTDevice(IOTDevice iotDevice){
-		Log.i(TAG, "addIOTDevice:" + iotDevice.getIOTAddress().getBSSID());
+		Logger.i(TAG, "addIOTDevice:" + iotDevice.getIOTAddress().getBSSID());
 		IOTDeviceList.add(iotDevice);
 		displayAll();
 	}
 	public static void clearIOTDeviceListIndex(){
-		Log.i(TAG, "clearIOTDeviceListIndex()");
+		Logger.i(TAG, "clearIOTDeviceListIndex()");
 		IOTDeviceListIndex = 0;
 		displayAll();
 	}
@@ -60,11 +61,11 @@ public class MessageStatic {
 		return IOTDeviceList.size();
 	}
 	public static IOTDevice nextIOTDevice(){
-		Log.i(TAG, "nextIOTDevice()");
+		Logger.i(TAG, "nextIOTDevice()");
 		displayAll();
 		if(IOTDeviceListIndex<IOTDeviceList.size()){
 			IOTDevice iotDevice = IOTDeviceList.get(IOTDeviceListIndex++);
-			Log.i(TAG, "iotDevice's bssid:" + iotDevice.getIOTAddress().getBSSID());
+			Logger.i(TAG, "iotDevice's bssid:" + iotDevice.getIOTAddress().getBSSID());
 			return iotDevice;
 		}
 		return null;

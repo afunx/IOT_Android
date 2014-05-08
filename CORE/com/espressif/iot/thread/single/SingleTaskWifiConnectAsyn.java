@@ -10,6 +10,7 @@ import com.espressif.iot.constants.WIFI_ENUM;
 import com.espressif.iot.net.lan.wifi.WifiAdmin;
 import com.espressif.iot.ui.android.MessageCenter;
 import com.espressif.iot.ui.android.MyFragmentsActivity;
+import com.espressif.iot.util.Logger;
 
 public class SingleTaskWifiConnectAsyn {
 
@@ -61,7 +62,7 @@ public class SingleTaskWifiConnectAsyn {
 				// do something when the AP isn't in mWificpmfogirations
 				boolean result = mWifiAdmin.connect(SSID, isNoPassword);
 				if(!result){
-					Log.d(TAG, "pop wifi password setting");
+					Logger.d(TAG, "pop wifi password setting");
 					try {
 						SingleTaskWifiConnectChecker.getInstance().clearTimeout();
 					} catch (Exception e) {

@@ -10,6 +10,7 @@ import com.espressif.iot.constants.WIFI_ENUM;
 import com.espressif.iot.net.lan.wifi.WifiAdmin;
 import com.espressif.iot.ui.android.MessageCenter;
 import com.espressif.iot.ui.android.MyFragmentsActivity;
+import com.espressif.iot.util.Logger;
 
 public class SingleTaskWifiConnectChecker {
 
@@ -42,14 +43,14 @@ public class SingleTaskWifiConnectChecker {
 	private WifiChecker mWifiChecker = new WifiChecker();
 	
 	public void startTask(){
-		Log.d(TAG,"startTask()");
+		Logger.d(TAG,"startTask()");
 		mWifiChecker.isStop = false;
 		// !!!NOTE mWifiAdmin must be injected before execute(mWifiChecker)
 		mWifiChecker.setWifiAdmin(mWifiAdmin);
 		singleExecutor.execute(mWifiChecker);
 	}
 	public void pauseTask(){
-		Log.d(TAG,"pauseTask()");
+		Logger.d(TAG,"pauseTask()");
 		mWifiChecker.isStop = true;
 	}
 	public String getTargetSSID(){
@@ -121,7 +122,7 @@ public class SingleTaskWifiConnectChecker {
 			mIsSet = true;
 		}
 		public boolean isTimeout(){
-			Log.d(TAG, "isTimeout()");
+			Logger.d(TAG, "isTimeout()");
 			return System.currentTimeMillis() > mTimeout;
 		}
 		public void clearTimeout(){
@@ -185,7 +186,7 @@ public class SingleTaskWifiConnectChecker {
 				isTimeoutRunning = true;
 				// check whether connect execution is timeout
 				if(mTimeoutChecker.isSet()&&mTimeoutChecker.isTimeout()){
-					Log.w(TAG, "connect is timeout");
+					Logger.w(TAG, "connect is timeout");
 					sendPopMessage();
 					mTimeoutChecker.clearTimeout();
 				}
@@ -198,21 +199,21 @@ public class SingleTaskWifiConnectChecker {
 				if(isConnectedNow!=isConnectedPrev){
 					// disconnected(previous)-> connected(now)
 					if(isConnectedNow){
-						Log.d(TAG, "wifi is connected now.");
+						Logger.d(TAG, "wifi is connected now.");
 						
 						if(mWifiAdmin.getStatus(targetSSID)==WIFI_ENUM.WifiStatus.WIFISTATUS_CURRENT){
-							Log.d(TAG, "targetSSID " + targetSSID + " connect succeed");
+							Logger.d(TAG, "targetSSID " + targetSSID + " connect succeed");
 							mTimeoutChecker.clearTimeout();
 							sendWifiConnectSucMessage();
 						}
 						else{
-							Log.d(TAG, "targetSSID " + targetSSID + " connect fail");
+							Logger.d(TAG, "targetSSID " + targetSSID + " connect fail");
 						}
 						
 					}
 					// connected(previous) -> disconnected(now)
 					else{
-						Log.d(TAG, "wifi is disconnected now.");
+						Logger.d(TAG, "wifi is disconnected now.");
 					}
 					
 					isConnectedPrev = isConnectedNow;
@@ -226,7 +227,7 @@ public class SingleTaskWifiConnectChecker {
 //					curSSID = SSID;
 //					if(preSSID==null&&curSSID!=null
 //							||preSSID!=null&&!preSSID.equals(curSSID)){
-//						Log.d(TAG, "SSID:"+SSID+" is connected");
+//						Logger.d(TAG, "SSID:"+SSID+" is connected");
 //						sendWifiConnectSucMessage();
 //					}
 //					

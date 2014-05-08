@@ -7,6 +7,7 @@ import org.apache.http.protocol.HTTP;
 import com.espressif.iot.R;
 import com.espressif.iot.model.internet.IOTDeviceHelper;
 import com.espressif.iot.model.internet.LoginResponse;
+import com.espressif.iot.util.Logger;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -45,11 +46,11 @@ public class RegisterActivity extends Activity {
 		public void handleMessage(Message msg){
 			switch(msg.what){
 			case MSG_REGISTER_SUC:
-				Log.d(TAG, "MSG_REGISTER_SUC");
+				Logger.d(TAG, "MSG_REGISTER_SUC");
 				registerSucAction();
 				break;
 			case MSG_REGISTER_FAIL:
-				Log.d(TAG, "MSG_REGISTER_FAIL");
+				Logger.d(TAG, "MSG_REGISTER_FAIL");
 				registerFailAction();
 				break;
 			}
@@ -57,7 +58,7 @@ public class RegisterActivity extends Activity {
 	};
 	
 	private void registerSucAction(){
-		Log.d(TAG, "registerSucAction");
+		Logger.d(TAG, "registerSucAction");
 		mProgressDialog.dismiss();
 		Toast.makeText(RegisterActivity.this, "注册成功 "+registerMessage,
 				Toast.LENGTH_SHORT).show();
@@ -65,7 +66,7 @@ public class RegisterActivity extends Activity {
 		finish();
 	}
 	private void registerFailAction(){
-		Log.d(TAG, "registerFailAction");
+		Logger.d(TAG, "registerFailAction");
 		mProgressDialog.dismiss();
 		Toast.makeText(RegisterActivity.this, "注册失败 "+registerMessage,
 				Toast.LENGTH_LONG).show();

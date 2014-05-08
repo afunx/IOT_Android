@@ -27,6 +27,7 @@ import com.espressif.iot.net.lan.wifi.WifiAdmin;
 import com.espressif.iot.oapi.OApiIntermediator;
 import com.espressif.iot.ui.android.MessageStatic;
 import com.espressif.iot.util.BSSIDUtil;
+import com.espressif.iot.util.Logger;
 import com.espressif.iot.util.MathUtil;
 import com.espressif.iot.util.Reflect;
 import com.espressif.iot.util.Util;
@@ -102,7 +103,7 @@ public class DeviceSettingProgressActivity extends Activity {
 				mIotDeviceCurrent = MessageStatic.nextIOTDevice();
 				// whether there's more devices need configuring
 				if(mIotDeviceCurrent!=null){
-					Log.e(TAG, "*******************next iotdevice config*******************");
+					Logger.e(TAG, "*******************next iotdevice config*******************");
 					config();
 				}
 				break;
@@ -181,7 +182,7 @@ public class DeviceSettingProgressActivity extends Activity {
 		mIotDeviceCurrent.getIOTSta().setSSID(staSSID);
 		
 		String token = RandomUtil.random40();
-		Log.d(TAG, "random token:" + token);
+		Logger.d(TAG, "random token:" + token);
 		mIotDeviceCurrent.getIOTSta().setToken(token);
 		mIotDeviceCurrent.executeAction(IOTActionEnum.IOT_ACTION_SET_STA_CONFIGURE);
 	}
@@ -195,7 +196,7 @@ public class DeviceSettingProgressActivity extends Activity {
 	private boolean connectAPSyn(){
 		// 2s at most estimated by me
 		oApiIntermediator.disconnectWifiSyn(mWifiAdmin);
-//		Log.e(TAG, "connect should be false, result is " + oApiIntermediator.isAPConnectedSyn(mWifiAdmin));
+//		Logger.e(TAG, "connect should be false, result is " + oApiIntermediator.isAPConnectedSyn(mWifiAdmin));
 		oApiIntermediator.connectAPAsyn(mWifiAdmin, MessageStatic.device_ap_connected_ssid, 
 				MessageStatic.device_ap_connected_password, MessageStatic.device_ap_type);
 		// 20s at most set by me
@@ -230,23 +231,23 @@ public class DeviceSettingProgressActivity extends Activity {
 //		User.token = userToken;
 		String userToken = User.token;
 		if(userToken==null){
-			Log.w(TAG, "checkIOTDeviceInternet() fail");
+			Logger.w(TAG, "checkIOTDeviceInternet() fail");
 			return false;
 		}
 //		userId = mIOTDeviceDBManager.addUserIfNotExist(userToken);
 		String tempToken = mIotDeviceCurrent.getIOTSta().getToken();
-		Log.d(TAG, "userToken:" + userToken);
-		Log.d(TAG,"tempToken:" + tempToken);
+		Logger.d(TAG, "userToken:" + userToken);
+		Logger.d(TAG,"tempToken:" + tempToken);
 		String deviceKey = null;
 		deviceKey = IOTDeviceHelper.authorize(mIotDeviceCurrent,userToken, tempToken);
 		if(deviceKey!=null){
 			mIotDeviceCurrent.setDeviceKey(deviceKey);
-			Log.d(TAG, "deviceKey:" + deviceKey);
-			Log.d(TAG, "checkIOTDeviceInternet() suc");
+			Logger.d(TAG, "deviceKey:" + deviceKey);
+			Logger.d(TAG, "checkIOTDeviceInternet() suc");
 			return true;
 		}
 		else{
-			Log.w(TAG, "checkIOTDeviceInternet() fail");
+			Logger.w(TAG, "checkIOTDeviceInternet() fail");
 			return false;
 		}
 	}
@@ -261,14 +262,14 @@ public class DeviceSettingProgressActivity extends Activity {
 		// connect to the AP the mIotDeviceCurrent is connected to
 		// check whether the device is exist on the AP
 		List<IOTAddress> iotAddressList = oApiIntermediator.scanSTAsLANSyn();
-		Log.e(TAG, "iotAddressList.size = " + iotAddressList.size());
-		Log.i(TAG, "device's bssid is: " + mIotDeviceCurrent.getIOTAddress().getBSSID());
+		Logger.e(TAG, "iotAddressList.size = " + iotAddressList.size());
+		Logger.i(TAG, "device's bssid is: " + mIotDeviceCurrent.getIOTAddress().getBSSID());
 		for(IOTAddress iotAddress : iotAddressList){
 			// iotAddress's BSSID is the same as mIotDeviceCurrent
 			// there's something wrong for BSSID, so we use SSID at present
 			String BSSID = BSSIDUtil.restoreRealBSSID(iotAddress.getBSSID());
 			if(BSSID.equals(mIotDeviceCurrent.getIOTAddress().getBSSID())){
-				Log.e(TAG, "checkIOTDeviceLocal():  type:" + iotAddress.getType().toString());
+				Logger.e(TAG, "checkIOTDeviceLocal():  type:" + iotAddress.getType().toString());
 				mIotDeviceCurrent.getIOTAddress().setBSSID(iotAddress.getBSSID());
 				mIotDeviceCurrent.setType(iotAddress.getType());
 				return true;
@@ -336,22 +337,22 @@ public class DeviceSettingProgressActivity extends Activity {
 	
 	private void startConfiging(){
 		
-		Log.d(TAG, "startConfiging()");
+		Logger.d(TAG, "startConfiging()");
 		
 		ConfigState.clearAll();
 		
 		if (mWorkThread == null) {
 			mWorkThread = new Thread(new Runnable() {
 				public void run() {
-					Log.d(TAG, "ssid:"+MessageStatic.device_ap_connected_ssid);
-					Log.d(TAG, "password:"+MessageStatic.device_ap_connected_password);
+					Logger.d(TAG, "ssid:"+MessageStatic.device_ap_connected_ssid);
+					Logger.d(TAG, "password:"+MessageStatic.device_ap_connected_password);
 //					mIotDeviceCurrent = MessageStatic.nextIOTDevice();
 					ConfigState.isConnectIOTDeviceSucceed = connectIOTDevice();
 					ConfigState.isConnectIOTDeviceFinished = true;
 					
 					if(ConfigState.isConnectIOTDeviceSucceed){
 						
-						Log.e(TAG, "connectIOTDevice() suc");
+						Logger.e(TAG, "connectIOTDevice() suc");
 						
 						configDevice();
 						ConfigState.isConnectAPSucceed = Reflect.Retry(1, CLASS_NAME,
@@ -361,7 +362,7 @@ public class DeviceSettingProgressActivity extends Activity {
 						
 						if(ConfigState.isConnectAPSucceed){
 							
-							Log.e(TAG, "connectAPSyn() suc");
+							Logger.e(TAG, "connectAPSyn() suc");
 							
 							Util.Sleep(5000);
 							
@@ -371,7 +372,7 @@ public class DeviceSettingProgressActivity extends Activity {
 //							ConfigState.isIOTDeviceLocalSucceed = true;
 							ConfigState.isIOTDeviceLocalFinished = true;
 							
-							Log.e(TAG, "localSuc=" + ConfigState.isIOTDeviceLocalSucceed);
+							Logger.e(TAG, "localSuc=" + ConfigState.isIOTDeviceLocalSucceed);
 							
 							// local succeed
 							if(ConfigState.isIOTDeviceLocalSucceed){
@@ -380,7 +381,7 @@ public class DeviceSettingProgressActivity extends Activity {
 										"checkIOTDeviceInternet", 2000);
 								ConfigState.isIOTDeviceInternetFinished = true;
 								if(ConfigState.isIOTDeviceInternetSucceed){
-									Log.e(TAG, "internet config suc");
+									Logger.e(TAG, "internet config suc");
 									String deviceKey = mIotDeviceCurrent.getDeviceKey();
 									String BSSID = mIotDeviceCurrent.getIOTAddress().getBSSID();
 //									BSSID = BSSIDUtil.restoreRealBSSID(BSSID);
@@ -417,25 +418,25 @@ public class DeviceSettingProgressActivity extends Activity {
 									
 								}
 								else{
-									Log.e(TAG, "checkIOTDeviceInternet() fail");
+									Logger.e(TAG, "checkIOTDeviceInternet() fail");
 									ConfigState.isFail = true;
 								}
 							}
 							// only local
 							if(!ConfigState.isIOTDeviceInternetSucceed){
 								ConfigState.isFail = true;
-								Log.d(TAG, "local fail or internet fail");
+								Logger.d(TAG, "local fail or internet fail");
 							}
 						}
 						else{
 							ConfigState.isFail = true;
-							Log.e(TAG, "connectAPSyn() fail");
+							Logger.e(TAG, "connectAPSyn() fail");
 						}
 						
 					}
 					else{
 						ConfigState.isFail = true;
-						Log.e(TAG, "connectIOTDevice() fail");
+						Logger.e(TAG, "connectIOTDevice() fail");
 					}
 				}
 			});
@@ -538,7 +539,7 @@ public class DeviceSettingProgressActivity extends Activity {
 	 * start time IOT Device
 	 */
 	private void startTiming() {
-		Log.d(TAG, "startTiming()");
+		Logger.d(TAG, "startTiming()");
 		mProgressBar.setMax(PROGRESS_BAR_MAX);
 		mProgressBar.setProgress(0);
 		mProgressBar.setVisibility(View.GONE);
@@ -555,7 +556,7 @@ public class DeviceSettingProgressActivity extends Activity {
 							break;
 							mProgressBarCount = i ;
 							mProgressBarCount = transferProgres(mProgressBarCount);
-							Log.d(TAG, "progressCount = " + mProgressBarCount);
+							Logger.d(TAG, "progressCount = " + mProgressBarCount);
 							Util.Sleep((long)(1.0 * ONE_DEVICE_SETTING_TIME_SECONDS
 									/ PROGRESS_BAR_MAX * 1000));
 							if (mProgressBarCount == PROGRESS_BAR_MAX) {

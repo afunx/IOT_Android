@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.espressif.iot.constants.CONSTANTS;
+import com.espressif.iot.util.Logger;
 
 import android.net.wifi.WifiInfo;
 import android.util.Log;
@@ -76,7 +77,7 @@ public class WifiScanResultManager {
 				if((elementOther.getScanResult().BSSID).
 						equals(element.getScanResult().BSSID)){
 					isContained = true;
-					Log.d(TAG, "list contains,BSSID:"+element.getScanResult().BSSID);
+					Logger.d(TAG, "list contains,BSSID:"+element.getScanResult().BSSID);
 					// update(may be on statistics in the future)
 					element.setScanResult(elementOther.getScanResult());
 					element.clearMissTime();
@@ -89,18 +90,18 @@ public class WifiScanResultManager {
 			if(!isContained){
 				element.missOnce();
 				if(element.getMissTime() >= CONSTANTS.AP_MAX_MISS_TIME){
-					Log.d(TAG, "list remove,BSSID:"+element.getScanResult().BSSID);
+					Logger.d(TAG, "list remove,BSSID:"+element.getScanResult().BSSID);
 					mList.remove(element);
 				}
 			}
 		}
 		// mList doesn't contain
 		for(WifiScanResult elementOther:list){
-			Log.d(TAG, "list add,BSSID:"+elementOther.getScanResult().BSSID);
+			Logger.d(TAG, "list add,BSSID:"+elementOther.getScanResult().BSSID);
 			mList.add(elementOther);
 			elementOther.clearMissTime();
 		}
-		Log.d(TAG, "mList.size()="+mList.size());
+		Logger.d(TAG, "mList.size()="+mList.size());
 	}
 	
 }

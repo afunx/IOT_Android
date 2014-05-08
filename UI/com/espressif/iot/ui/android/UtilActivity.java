@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 
 import com.espressif.iot.thread.AbsTaskAsyn;
 import com.espressif.iot.thread.FixedThreadPool;
+import com.espressif.iot.util.Logger;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -29,7 +30,7 @@ public class UtilActivity {
 	 */
 	public static Activity transferActivity(Activity srcActivity,
 			Class<?> destActivityClass, boolean finish) {
-		Log.d(TAG, "transfer from " + srcActivity + ", to " + destActivityClass);
+		Logger.d(TAG, "transfer from " + srcActivity + ", to " + destActivityClass);
 		Intent intent = new Intent();
 		intent.setClass(srcActivity, destActivityClass);
 		srcActivity.startActivity(intent);

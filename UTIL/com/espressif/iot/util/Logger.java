@@ -20,6 +20,11 @@ public class Logger {
 			Log.w(tag, msg);
 	}
 
+	public static void w(String tag, String msg, Throwable tr){
+		if (LOG_LEVEL > WARN)
+			Log.w(tag, msg, tr);
+	}
+	
 	public static void i(String tag, String msg) {
 		if (LOG_LEVEL > INFO)
 			Log.i(tag, msg);

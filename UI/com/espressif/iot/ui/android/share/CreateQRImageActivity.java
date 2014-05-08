@@ -2,6 +2,7 @@ package com.espressif.iot.ui.android.share;
 
 import com.espressif.iot.R;
 import com.espressif.iot.open.zxing.CreateQRImageHelper;
+import com.espressif.iot.util.Logger;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -23,7 +24,7 @@ public class CreateQRImageActivity extends Activity{
 		imgCreateQr = (ImageView) findViewById(R.id.img_create_qr);
 		Bitmap bitmap = mCreateQRImageTest.createQRImage(shareKey);
 		imgCreateQr.setImageBitmap(bitmap);
-		Log.d(TAG, "onCreate() finished");
+		Logger.d(TAG, "onCreate() finished");
 	}
 	
 }

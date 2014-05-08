@@ -6,6 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import android.util.Log;
 
 import com.espressif.iot.model.device.IOTDevice;
+import com.espressif.iot.util.Logger;
 
 /**
  * each IOTGroup is empty or has a master device,
@@ -56,7 +57,7 @@ public class IOTGroup {
 	}
 	
 	public void clear(){
-		Log.d(TAG, "clear()");
+		Logger.d(TAG, "clear()");
 		for(IOTDevice device: mIOTDeviceList){
 			device.clear();
 		}
@@ -69,7 +70,7 @@ public class IOTGroup {
 	}
 	
 	private boolean isContained(IOTDevice device) {
-		Log.e(TAG, "isContained(): list size = " + mIOTDeviceList.size());
+		Logger.e(TAG, "isContained(): list size = " + mIOTDeviceList.size());
 		for (IOTDevice deviceInList : mIOTDeviceList) {
 			if (device.isSameDevice(deviceInList)) {
 				return true;
@@ -84,10 +85,10 @@ public class IOTGroup {
 	 */
 	public void addIOTDevice(IOTDevice device){
 		if(isContained(device)){
-			Log.w(TAG, "addIOTDevice() : device is exist already");
+			Logger.w(TAG, "addIOTDevice() : device is exist already");
 		}
 		if(!isContained(device)){
-			Log.d(TAG, device + "device:("+device+") is added in the group:("+this+")");
+			Logger.d(TAG, device + "device:("+device+") is added in the group:("+this+")");
 			mIOTDeviceList.add(device);
 			device.setGroup(this);
 			/**
@@ -122,18 +123,18 @@ public class IOTGroup {
 	 */
 	public boolean removeIOTDevice(IOTDevice device){
 //		if(device.isMaster()){
-//			Log.d(TAG, "device is master, remove fail");
+//			Logger.d(TAG, "device is master, remove fail");
 //			return false;
 //		}
 //		else{
 			IOTDevice deviceInGroup = getSameIOTDevice(device);
 			boolean result = mIOTDeviceList.remove(deviceInGroup);
 			if(result){
-				Log.d(TAG, "device remove succeed");
+				Logger.d(TAG, "device remove succeed");
 				return true;
 			}
 			else{
-				Log.d(TAG, "device remove fail");
+				Logger.d(TAG, "device remove fail");
 				return false;
 			}
 //		}	

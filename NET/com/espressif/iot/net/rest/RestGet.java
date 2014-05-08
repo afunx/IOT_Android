@@ -19,6 +19,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.espressif.iot.util.Logger;
+
 import android.util.Log;
 
 /*
@@ -54,9 +56,9 @@ public class RestGet {
 	public JSONObject restGetJson(String uriString, String headerKey, String headerValue){
 		try {
 			URI uri = new URI(uriString);
-			Log.d(TAG, "restGetJson entrance");
-			Log.d(TAG, "uri:"+uri);
-			Log.d(TAG, "headerKey:"+headerKey+";headerValue:"+headerValue);
+			Logger.d(TAG, "restGetJson entrance");
+			Logger.d(TAG, "uri:"+uri);
+			Logger.d(TAG, "headerKey:"+headerKey+";headerValue:"+headerValue);
 			
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpGet httpGet  = new HttpGet();
@@ -85,9 +87,9 @@ public class RestGet {
 	            // get the Json object
 	            JSONObject jsonObject = new JSONObject(builder.toString());
 	            
-	            Log.d(TAG, "jsonObject:" + jsonObject);
+	            Logger.d(TAG, "jsonObject:" + jsonObject);
 	            
-	            Log.d(TAG, "restGetJson exit normally");
+	            Logger.d(TAG, "restGetJson exit normally");
 	            return jsonObject;
 			}
 		} catch (ClientProtocolException e) {
@@ -103,7 +105,7 @@ public class RestGet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Log.d(TAG, "restGetJson exit abnormally with null return");
+		Logger.d(TAG, "restGetJson exit abnormally with null return");
 		return null;
 	}
 	
@@ -117,8 +119,8 @@ public class RestGet {
 	public JSONObject restGetJson(String uriString){
 		try {
 			URI uri = new URI(uriString);
-			Log.d(TAG, "restGetJson entrance");
-			Log.d(TAG, "uri:"+uri);
+			Logger.d(TAG, "restGetJson entrance");
+			Logger.d(TAG, "uri:"+uri);
 			
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpGet httpGet  = new HttpGet();
@@ -146,9 +148,9 @@ public class RestGet {
 	            // get the Json object
 	            JSONObject jsonObject = new JSONObject(builder.toString());
 	            
-	            Log.d(TAG, "jsonObject:" + jsonObject);
+	            Logger.d(TAG, "jsonObject:" + jsonObject);
 	            
-	            Log.d(TAG, "restGetJson exit normally");
+	            Logger.d(TAG, "restGetJson exit normally");
 	            return jsonObject;
 			}
 		} catch (ClientProtocolException e) {
@@ -164,7 +166,7 @@ public class RestGet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Log.d(TAG, "restGetJson exit abnormally with null return");
+		Logger.d(TAG, "restGetJson exit abnormally with null return");
 		return null;
 	}
 }

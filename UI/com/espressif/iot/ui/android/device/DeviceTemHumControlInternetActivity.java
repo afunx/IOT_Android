@@ -11,6 +11,7 @@ import com.espressif.iot.model.internet.TemHumData;
 import com.espressif.iot.ui.android.MessageStatic;
 import com.espressif.iot.ui.android.UtilActivity;
 import com.espressif.iot.ui.android.share.CreateQRImageActivity;
+import com.espressif.iot.util.Logger;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -48,7 +49,7 @@ public class DeviceTemHumControlInternetActivity extends Activity{
 	private void share(){
 		CreateQRImageActivity.shareKey = IOTDeviceHelper.genShareKey(iotDevice.getDeviceKey());
 		if(CreateQRImageActivity.shareKey!=null){
-			Log.d(TAG, "shareKey is: " + CreateQRImageActivity.shareKey);
+			Logger.d(TAG, "shareKey is: " + CreateQRImageActivity.shareKey);
 		UtilActivity.transferActivity(
 				DeviceTemHumControlInternetActivity.this,
 				CreateQRImageActivity.class, false);

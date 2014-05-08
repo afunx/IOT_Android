@@ -18,6 +18,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.espressif.iot.util.Logger;
+
 import android.util.Log;
 
 /*
@@ -60,16 +62,16 @@ public class RestPost {
 			StringBuilder builder = new StringBuilder();
 			InputStream inputStream;
 
-			Log.d(TAG, "restPostJson entrance");
-			Log.d(TAG, "uri:" + uri);
+			Logger.d(TAG, "restPostJson entrance");
+			Logger.d(TAG, "uri:" + uri);
 
 			// set uri
 			httpPost.setURI(uri);
 			// add header
 			httpPost.addHeader(headerKey, headerValue);
-			Log.d(TAG, "headerKey:"+headerKey+",headerValue:"+headerValue);
+			Logger.d(TAG, "headerKey:"+headerKey+",headerValue:"+headerValue);
 			// System.out.println(jsonObject);
-			Log.d(TAG, "jsonObject:" + jsonObject);
+			Logger.d(TAG, "jsonObject:" + jsonObject);
 			// inject the json object(Only POST support, GET don't support)
 			if(jsonObject!=null){
 				StringEntity se = new StringEntity(jsonObject.toString());
@@ -102,12 +104,12 @@ public class RestPost {
 				// get the Json object
 				JSONObject jsonObjectResult = new JSONObject(builder.toString());
 
-				Log.d(TAG, "jsonObjectResult:" + jsonObjectResult);
+				Logger.d(TAG, "jsonObjectResult:" + jsonObjectResult);
 
-				Log.d(TAG, "restPostJson exit normally");
+				Logger.d(TAG, "restPostJson exit normally");
 				return jsonObjectResult;
 			} else {
-				Log.e(TAG,
+				Logger.e(TAG,
 						"the fail reason is: " + statusLine.getReasonPhrase());
 				return null;
 			}
@@ -124,7 +126,7 @@ public class RestPost {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Log.d(TAG, "restPostJson exit abnormally with null return");
+		Logger.d(TAG, "restPostJson exit abnormally with null return");
 		return null;
 	}
 
@@ -146,14 +148,14 @@ public class RestPost {
 			StringBuilder builder = new StringBuilder();
 			InputStream inputStream;
 
-			Log.d(TAG, "restPostJson entrance");
-			Log.d(TAG, "uri:" + uri);
+			Logger.d(TAG, "restPostJson entrance");
+			Logger.d(TAG, "uri:" + uri);
 
 			// set uri
 			httpPost.setURI(uri);
 
 			// System.out.println(jsonObject);
-			Log.d(TAG, "jsonObject:" + jsonObject);
+			Logger.d(TAG, "jsonObject:" + jsonObject);
 
 			// inject the json object(Only POST support, GET don't support)
 			if(jsonObject!=null){
@@ -187,12 +189,12 @@ public class RestPost {
 				if(builder.length()>0)
 					jsonObjectResult = new JSONObject(builder.toString());
 
-				Log.d(TAG, "jsonObjectResult:" + jsonObjectResult);
+				Logger.d(TAG, "jsonObjectResult:" + jsonObjectResult);
 
-				Log.d(TAG, "restPostJson exit normally");
+				Logger.d(TAG, "restPostJson exit normally");
 				return jsonObjectResult;
 			} else {
-				Log.e(TAG,
+				Logger.e(TAG,
 						"the fail reason is: " + statusLine.getReasonPhrase());
 				return null;
 			}
@@ -209,7 +211,7 @@ public class RestPost {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Log.d(TAG, "restPostJson exit abnormally with null return");
+		Logger.d(TAG, "restPostJson exit abnormally with null return");
 		return null;
 	}
 	

@@ -20,6 +20,7 @@ import com.espressif.iot.ui.android.device.DeviceSettingActivity;
 import com.espressif.iot.ui.android.device.DeviceTemHumControlInternetActivity;
 import com.espressif.iot.ui.android.device.FragmentDevice;
 import com.espressif.iot.util.BSSIDUtil;
+import com.espressif.iot.util.Logger;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -59,7 +60,7 @@ public class EspUIDevice extends LinearLayout {
 		oApiIntermediator = OApiIntermediator.getInstance();
 		mGestureDetector = new GestureDetector(context, new EspGestureDetector(
 				this));
-		Log.d(TAG, "EspUIDevice()");
+		Logger.d(TAG, "EspUIDevice()");
 		View view = LayoutInflater.from(context).inflate(
 				R.layout.esp_iot_device, this);
 		layoutParent = FragmentDevice.mLayoutLeak;
@@ -115,7 +116,7 @@ public class EspUIDevice extends LinearLayout {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		// Log.d(TAG, "onTouchEvent");
+		// Logger.d(TAG, "onTouchEvent");
 		return mGestureDetector.onTouchEvent(event);
 	}
 
@@ -172,7 +173,7 @@ public class EspUIDevice extends LinearLayout {
 		
 		@Override
 		public boolean onSingleTapUp(MotionEvent e) {
-			Log.d(TAG, "onSingleTapUp() is called");
+			Logger.d(TAG, "onSingleTapUp() is called");
 			STATUS status = mEspUIDevice.mIOTDevice.getStatus();
 			switch(status){
 			case INTERNET:
@@ -187,7 +188,7 @@ public class EspUIDevice extends LinearLayout {
 				case TEMPERATURE:
 					MessageStatic.currentIOTDevice = mEspUIDevice.mIOTDevice;
 					DeviceTemHumControlInternetActivity.token = mEspUIDevice.mIOTDevice.getDeviceKey();
-					Log.e(TAG, "temperature:token:"+DeviceTemHumControlInternetActivity.token );
+					Logger.e(TAG, "temperature:token:"+DeviceTemHumControlInternetActivity.token );
 					UtilActivity.transferActivity(mEspUIDevice.getActivity(),
 							DeviceTemHumControlInternetActivity.class, false);
 					break;
@@ -224,7 +225,7 @@ public class EspUIDevice extends LinearLayout {
 
 		@Override
 		public void onLongPress(MotionEvent e) {
-			Log.d(TAG, "onLongPress() is called");
+			Logger.d(TAG, "onLongPress() is called");
 			STATUS status = mEspUIDevice.mIOTDevice.getStatus();
 			switch(status){
 			case CONNECTING:
@@ -249,10 +250,10 @@ public class EspUIDevice extends LinearLayout {
 		public boolean onScroll(MotionEvent e1, MotionEvent e2,
 				float distanceX, float distanceY) {
 			if (e1.getX() - e2.getX() > VerticalMinDistance) {
-				Log.d(TAG, "Left onScroll");
+				Logger.d(TAG, "Left onScroll");
 				return true;
 			} else if (e2.getX() - e1.getX() > VerticalMinDistance) {
-				Log.d(TAG, "Right onScroll");
+				Logger.d(TAG, "Right onScroll");
 				return true;
 			}
 			return false;
@@ -260,7 +261,7 @@ public class EspUIDevice extends LinearLayout {
 
 		@Override
 		public void onShowPress(MotionEvent e) {
-			Log.d(TAG, "onShowPress() is called");
+			Logger.d(TAG, "onShowPress() is called");
 		}
 
 		@Override

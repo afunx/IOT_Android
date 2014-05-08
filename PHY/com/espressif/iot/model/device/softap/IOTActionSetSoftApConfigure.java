@@ -5,6 +5,7 @@ import android.util.Log;
 import com.espressif.iot.model.device.IOTAction;
 import com.espressif.iot.model.device.IOTActionEnum;
 import com.espressif.iot.model.device.IOTDevice;
+import com.espressif.iot.util.Logger;
 
 public class IOTActionSetSoftApConfigure extends IOTAction<Boolean>{
 	
@@ -18,7 +19,7 @@ public class IOTActionSetSoftApConfigure extends IOTAction<Boolean>{
 	@Override
 	protected void actionFailed() {
 		// TODO Auto-generated method stub
-		Log.e(TAG, "action fail");
+		Logger.e(TAG, "action fail");
 	}
 
 	@Override

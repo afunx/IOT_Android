@@ -30,6 +30,7 @@ import com.espressif.iot.model.device.IOTDevice;
 import com.espressif.iot.model.device.IOTDevice.TYPE;
 import com.espressif.iot.tasknet.rest.RestGetHelper;
 import com.espressif.iot.tasknet.rest.RestPostHelper;
+import com.espressif.iot.util.Logger;
 
 
 /**
@@ -103,7 +104,7 @@ public class IOTDeviceHelper{
 			jsonObject.put(Token, temptToken);
 			JSONObject result = restPostHelper.restPostJSONSyn(UrlAuthorize, jsonObject, headerKey, headerValue);
 			if(result==null){
-				Log.w(TAG, "authorize() fail");
+				Logger.w(TAG, "authorize() fail");
 				return null;
 			}
 			int status = Integer.parseInt(result.getString("status"));
@@ -113,20 +114,20 @@ public class IOTDeviceHelper{
 				boolean is_owner_key = false;
 				if(Integer.parseInt(key.getString("is_owner_key"))==1)
 					is_owner_key = true;
-				Log.d(TAG, "is_owner_key:" + is_owner_key);
+				Logger.d(TAG, "is_owner_key:" + is_owner_key);
 				iotDevice.setIsOwner(is_owner_key);
 				long id = Long.parseLong(key.getString("device_id"));
 				iotDevice.setDeviceId(id);
 //				iotDevice.setType(TYPE.PLUG);
-				Log.d(TAG, "deviceId:" + id);
-				Log.d(TAG, "authorized() suc");
+				Logger.d(TAG, "deviceId:" + id);
+				Logger.d(TAG, "authorized() suc");
 				return token;
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Log.w(TAG, "authorize() fail");
+		Logger.w(TAG, "authorize() fail");
 		return null;
 	}
 	
@@ -168,7 +169,7 @@ public class IOTDeviceHelper{
 //				User.token = userKey;
 				int status = Integer.parseInt(jsonObjectResult.getString("status"));
 				if(status==HttpStatus.SC_OK){
-					Log.d(TAG,"getUserKey() suc");
+					Logger.d(TAG,"getUserKey() suc");
 					JSONObject key = (JSONObject) jsonObjectResult.getJSONArray("keys").get(0);
 					String token = key.getString(Token);
 					long id = Long.parseLong(key.getString("user_id"));
@@ -179,7 +180,7 @@ public class IOTDeviceHelper{
 					return result;
 				}
 				else{
-					Log.d(TAG, "getUserKey() fail");
+					Logger.d(TAG, "getUserKey() fail");
 					String message = jsonObjectResult.getString("message");
 					result.setMessage(message);
 					result.setStatus(status);
@@ -190,7 +191,7 @@ public class IOTDeviceHelper{
 				e.printStackTrace();
 			}
 		}
-		Log.d(TAG, "getUserKey() fail");
+		Logger.d(TAG, "getUserKey() fail");
 //		result.setMessage("用户名或密码错误");
 		return result;
 	}
@@ -263,14 +264,14 @@ public class IOTDeviceHelper{
 					message = jsonObjectResult.getString("message");
 					status = Integer.parseInt(jsonObjectResult.getString("status"));
 				}
-				Log.d(TAG, "jsonObject:" + jsonObjectResult);
-				Log.d(TAG, "message is: " + message);
-				Log.d(TAG, "status:" + status);
+				Logger.d(TAG, "jsonObject:" + jsonObjectResult);
+				Logger.d(TAG, "message is: " + message);
+				Logger.d(TAG, "status:" + status);
 				result.setMessage(message);
 				result.setStatus(status);
 				return result;
 			} else {
-				Log.e(TAG,
+				Logger.e(TAG,
 						"the fail reason is: " + statusLine.getReasonPhrase());
 //				return "register fail";
 				return result;
@@ -279,7 +280,7 @@ public class IOTDeviceHelper{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Log.d(TAG, "restPostJson exit abnormally with null return");
+		Logger.d(TAG, "restPostJson exit abnormally with null return");
 //		return "register fail";
 		return result;
 	}
@@ -310,7 +311,7 @@ public class IOTDeviceHelper{
 				return message;
 			}
 		}
-		Log.w(TAG, "validate is fail");
+		Logger.w(TAG, "validate is fail");
 		return null;
 	}
 	
@@ -365,10 +366,10 @@ public class IOTDeviceHelper{
 			e.printStackTrace();
 		}
 		if (isStatusOK(status)) {
-			Log.d(TAG, "plugSwitch() ok");
+			Logger.d(TAG, "plugSwitch() ok");
 			return true;
 		} else {
-			Log.w(TAG, "plugSwitch() err");
+			Logger.w(TAG, "plugSwitch() err");
 			return false;
 		}
 
@@ -411,10 +412,10 @@ public class IOTDeviceHelper{
 					temHumData.setAt(at);
 					temHumData.setX(x);
 					temHumData.setY(y);
-					Log.d(TAG, "getTemHumData() suc");
+					Logger.d(TAG, "getTemHumData() suc");
 					return temHumData;
 				} else {
-					Log.e(TAG, "getTemHumData() fail");
+					Logger.e(TAG, "getTemHumData() fail");
 					return null;
 				}
 			} catch (Exception e) {
@@ -422,7 +423,7 @@ public class IOTDeviceHelper{
 				e.printStackTrace();
 			}
 		}
-		Log.e(TAG, "getTemHumData() fail"); 
+		Logger.e(TAG, "getTemHumData() fail"); 
 		return null;
 	}
 	
@@ -467,7 +468,7 @@ public class IOTDeviceHelper{
 						resultList.add(temHumData);
 					}
 				} else {
-					Log.e(TAG, "getTemHumData() fail");
+					Logger.e(TAG, "getTemHumData() fail");
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -525,10 +526,10 @@ public class IOTDeviceHelper{
 			e.printStackTrace();
 		}
 		if (HttpStatus.SC_OK==status) {
-			Log.d(TAG, "putMetadata() ok");
+			Logger.d(TAG, "putMetadata() ok");
 			return true;
 		} else {
-			Log.w(TAG, "putMetadata() err");
+			Logger.w(TAG, "putMetadata() err");
 			return false;
 		}
 	}
@@ -566,7 +567,7 @@ public class IOTDeviceHelper{
 			}
 			
 			if (HttpStatus.SC_OK==status) {
-				Log.d(TAG, "getMetadata() ok");
+				Logger.d(TAG, "getMetadata() ok");
 				String metadata = null;
 				try {
 					metadata = result.getJSONObject(Device).getString(Metadata);
@@ -574,7 +575,7 @@ public class IOTDeviceHelper{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				Log.d(TAG, "metadata is: " + metadata);
+				Logger.d(TAG, "metadata is: " + metadata);
 				// "ff:ff:ff:77:85:00" 's length() is 17
 				String bssid = metadata.substring(0, 18);
 				String typeStr = metadata.substring(18);
@@ -583,7 +584,7 @@ public class IOTDeviceHelper{
 				device.setTypeStr(typeStr);
 				return true;
 			} else {
-				Log.w(TAG, "getMetadata() err");
+				Logger.w(TAG, "getMetadata() err");
 				return false;
 			}
 		}
@@ -637,7 +638,7 @@ public class IOTDeviceHelper{
 			e.printStackTrace();
 		}
 		if (HttpStatus.SC_OK==status) {
-			Log.d(TAG, "shareDevice() ok");
+			Logger.d(TAG, "shareDevice() ok");
 			String shareKey = null;
 			try {
 				shareKey = result.getString(Token);
@@ -647,7 +648,7 @@ public class IOTDeviceHelper{
 			}
 			return shareKey;
 		} else {
-			Log.w(TAG, "shareDevice() err");
+			Logger.w(TAG, "shareDevice() err");
 			return null;
 		}
 	}
@@ -685,10 +686,10 @@ public class IOTDeviceHelper{
 			e.printStackTrace();
 		}
 		if (HttpStatus.SC_OK==status) {
-			Log.d(TAG, "shareDeviceAuthorize() ok");
+			Logger.d(TAG, "shareDeviceAuthorize() ok");
 			return true;
 		} else {
-			Log.w(TAG, "shareDeviceAuthorize() err");
+			Logger.w(TAG, "shareDeviceAuthorize() err");
 			return false;
 		}
 	}
