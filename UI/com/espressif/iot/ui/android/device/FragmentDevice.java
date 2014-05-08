@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -94,6 +95,8 @@ public class FragmentDevice extends AbsFragment {
     private OApiIntermediator oApiIntermediator;
     
 	private WifiAdmin mWifiAdmin;
+	
+	private boolean mIsStop;
 	
 //	private volatile boolean isGetData2Finished;
 	
@@ -211,11 +214,15 @@ public class FragmentDevice extends AbsFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		this.mIsStop = false;
+		Log.e(TAG, "onActivityCreated");
 	}
 	
 	@Override
 	public void onStop(){
 		super.onStop();
+		this.mIsStop = true;
+		Log.e(TAG, "onStop");
 	}
 	
 	
@@ -296,6 +303,9 @@ public class FragmentDevice extends AbsFragment {
 		/**
 		 * add by afunx, to modify the concurrent error
 		 */
+		if(mIsStop){
+			return;
+		}
 //		IOTDevice toRemovedDevice = mIOTDeviceConnectingList.get(index);
 //		Integer toRemovedDevicePos = mIOTDeviceConnectingPosList.get(index);
 		IOTDevice toRemovedDevice = targetDevice;
@@ -373,6 +383,9 @@ public class FragmentDevice extends AbsFragment {
 		}
 		// check whether it is Internet
 		else{
+			if(mIsStop){
+				return;
+			}
 			boolean isInternetAccessable = oApiIntermediator.isInternetAccessedWifiWANSyn(getActivity())
 					|| oApiIntermediator.isInternetAccessedMonetWANSyn(getActivity());
 //			boolean isInternetConnected = checkIOTDeviceInternet(deviceKey,type);
@@ -583,6 +596,9 @@ public class FragmentDevice extends AbsFragment {
 	
 	private void scanUI(){
 		Logger.d(TAG, "scanUI()");
+		if(mIsStop){
+			return;
+		}
 		mLayout.removeAllViews();
 		MessageStatic.clearIOTDeviceList();
 		
@@ -592,7 +608,7 @@ public class FragmentDevice extends AbsFragment {
 			WifiScanResult wifiScanResult = mWifiScanResultList.get(mIOTDeviceNewPosList.get(index));
 			String SSID = wifiScanResult.getScanResult().SSID;
 			IOTDevice device = mIOTDeviceNewList.get(index);
-			EspUIDevice espUIDevice = new EspUIDevice(this.getActivity(), device, getActivity());
+			EspUIDevice espUIDevice = new EspUIDevice(this.getActivity().getApplicationContext(), device, getActivity());
 			espUIDevice.setEspDeviceName(SSID);
 			espUIDevice.setEspStatusNew();
 			mLayout.addView(espUIDevice);
@@ -618,7 +634,7 @@ public class FragmentDevice extends AbsFragment {
 			DeviceDB iotDeviceDB = mIOTDeviceDBList.get(position);
 			String BSSID = iotDeviceDB.getBssid();
 			IOTDevice device = mIOTDeviceConnectingList.get(index);
-			EspUIDevice espUIDevice = new EspUIDevice(this.getActivity(), device, getActivity());
+			EspUIDevice espUIDevice = new EspUIDevice(getActivity(), device, getActivity());
 			espUIDevice.setEspDeviceName(BSSIDUtil.genDeviceNameByBSSID(BSSID));
 			espUIDevice.setEspStatusConnecting();
 			mLayout.addView(espUIDevice);
