@@ -6,7 +6,7 @@ import com.espressif.iot.model.device.IOTAction;
 import com.espressif.iot.model.device.IOTActionEnum;
 import com.espressif.iot.model.device.IOTDevice;
 
-public class IOTActionGetInfo extends IOTAction {
+public class IOTActionGetInfo extends IOTAction<Boolean> {
 
 	private static final String TAG = "IOTActionGetInfo";
 
@@ -24,8 +24,14 @@ public class IOTActionGetInfo extends IOTAction {
 	@Override
 	protected boolean action() {
 		// TODO Auto-generated method stub
-		return intermediator.executeIOTAction(mIOTDevice,
+		return result = intermediator.executeIOTAction(mIOTDevice,
 				IOTActionEnum.IOT_ACTION_GET_INFO);
+	}
+
+	@Override
+	protected Boolean getResult() {
+		// TODO Auto-generated method stub
+		return result;
 	}
 
 }

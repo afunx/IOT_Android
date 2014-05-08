@@ -26,5 +26,4 @@ public class CreateQRImageActivity extends Activity{
 		Log.d(TAG, "onCreate() finished");
 	}
 	
-	
 }

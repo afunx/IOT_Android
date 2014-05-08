@@ -6,7 +6,7 @@ import com.espressif.iot.model.device.IOTAction;
 import com.espressif.iot.model.device.IOTActionEnum;
 import com.espressif.iot.model.device.IOTDevice;
 
-public class IOTActionSetWifiConfigure extends IOTAction{
+public class IOTActionSetWifiConfigure extends IOTAction<Boolean>{
 
 	private final String TAG = "IOTActionSetWifiConfigure";
 	
@@ -24,8 +24,14 @@ public class IOTActionSetWifiConfigure extends IOTAction{
 	@Override
 	protected boolean action() {
 		// TODO Auto-generated method stub
-		return intermediator.executeIOTAction(mIOTDevice,
+		return result = intermediator.executeIOTAction(mIOTDevice,
 				IOTActionEnum.IOT_ACTION_SET_WIFI_CONFIGURE);
+	}
+
+	@Override
+	protected Boolean getResult() {
+		// TODO Auto-generated method stub
+		return result;
 	}
 
 }

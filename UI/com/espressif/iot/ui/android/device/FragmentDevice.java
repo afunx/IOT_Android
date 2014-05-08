@@ -4,7 +4,6 @@ package com.espressif.iot.ui.android.device;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -28,6 +27,7 @@ import com.espressif.iot.constants.CONSTANTS_DYNAMIC;
 import com.espressif.iot.db.device.IOTDeviceDBManager;
 import com.espressif.iot.db.device.model.TokenIsOwner;
 import com.espressif.iot.db.greenrobot.daoDevice.DeviceDB;
+import com.espressif.iot.model.device.IOTActionEnum;
 import com.espressif.iot.model.device.IOTAddress;
 import com.espressif.iot.model.device.IOTDevice;
 import com.espressif.iot.model.device.IOTDevice.STATUS;
@@ -232,16 +232,19 @@ public class FragmentDevice extends AbsFragment {
 	 * it remianed to be implemented later
 	 * @return
 	 */
-	private boolean checkIOTDeviceInternet(String token,String type){
+	private boolean checkIOTDeviceInternet(IOTDevice device){
 //		String userToken = User.userToken;
 		boolean isOnline = false;
+		String type = device.getType().toString().toLowerCase();
+		String token = device.getDeviceKey();
 		if(type.equals(IOTDevice.getIOTDeviceType(TYPE.PLUG))){
 			isOnline = IOTDeviceHelper.plugSwitch(false, token, false);
 			Log.d(TAG,"checkIOTDeviceInternet() PLUG is " + isOnline);
 //			return isOnline;
 		}
 		else if(type.equals(IOTDevice.getIOTDeviceType(TYPE.TEMPERATURE))){
-			isOnline = IOTDeviceHelper.getTemHumDataList(token)!=null;
+//			isOnline = IOTDeviceHelper.getTemHumDataList(token)!=null;
+			isOnline = device.executeAction(IOTActionEnum.IOT_ACTION_GET_TEM_HUM_100_INTERNET);
 //			isOnline = IOTDeviceHelper.getTemHumData(token)!=null;
 			Log.d(TAG,"checkIOTDeviceInternet() TEMPERATURE is " + isOnline);
 //			return isOnline;
@@ -305,6 +308,7 @@ public class FragmentDevice extends AbsFragment {
 		long deviceId = iotDeviceDB.getId();
 		TokenIsOwner tokenIsOwner = sIOTDeviceDBManager.getTokenIsOwner(deviceId, User.id);
 		String deviceKey = tokenIsOwner.getToken();
+		boolean isOwner = tokenIsOwner.getIsOwner();
 		IOTDevice device = null;
 		
 		/**
@@ -350,11 +354,17 @@ public class FragmentDevice extends AbsFragment {
 		 * JUST FOR TEST
 		 */
 //		isLocal = false;
+		IOTAddress iotAddress = new IOTAddress(BSSID,null);
+		device = IOTDevice.createIOTDevice(iotAddress);
+		device.setTypeStr(type);
+		device.setDeviceKey(deviceKey);
+		device.setIsOwner(isOwner);
 		
 		if(isLocal){
-			device = IOTDevice.createIOTDevice(mLocalIOTAddress);
+//			device = IOTDevice.createIOTDevice(mLocalIOTAddress);
+			device.setIOTAddress(mLocalIOTAddress);
 			device.setStatus(STATUS.LOCAL);
-			device.setTypeStr(type);
+//			device.setTypeStr(type);
 			mIOTDeviceLocalList.add(device);
 			mIOTDeviceLocalPosList.add(index);
 		}
@@ -362,13 +372,14 @@ public class FragmentDevice extends AbsFragment {
 		else{
 			boolean isInternetAccessable = oApiIntermediator.isInternetAccessedWifiWANSyn(getActivity())
 					|| oApiIntermediator.isInternetAccessedMonetWANSyn(getActivity());
-			boolean isInternetConnected = checkIOTDeviceInternet(deviceKey,type);
+//			boolean isInternetConnected = checkIOTDeviceInternet(deviceKey,type);
+			boolean isInternetConnected = checkIOTDeviceInternet(device);
 			if(isInternetAccessable){
 				if(isInternetConnected){
-					IOTAddress iotAddress = new IOTAddress(BSSID,null);
-					device = IOTDevice.createIOTDevice(iotAddress);
+//					IOTAddress iotAddress = new IOTAddress(BSSID,null);
+//					device = IOTDevice.createIOTDevice(iotAddress);
 					device.setStatus(STATUS.INTERNET);
-					device.setTypeStr(type);
+//					device.setTypeStr(type);
 					mIOTDeviceInternetList.add(device);
 					mIOTDeviceInternetPosList.add(index);
 //					mHandler.sendEmptyMessage(0);
@@ -378,18 +389,18 @@ public class FragmentDevice extends AbsFragment {
 //			else{
 			if(!isInternetAccessable||!isInternetConnected){
 				// it is offline
-				IOTAddress iotAddress = new IOTAddress(BSSID,null);
-				device = IOTDevice.createIOTDevice(iotAddress);
+//				IOTAddress iotAddress = new IOTAddress(BSSID,null);
+//				device = IOTDevice.createIOTDevice(iotAddress);
 				device.setStatus(STATUS.OFFLINE);
-				device.setTypeStr(type);
+//				device.setTypeStr(type);
 				mIOTDeviceOfflineList.add(device);
 				mIOTDeviceOfflinePosList.add(index);
 			}
 //			}
 		}
 		
-		device.setDeviceKey(tokenIsOwner.getToken());
-		device.setIsOwner(tokenIsOwner.getIsOwner());
+//		device.setDeviceKey(tokenIsOwner.getToken());
+//		device.setIsOwner(tokenIsOwner.getIsOwner());
 		
 		lock.lock();
 //		mIOTDeviceConnectingList.remove(index);

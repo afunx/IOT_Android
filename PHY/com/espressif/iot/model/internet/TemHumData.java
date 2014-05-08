@@ -6,10 +6,6 @@ package com.espressif.iot.model.internet;
  *
  */
 public class TemHumData {
-//	private String datapoint;
-//	private String created;
-//	private String visibly;
-//	private String datastream_id;
 	private String at;
 	// humidity
 	private int y;

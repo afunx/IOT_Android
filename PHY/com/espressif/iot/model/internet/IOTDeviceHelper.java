@@ -440,11 +440,10 @@ public class IOTDeviceHelper{
 	 *            owner key or user key are both in the token
 	 * 
 	 */
-	public static List<TemHumData> getTemHumDataList(String token){
+	static List<TemHumData> getTemHumDataList(String token){
 		/**
 		 * for the moment the token is used fixed
 		 */
-//		token = "20dd316acf9c3f0f9347c27fab14d77bd98458ac";
 		String headerKey = Authorization;
 		String headerValue = "token " + token;
 		List<TemHumData> resultList = new CopyOnWriteArrayList<TemHumData>();

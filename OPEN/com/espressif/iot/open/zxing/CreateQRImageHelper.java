@@ -10,7 +10,11 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+
 /**
+ * Help to create QR image, according to the String content
+ * @author zxing
+ *
  */
 public class CreateQRImageHelper
 {

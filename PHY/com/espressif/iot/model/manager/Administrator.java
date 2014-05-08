@@ -85,8 +85,8 @@ public class Administrator {
 		intermediatorWifiLan.connectAPAsyn(wifiAdmin, SSID, password, type);
 	}
 	
-	public boolean isAPConnectedSyn(WifiAdmin wifiAdmin){
-		return intermediatorWifiLan.isAPConnectedSyn(wifiAdmin, CONSTANTS.CHECK_AP_CONNECTED_TIMEOUT_SECONDS_2);
+	public boolean isAPConnectedSyn(WifiAdmin wifiAdmin, int timeoutSeconds){
+		return intermediatorWifiLan.isAPConnectedSyn(wifiAdmin, timeoutSeconds);
 	}
 
 	public void reconnectAsyn(Handler handler, WifiAdmin wifiAdmin,

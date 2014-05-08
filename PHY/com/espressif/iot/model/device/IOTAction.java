@@ -2,7 +2,7 @@ package com.espressif.iot.model.device;
 
 import com.espressif.iot.mediator.IntermediatorIOT;
 
-public abstract class IOTAction {
+public abstract class IOTAction<T> {
 
 	protected static IntermediatorIOT intermediator = IntermediatorIOT.getInstance();
 	
@@ -11,7 +11,11 @@ public abstract class IOTAction {
 
 	// the action to be performed
 	protected abstract boolean action();
-
+	
+	protected abstract T getResult();
+	
+	protected T result;
+	
 	// which IOT device the IOTAction belongs to
 	protected IOTDevice mIOTDevice;
 	

@@ -4,7 +4,7 @@ import com.espressif.iot.model.device.IOTAction;
 import com.espressif.iot.model.device.IOTActionEnum;
 import com.espressif.iot.model.device.IOTDevice;
 
-public class IOTActionSwitchOff extends IOTAction{
+public class IOTActionSwitchOff extends IOTAction<Boolean>{
 
 	public IOTActionSwitchOff(IOTDevice iotDevice) {
 		super(iotDevice);
@@ -25,8 +25,14 @@ public class IOTActionSwitchOff extends IOTAction{
 		IOTCommonStatus commonStatus = mIOTDevice.getIOTCommonStatus();
 		commonStatus.setStatus(0);
 		
-		boolean success = intermediator.executeIOTAction(mIOTDevice, IOTActionEnum.IOT_ACTION_SWITCH_OFF);
+		result = intermediator.executeIOTAction(mIOTDevice, IOTActionEnum.IOT_ACTION_SWITCH_OFF);
 		
-		return success;
+		return result;
+	}
+
+	@Override
+	protected Boolean getResult() {
+		// TODO Auto-generated method stub
+		return result;
 	}	
 }

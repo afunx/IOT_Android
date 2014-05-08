@@ -56,7 +56,7 @@ public class IntermediatorWifiLAN {
 	}
 
 	public void wifiDisconnectSyn(WifiAdmin wifiAdmin) {
-		wifiAdmin.disconnect();
+		wifiAdmin.disconnectSyn();
 	}
 
 	public WIFI_ENUM.WifiStatus getWifiStatusSyn(WifiAdmin wifiAdmin, String SSID) {

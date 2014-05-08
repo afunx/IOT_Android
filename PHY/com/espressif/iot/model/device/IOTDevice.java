@@ -15,6 +15,7 @@ import com.espressif.iot.model.device.sta_softap.IOTActionSetWifiConfigure;
 import com.espressif.iot.model.device.sta_softap.IOTActionSwitchOff;
 import com.espressif.iot.model.device.sta_softap.IOTActionSwitchOn;
 import com.espressif.iot.model.device.sta_softap.IOTCommonStatus;
+import com.espressif.iot.model.internet.IOTActionGetTemHumInternet;
 import com.espressif.iot.util.BSSIDUtil;
 
 public class IOTDevice {
@@ -265,13 +266,8 @@ public class IOTDevice {
 		return this.mIotCommonStatus;
 	}
 
-	private IOTAction mAction;
+	private IOTAction<?> mAction;
 
-	
-//	public enum IOTActionEnum {
-//	IOT_ACTION_GET_STA_SOFTAP_CONFIGURE
-//}
-	
 	public boolean executeAction(IOTActionEnum actionEnum) {
 		switch (actionEnum) {
 		case IOT_ACTION_SWITCH_ON:
@@ -302,6 +298,9 @@ public class IOTDevice {
 			mAction = new IOTActionGetStaSoftApConfigure(this);
 			break;
 	
+		case IOT_ACTION_GET_TEM_HUM_100_INTERNET:
+			mAction = new IOTActionGetTemHumInternet(this);
+			break;
 		default:
 			Log.e(TAG,
 					"it should never happen: the actionEnum is not supported.");
@@ -309,6 +308,10 @@ public class IOTDevice {
 
 		}
 		return mAction.executeAction();
+	}
+	
+	public Object getActionResult(){
+		return mAction.getResult();
 	}
 	
 	@Override

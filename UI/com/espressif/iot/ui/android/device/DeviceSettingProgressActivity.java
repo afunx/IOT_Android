@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.espressif.iot.R;
 import com.espressif.iot.cipher.RandomUtil;
+import com.espressif.iot.constants.CONSTANTS;
 import com.espressif.iot.db.device.IOTDeviceDBManager;
 import com.espressif.iot.model.device.IOTActionEnum;
 import com.espressif.iot.model.device.IOTAddress;
@@ -198,7 +199,7 @@ public class DeviceSettingProgressActivity extends Activity {
 		oApiIntermediator.connectAPAsyn(mWifiAdmin, MessageStatic.device_ap_connected_ssid, 
 				MessageStatic.device_ap_connected_password, MessageStatic.device_ap_type);
 		// 20s at most set by me
-		if(oApiIntermediator.isAPConnectedSyn(mWifiAdmin))
+		if(oApiIntermediator.isAPConnectedSyn(mWifiAdmin,CONSTANTS.CHECK_AP_CONNECTED_TIMEOUT_SECONDS_2))
 				return true;
 		return false;
 	}
@@ -214,7 +215,7 @@ public class DeviceSettingProgressActivity extends Activity {
 		oApiIntermediator.disconnectWifiSyn(mWifiAdmin);
 		oApiIntermediator.connectAPAsyn(mWifiAdmin, SSID, true);
 		// 20s at most
-		if (oApiIntermediator.isAPConnectedSyn(mWifiAdmin))
+		if (oApiIntermediator.isAPConnectedSyn(mWifiAdmin,CONSTANTS.CHECK_AP_CONNECTED_TIMEOUT_SECONDS_2))
 			return true;
 		return false;
 	}

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.espressif.iot.R;
+import com.espressif.iot.model.device.IOTActionEnum;
 import com.espressif.iot.model.device.IOTDevice;
 import com.espressif.iot.model.internet.IOTDeviceHelper;
 import com.espressif.iot.model.internet.TemHumData;
@@ -116,9 +117,12 @@ public class DeviceTemHumControlInternetActivity extends Activity{
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void temHumAction(){
 		mTemHumDataList.clear();
-		mTemHumDataList = IOTDeviceHelper.getTemHumDataList(token);
+//		mTemHumDataList = IOTDeviceHelper.getTemHumDataList(token);
+		iotDevice.executeAction(IOTActionEnum.IOT_ACTION_GET_TEM_HUM_100_INTERNET);
+		mTemHumDataList = (List<TemHumData>) iotDevice.getActionResult();
 	}
 	private void temHumActionUI(){
 		mLayout.removeAllViews();

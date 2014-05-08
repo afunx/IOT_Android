@@ -56,6 +56,7 @@ public class TestActivity extends Activity {
 		Log.d(TAG,"result: at="+result.getAt() + "x="+result.getX()+"y="+result.getY());
 	}
 	private void testGetTemHumDataList(){
+		/*
 		List<TemHumData> result = IOTDeviceHelper.getTemHumDataList("20dd316acf9c3f0f9347c27fab14d77bd98458ac");
 		if(result.isEmpty()){
 			Log.d(TAG, "testGetTemHumDataList() fail");
@@ -63,6 +64,7 @@ public class TestActivity extends Activity {
 		else{
 			Log.d(TAG, "testGetTemHumDataList() suc");
 		}
+		*/
 	}
 	private void testPutMetadata(){
 		String bssid = "ff:ff:ff:77:85:00";

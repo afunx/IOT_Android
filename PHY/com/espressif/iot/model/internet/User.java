@@ -6,7 +6,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Each User has a user key, which indicate the user's identity
  * 
- * 
  * @author afunx
  *
  */

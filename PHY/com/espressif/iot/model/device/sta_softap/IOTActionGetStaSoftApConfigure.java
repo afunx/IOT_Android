@@ -6,7 +6,7 @@ import com.espressif.iot.model.device.IOTAction;
 import com.espressif.iot.model.device.IOTActionEnum;
 import com.espressif.iot.model.device.IOTDevice;
 
-public class IOTActionGetStaSoftApConfigure extends IOTAction{
+public class IOTActionGetStaSoftApConfigure extends IOTAction<Boolean>{
 
 	private static final String TAG = "IOTActionGetStaSoftApConfigure";
 	
@@ -24,8 +24,14 @@ public class IOTActionGetStaSoftApConfigure extends IOTAction{
 	@Override
 	protected boolean action() {
 		// TODO Auto-generated method stub
-		return intermediator.executeIOTAction(mIOTDevice,
+		return result = intermediator.executeIOTAction(mIOTDevice,
 				IOTActionEnum.IOT_ACTION_GET_STA_SOFTAP_CONFIGURE);
+	}
+
+	@Override
+	protected Boolean getResult() {
+		// TODO Auto-generated method stub
+		return result;
 	}
 
 }

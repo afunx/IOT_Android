@@ -207,7 +207,7 @@ public class WifiAdmin {
 		return config;
 	}
 
-	public void disconnect() {
+	public void disconnectSyn() {
 		mWifiManager.disconnect();
 		// make sure the disconnect is finished by the android system
 		while(isConnect()){
