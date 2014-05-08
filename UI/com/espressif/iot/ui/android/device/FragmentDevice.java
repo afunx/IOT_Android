@@ -96,6 +96,12 @@ public class FragmentDevice extends AbsFragment {
     
 	private WifiAdmin mWifiAdmin;
 	
+	/**
+	 * !NOTE: 
+	 * there's some concurrent bugs exist,
+	 * for the moment, we use mIsStop to avoid it in most time,
+	 * we will fix it thoroughly in the future
+	 */
 	private boolean mIsStop;
 	
 //	private volatile boolean isGetData2Finished;
@@ -214,15 +220,20 @@ public class FragmentDevice extends AbsFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
 		this.mIsStop = false;
-		Log.e(TAG, "onActivityCreated");
+//		Log.e(TAG, "onResume");
 	}
 	
 	@Override
 	public void onStop(){
 		super.onStop();
 		this.mIsStop = true;
-		Log.e(TAG, "onStop");
+//		Log.e(TAG, "onStop");
 	}
 	
 	
@@ -597,7 +608,7 @@ public class FragmentDevice extends AbsFragment {
 	private void scanUI(){
 		Logger.d(TAG, "scanUI()");
 		if(mIsStop){
-			return;
+//			return;
 		}
 		mLayout.removeAllViews();
 		MessageStatic.clearIOTDeviceList();
@@ -608,7 +619,7 @@ public class FragmentDevice extends AbsFragment {
 			WifiScanResult wifiScanResult = mWifiScanResultList.get(mIOTDeviceNewPosList.get(index));
 			String SSID = wifiScanResult.getScanResult().SSID;
 			IOTDevice device = mIOTDeviceNewList.get(index);
-			EspUIDevice espUIDevice = new EspUIDevice(this.getActivity().getApplicationContext(), device, getActivity());
+			EspUIDevice espUIDevice = new EspUIDevice(this.getActivity(), device, getActivity());
 			espUIDevice.setEspDeviceName(SSID);
 			espUIDevice.setEspStatusNew();
 			mLayout.addView(espUIDevice);
