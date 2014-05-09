@@ -155,6 +155,7 @@ public class FragmentDevice extends AbsFragment {
 		return view;
 	}
 	
+	
 	/**
 	 * for the reason that fragment's onResume() is not like what we think it
 	 */
@@ -509,7 +510,7 @@ public class FragmentDevice extends AbsFragment {
 			
 			// if the device is in db, we ignore it
 			if(isDeviceInDB(BSSID)){
-//				continue;
+				continue;
 			}
 			
 			String SSID = wifiScanResult.getScanResult().SSID;
@@ -537,6 +538,7 @@ public class FragmentDevice extends AbsFragment {
 			/**
 			 * add by afunx 2014-05-09
 			 */
+			/*
 			for(DeviceDB deviceDB: mIOTDeviceDBList){
 				Log.e(TAG, "afunx");
 				String deviceDBBssid = deviceDB.getBssid();
@@ -552,6 +554,7 @@ public class FragmentDevice extends AbsFragment {
 				}
 //				sIOTDeviceDBManager.deleteDeviceByBSSID(deviceDBBssid, User.id);
 			}
+			*/
 		}
 //		// add from db
 //		mIOTDeviceDBList = sIOTDeviceDBManager.getIOTDeviceDBList(User.id);

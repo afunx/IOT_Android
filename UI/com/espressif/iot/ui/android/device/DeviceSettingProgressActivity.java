@@ -70,6 +70,9 @@ public class DeviceSettingProgressActivity extends Activity {
 	private String getProgressTitle(){
 		if(ConfigState.isIOTDeviceInternetFinished){
 			if(ConfigState.isIOTDeviceInternetSucceed){
+				this.finish();
+				DeviceSettingActivity.finishS();
+				FragmentDevice.onResumeAlike();
 				return "网络授权成功";
 			}
 			else{

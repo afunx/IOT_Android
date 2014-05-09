@@ -30,6 +30,11 @@ public class DeviceSettingActivity extends Activity {
 	private EditText edtPassword;
 	private TextView tvDeviceName;
 	private Button btnStart;
+	private static Activity leakActivity;
+	
+	public static void finishS(){
+		leakActivity.finish();
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,7 @@ public class DeviceSettingActivity extends Activity {
 		adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_expandable_list_item_1, getData());
 		init();
+		leakActivity = this;
 	}
 
 	private void init() {
