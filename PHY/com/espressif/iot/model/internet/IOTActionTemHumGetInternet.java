@@ -24,7 +24,8 @@ public class IOTActionTemHumGetInternet extends IOTAction<Boolean>{
 	protected boolean action() {
 		// TODO Auto-generated method stub
 		String token = mIOTDevice.getDeviceKey();
-		return result = IOTDeviceHelper.getTemHumData(token,null);
+//		return result = IOTDeviceHelper.getTemHumData(token,null);
+		return true;
 	}
 
 	@Override

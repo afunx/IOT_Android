@@ -19,7 +19,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -44,6 +43,7 @@ public class DeviceTemHumControlInternetActivity extends Activity{
 		iotDevice = MessageStatic.currentIOTDevice;
 		setContentView(R.layout.activity_device_hum_tem_control);
 		init();
+		new GetDataTask1().execute();
 	}
 	
 	private void share(){

@@ -1,8 +1,6 @@
 package com.espressif.iot.ui.android.login;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.protocol.HTTP;
 
 import com.espressif.iot.R;
 import com.espressif.iot.model.internet.IOTDeviceHelper;
@@ -14,7 +12,6 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;

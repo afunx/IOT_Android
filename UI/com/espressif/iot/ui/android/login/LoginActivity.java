@@ -134,12 +134,27 @@ public class LoginActivity extends Activity {
 //				LoginActivity.this.startActivity(intent);
 			}
 		}
+		
+		/**
+		 * add by afunx 2014-05-09
+		 */
+		mEdtEmail.setText(mSp.getString(EMAIL, ""));
 	}
 	
+	private void saveEmail(){
+		Editor editor = mSp.edit();
+		editor.putString(EMAIL, mEmailStr);
+		editor.commit();
+	}
 	private void login(){
 		mEmailStr = mEdtEmail.getText().toString();
 		mPasswordStr = mEdtPassword.getText().toString();
 
+		/**
+		 * save the EMAIL
+		 */
+		saveEmail();
+		
 		/**
 		 * waiting some time, simulating the real login situation
 		 */
