@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -508,7 +509,7 @@ public class FragmentDevice extends AbsFragment {
 			
 			// if the device is in db, we ignore it
 			if(isDeviceInDB(BSSID)){
-				continue;
+//				continue;
 			}
 			
 			String SSID = wifiScanResult.getScanResult().SSID;
@@ -526,11 +527,30 @@ public class FragmentDevice extends AbsFragment {
 			device.getIOTSoftAP().setSSID(SSID);
 			
 			// it is not in the db, which means it is new device found
-			if(!sIOTDeviceDBManager.isDeviceExistByBSSID(BSSID)){
+//			if(!sIOTDeviceDBManager.isDeviceExistByBSSID(BSSID)){
+			if(true){
 				// device new
 				device.setStatus(STATUS.NEW);
 				mIOTDeviceNewList.add(device);
 				mIOTDeviceNewPosList.add(index);
+			}
+			/**
+			 * add by afunx 2014-05-09
+			 */
+			for(DeviceDB deviceDB: mIOTDeviceDBList){
+				Log.e(TAG, "afunx");
+				String deviceDBBssid = deviceDB.getBssid();
+				String realDeviceDBBssid = BSSIDUtil.restoreRealBSSID(deviceDBBssid);
+				String deviceBssid = iotAddress.getBSSID();
+				String realDeviceBssid = BSSIDUtil.restoreRealBSSID(deviceBssid);
+				if(deviceDBBssid.equals(deviceBssid)
+						||deviceDBBssid.equals(realDeviceBssid)
+						|| realDeviceDBBssid.equals(deviceBssid)
+						|| realDeviceDBBssid.equals(realDeviceBssid))
+				{
+					mIOTDeviceDBList.remove(deviceDB);
+				}
+//				sIOTDeviceDBManager.deleteDeviceByBSSID(deviceDBBssid, User.id);
 			}
 		}
 //		// add from db

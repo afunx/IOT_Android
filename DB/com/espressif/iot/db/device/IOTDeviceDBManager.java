@@ -24,7 +24,6 @@ import de.greenrobot.dao.query.Query;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 
 
