@@ -15,6 +15,7 @@ import java.util.List;
 import com.espressif.iot.R;
 import com.espressif.iot.cipher.RandomUtil;
 import com.espressif.iot.constants.CONSTANTS;
+import com.espressif.iot.constants.CONSTANTS_DYNAMIC;
 import com.espressif.iot.db.device.IOTDeviceDBManager;
 import com.espressif.iot.model.device.IOTActionEnum;
 import com.espressif.iot.model.device.IOTAddress;
@@ -64,6 +65,43 @@ public class DeviceSettingProgressActivity extends Activity {
 	private static OApiIntermediator oApiIntermediator = OApiIntermediator.getInstance();
 	private static String CLASS_NAME = DeviceSettingProgressActivity.class.getCanonicalName();
 	
+	private static boolean isDebug = true;
+	
+	private String getProgressTitle(){
+		if(ConfigState.isIOTDeviceInternetFinished){
+			if(ConfigState.isIOTDeviceInternetSucceed){
+				return "网络授权成功";
+			}
+			else{
+				return "网络授权失败";
+			}
+		}
+		if(ConfigState.isIOTDeviceLocalFinished){
+			if(ConfigState.isIOTDeviceLocalSucceed){
+				return "本地认证成功";
+			}
+			else{
+				return "本地认证失败";
+			}
+		}
+		if(ConfigState.isConnectAPFinished){
+			if(ConfigState.isConnectAPSucceed){
+				return "AP连接成功";
+			}
+			else{
+				return "AP连接失败";
+			}
+		}
+		if(ConfigState.isConnectIOTDeviceFinished){
+			if(ConfigState.isConnectIOTDeviceSucceed){
+				return "设备连接成功";
+			}
+			else{
+				return "设备连接失败";
+			}
+		}
+		return("开始配置");
+	}
 	/**
 	 * it is exist here, just for some reason,
 	 * it should be removed instantly
@@ -76,6 +114,7 @@ public class DeviceSettingProgressActivity extends Activity {
 		@Override
 		public void handleMessage(Message msg) {
 			String deviceName = mIotDeviceCurrent.getName();
+			
 			switch (msg.what) {
 			case START:
 				mTvTitle.setText("正在配置"+deviceName+" ...");
@@ -90,9 +129,11 @@ public class DeviceSettingProgressActivity extends Activity {
 				mLocked = false;
 				if(!ConfigState.isFail){
 					// config succeed
+					if(!isDebug)
 					mTvTitle.setText(deviceName+" 配置成功");
 				}
 				else{
+					if(!isDebug)
 					// config fail
 					mTvTitle.setText(deviceName+" 配置失败");
 				}
@@ -106,7 +147,14 @@ public class DeviceSettingProgressActivity extends Activity {
 					Logger.e(TAG, "*******************next iotdevice config*******************");
 					config();
 				}
-				break;
+				return;
+//				break;
+			}
+			
+			/** set the status bar for debugging*/
+			if(isDebug){
+				String title = getProgressTitle();
+				mTvTitle.setText(deviceName+" "+title);
 			}
 		}
 	};
@@ -268,7 +316,10 @@ public class DeviceSettingProgressActivity extends Activity {
 			// iotAddress's BSSID is the same as mIotDeviceCurrent
 			// there's something wrong for BSSID, so we use SSID at present
 			String BSSID = BSSIDUtil.restoreRealBSSID(iotAddress.getBSSID());
-			if(BSSID.equals(mIotDeviceCurrent.getIOTAddress().getBSSID())){
+			if(BSSID.equals(mIotDeviceCurrent.getIOTAddress().getBSSID())
+					||
+					/* */
+					(iotAddress.getBSSID().equals(mIotDeviceCurrent.getIOTAddress().getBSSID()))){
 				Logger.e(TAG, "checkIOTDeviceLocal():  type:" + iotAddress.getType().toString());
 				mIotDeviceCurrent.getIOTAddress().setBSSID(iotAddress.getBSSID());
 				mIotDeviceCurrent.setType(iotAddress.getType());
@@ -355,6 +406,7 @@ public class DeviceSettingProgressActivity extends Activity {
 						Logger.e(TAG, "connectIOTDevice() suc");
 						
 						configDevice();
+						
 						ConfigState.isConnectAPSucceed = Reflect.Retry(1, CLASS_NAME,
 								DeviceSettingProgressActivity.this,
 								"connectAPSyn", 0);
@@ -364,11 +416,39 @@ public class DeviceSettingProgressActivity extends Activity {
 							
 							Logger.e(TAG, "connectAPSyn() suc");
 							
-							Util.Sleep(5000);
+//							Util.Sleep(5000);
 							
+							/*
 							ConfigState.isIOTDeviceLocalSucceed = Reflect.Retry(5, CLASS_NAME,
 									DeviceSettingProgressActivity.this,
 									"checkIOTDeviceLocal", 0);
+							*/
+							for (int tryTime = 0; tryTime < 5; tryTime++) {
+								Logger.e(TAG, "tryTime="+tryTime);
+								switch (tryTime) {
+								case 0:
+									CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 24;
+									break;
+								case 1:
+									CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 12;
+									break;
+								case 2:
+									CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 4;
+									break;
+								case 3:
+									CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 2;
+									break;
+								case 4:
+									CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT ;
+								}
+								ConfigState.isIOTDeviceLocalSucceed = 
+										DeviceSettingProgressActivity.this.checkIOTDeviceLocal();
+								if(ConfigState.isIOTDeviceLocalSucceed){
+									break;
+								}
+							}
+							CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT;
+							
 //							ConfigState.isIOTDeviceLocalSucceed = true;
 							ConfigState.isIOTDeviceLocalFinished = true;
 							
@@ -376,7 +456,7 @@ public class DeviceSettingProgressActivity extends Activity {
 							
 							// local succeed
 							if(ConfigState.isIOTDeviceLocalSucceed){
-								ConfigState.isIOTDeviceInternetSucceed = Reflect.Retry(5, CLASS_NAME,
+								ConfigState.isIOTDeviceInternetSucceed = Reflect.Retry(10, CLASS_NAME,
 										DeviceSettingProgressActivity.this,
 										"checkIOTDeviceInternet", 2000);
 								ConfigState.isIOTDeviceInternetFinished = true;

@@ -256,7 +256,7 @@ public class FragmentDevice extends AbsFragment {
 		}
 		else if(type.equals(IOTDevice.getIOTDeviceType(TYPE.TEMPERATURE))){
 //			isOnline = IOTDeviceHelper.getTemHumDataList(token)!=null;
-			isOnline = device.executeAction(IOTActionEnum.IOT_ACTION_GET_TEM_HUM_100_INTERNET);
+			isOnline = device.executeAction(IOTActionEnum.IOT_ACTION_GET_TEM_HUM_INTERNET);
 //			isOnline = IOTDeviceHelper.getTemHumData(token)!=null;
 			Logger.d(TAG,"checkIOTDeviceInternet() TEMPERATURE is " + isOnline);
 //			return isOnline;
@@ -285,7 +285,8 @@ public class FragmentDevice extends AbsFragment {
 //			String BSSID = BSSIDUtil.restoreRealBSSID(iotAddress.getBSSID());
 			String BSSID = iotAddress.getBSSID();
 			Logger.i(TAG, "currentBSSID(device):"+currentBSSID+", BSSID(receive):"+BSSID);
-			if(BSSID.equals(currentBSSID)){
+			if(BSSID.equals(currentBSSID)
+					||currentBSSID.equals(BSSIDUtil.restoreRealBSSID(BSSID))){
 				mLocalIOTAddress = iotAddress;
 				Logger.i(TAG, "checkIOTDeviceLocal() is true");
 				return true;

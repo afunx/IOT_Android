@@ -4,8 +4,14 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.text.ParseException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.http.HttpEntity;
@@ -22,6 +28,7 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 import android.util.Log;
 
@@ -55,11 +62,13 @@ public class IOTDeviceHelper{
 	private static final String Password = "password";
 	private static final String Token = "token";
 	private static final String Key = "key";
+	private static final String Keys = "keys";
 	private static final String Metadata = "metadata";
 	private static final String Device = "device";
 	private static final String Datapoint = "datapoint";
 	private static final String Name = "name";
 	private static final String Scope = "scope";
+	private static final String Message = "message";
 	// for User is a class name, to avoid collapse, use "USER" instead of "User"
 	private static final String USER = "user";
 	private static final String UrlAuthorize = "http://114.215.177.97/v1/key/authorize/";
@@ -82,8 +91,80 @@ public class IOTDeviceHelper{
 			return false;
 	}
 	
-	public static String Test = "test";
+	private static class JSONResponse{
+		public JSONResponse(boolean suc,Map<String,JSONObject> jsonObjectMap){
+			this.suc = suc;
+			this.jsonObjectMap = jsonObjectMap;
+		}
+		public JSONResponse(boolean suc,JSONArray jsonArray){
+			this.suc = suc;
+			this.jsonArray = jsonArray;
+		}
+		/**whether the action is succeed*/
+		public boolean suc;
+		/**the jsonObject*/
+		public Map<String,JSONObject> jsonObjectMap;
+		public List<String> jsonObjectList;
+		public JSONArray jsonArray;
+		public String message;
+		public int status;
+	}
 	
+	/** Flyweight Pattern */
+	private static JSONResponse JSON_RESPONSE_FAIL = 
+			new JSONResponse(false,new HashMap<String,JSONObject>());
+	private static String JSON_RESPONSE_FAIL_MESSAGE = "请打开wifi或3g确保能连上Internet";
+	
+	/**
+	 * check whether the response is OK
+	 * @param response	the Json response get from server
+	 * @param jsonKey	the result JsonObject's key
+	 * @param isJsonObject whether it is JsonObject or JsonArray
+	 * @return	the JSONResponse
+	 * 
+	 * @see JSONResponse
+	 */
+	private static JSONResponse checkRestResponse(JSONObject response,
+			List<String> jsonKeyList, boolean isJsonObject) {
+		JSON_RESPONSE_FAIL.message = JSON_RESPONSE_FAIL_MESSAGE;
+		if (response == null)
+			return JSON_RESPONSE_FAIL;
+		int status = -1;
+		JSONResponse resultJsonResponse = null;
+		JSONObject resultJsonObject = null;
+		JSONArray resultJsonArray = null;
+		Map<String, JSONObject> resultJsonObjectMap = new HashMap<String, JSONObject>();
+		// List<JSONObject> resulJsonObjectList = new ArrayList<JSONObject>();
+		try {
+			status = Integer.parseInt(response.getString("status"));
+			JSON_RESPONSE_FAIL.status = status;
+			if (status == HttpStatus.SC_OK) {
+				if (isJsonObject) {
+					for (String jsonKey : jsonKeyList) {
+						resultJsonObject = response.getJSONObject(jsonKey);
+						resultJsonObjectMap.put(jsonKey, resultJsonObject);
+					}
+					resultJsonResponse = new JSONResponse(false,
+							resultJsonObjectMap);
+				} else {
+					resultJsonArray = response.getJSONArray(jsonKeyList.get(0));
+					resultJsonResponse = new JSONResponse(false,
+							resultJsonArray);
+				} 
+				resultJsonResponse.suc = true;
+				resultJsonResponse.status = status;
+				return resultJsonResponse;
+			}
+			else{
+				JSON_RESPONSE_FAIL.message = response.getString(Message);
+				return JSON_RESPONSE_FAIL;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return JSON_RESPONSE_FAIL;
+	}
 	/**
 	 * !NOTE: if fail, it will return null
 	 * 
@@ -100,27 +181,24 @@ public class IOTDeviceHelper{
 		String headerKey = Authorization;
 		String headerValue = "token " + userToken;
 		JSONObject jsonObject = new JSONObject();
+		
+		
 		try {
 			jsonObject.put(Token, temptToken);
 			JSONObject result = restPostHelper.restPostJSONSyn(UrlAuthorize, jsonObject, headerKey, headerValue);
-			if(result==null){
-				Logger.w(TAG, "authorize() fail");
-				return null;
-			}
-			int status = Integer.parseInt(result.getString("status"));
-			if(isStatusOK(status)){
-				JSONObject key = result.getJSONObject(Key);
+			List<String> keyList = new ArrayList<String>();
+			keyList.add(Key);
+			JSONResponse jsonResponse = checkRestResponse(result,keyList,true);
+			if(jsonResponse.suc){
+				Logger.d(TAG, "authorized() suc");
+				JSONObject key = jsonResponse.jsonObjectMap.get(Key);
 				String token = key.getString(Token);
 				boolean is_owner_key = false;
 				if(Integer.parseInt(key.getString("is_owner_key"))==1)
 					is_owner_key = true;
-				Logger.d(TAG, "is_owner_key:" + is_owner_key);
 				iotDevice.setIsOwner(is_owner_key);
 				long id = Long.parseLong(key.getString("device_id"));
 				iotDevice.setDeviceId(id);
-//				iotDevice.setType(TYPE.PLUG);
-				Logger.d(TAG, "deviceId:" + id);
-				Logger.d(TAG, "authorized() suc");
 				return token;
 			}
 		} catch (JSONException e) {
@@ -149,50 +227,43 @@ public class IOTDeviceHelper{
 	public static LoginResponse getUserKey(String email,String password){
 		LoginResponse result = new LoginResponse();
 		JSONObject jsonObject = new JSONObject();
-//		JSONObject temp = new JSONObject();
 		try {
 			jsonObject = new JSONObject();
 			jsonObject.put(Email, email);
 			jsonObject.put(Password, password);
 			jsonObject.put(Scope, USER);
-//			temp.put(Authorization, jsonObject);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		JSONObject jsonObjectResult = restPostHelper.restPostJSONSyn(UrlGetUserKey, jsonObject);
-		if(jsonObjectResult!=null){
+		List<String> keyList = new ArrayList<String>();
+		keyList.add(Keys);
+		JSONResponse jsonResponse = checkRestResponse(jsonObjectResult,keyList,false);
+		if(jsonResponse.suc){
+			Logger.d(TAG,"getUserKey() suc");
 			try {
-//				JSONObject key = (JSONObject) jsonObjectResult.getJSONArray("keys").get(0);
-//				String userKey = key.getString(Token);
-//				User.token = userKey;
-				int status = Integer.parseInt(jsonObjectResult.getString("status"));
-				if(status==HttpStatus.SC_OK){
-					Logger.d(TAG,"getUserKey() suc");
-					JSONObject key = (JSONObject) jsonObjectResult.getJSONArray("keys").get(0);
-					String token = key.getString(Token);
-					long id = Long.parseLong(key.getString("user_id"));
-					User.token = token;
-					User.id = id;
-					result.setStatus(status);
-					result.setMessage("登陆成功");
-					return result;
-				}
-				else{
-					Logger.d(TAG, "getUserKey() fail");
-					String message = jsonObjectResult.getString("message");
-					result.setMessage(message);
-					result.setStatus(status);
-					return result;
-				}
+				JSONObject key = (JSONObject) jsonResponse.jsonArray.get(0);
+				String token = key.getString(Token);
+				long id = Long.parseLong(key.getString("user_id"));
+				User.token = token;
+				User.id = id;
+				result.setStatus(HttpStatus.SC_OK);
+				result.setMessage("登陆成功");
+				return result;
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		Logger.d(TAG, "getUserKey() fail");
-//		result.setMessage("用户名或密码错误");
+		else{
+			Logger.d(TAG, "getUserKey() fail");
+			String message = jsonResponse.message;
+			result.setMessage(message);
+			result.setStatus(jsonResponse.status);
+			return result;
+		}
+		result.setMessage("用户名或密码错误");
 		return result;
 	}
 	
@@ -273,7 +344,6 @@ public class IOTDeviceHelper{
 			} else {
 				Logger.e(TAG,
 						"the fail reason is: " + statusLine.getReasonPhrase());
-//				return "register fail";
 				return result;
 			}
 		} catch (Exception e) {
@@ -281,7 +351,6 @@ public class IOTDeviceHelper{
 			e.printStackTrace();
 		}
 		Logger.d(TAG, "restPostJson exit abnormally with null return");
-//		return "register fail";
 		return result;
 	}
 	
@@ -425,6 +494,74 @@ public class IOTDeviceHelper{
 		}
 		Logger.e(TAG, "getTemHumData() fail"); 
 		return null;
+	}
+	
+	/**
+	   * 获取现在时间
+	   * 
+	   * @return 返回时间类型 yyyy-MM-dd HH:mm:ss
+	   */
+	private static Date getNowDate(String dateStr) {
+		SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date dt2 = null;
+		try {
+			dt2 = sdf.parse(dateStr);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return dt2;
+	}
+	
+	// tempt method
+	public static boolean getTemHumData(String token,String empty){
+		/**
+		 * for the moment the token is used fixed
+		 */
+		String headerKey = Authorization;
+		String headerValue = "token " + token;
+		List<TemHumData> resultList = new CopyOnWriteArrayList<TemHumData>();
+		JSONObject jsonObjectResult = restGetHelper.restGetJSONSyn(UrlTemHumDataPoints, headerKey,
+				headerValue);
+		if(jsonObjectResult!=null){
+			try {
+				int status = Integer.parseInt(jsonObjectResult
+						.getString("status"));
+				if (status == HttpStatus.SC_OK) {
+					JSONArray jsonArray = jsonObjectResult.getJSONArray("datapoints");
+					for(int i=0;i<jsonArray.length();i++){
+						TemHumData temHumData = new TemHumData();
+						JSONObject jsonObject = jsonArray.getJSONObject(i);
+						String at = jsonObject.getString("at");
+						int x = Integer.parseInt(jsonObject.getString("x"));
+						int y = Integer.parseInt(jsonObject.getString("y"));
+						temHumData.setAt(at);
+						temHumData.setX(x);
+						temHumData.setY(y);
+						resultList.add(temHumData);
+					}
+					for(TemHumData result: resultList){
+						String dateStr = result.getAt();
+						Date date = getNowDate(dateStr);
+						Date now = new Date();
+						long dateLong = date.getTime();
+						long nowLong = now.getTime();
+						Log.e(TAG, "dateLong-nowLong="+(dateLong-nowLong));
+						if(Math.abs(dateLong-nowLong)<10000){
+//						if(dateLong-nowLong<30000||nowLong-dateLong<30000){
+							return true;
+						}
+					}
+				} else {
+					Logger.e(TAG, "getTemHumData() fail");
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return false;
 	}
 	
 	/**

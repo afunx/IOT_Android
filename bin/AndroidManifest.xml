@@ -22,7 +22,7 @@
   	<uses-permission android:name="android.permission.FLASHLIGHT"/>
     
     <uses-sdk
-        android:minSdkVersion="17"
+        android:minSdkVersion="14"
         android:targetSdkVersion="18" />
 
     <application

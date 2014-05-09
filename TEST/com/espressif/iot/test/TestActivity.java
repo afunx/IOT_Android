@@ -23,7 +23,7 @@ public class TestActivity extends Activity {
 	}
 	
 	private void test(){
-		System.out.println("test:"+IOTDeviceHelper.Test );
+//		System.out.println("test:"+IOTDeviceHelper.Test );
 		new Thread(){
 			public void run(){
 //				while(true){

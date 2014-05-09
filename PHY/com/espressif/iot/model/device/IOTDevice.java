@@ -19,6 +19,7 @@ import com.espressif.iot.model.internet.IOTActionTemHumGet100Internet;
 import com.espressif.iot.model.internet.IOTActionSwitchGetInternet;
 import com.espressif.iot.model.internet.IOTActionSwitchOffInternet;
 import com.espressif.iot.model.internet.IOTActionSwitchOnInternet;
+import com.espressif.iot.model.internet.IOTActionTemHumGetInternet;
 import com.espressif.iot.util.BSSIDUtil;
 import com.espressif.iot.util.Logger;
 
@@ -302,6 +303,10 @@ public class IOTDevice {
 			mAction = new IOTActionGetStaSoftApConfigure(this);
 			break;
 	
+		case IOT_ACTION_GET_TEM_HUM_INTERNET:
+			mAction = new IOTActionTemHumGetInternet(this);
+			break;
+			
 		case IOT_ACTION_GET_TEM_HUM_100_INTERNET:
 			mAction = new IOTActionTemHumGet100Internet(this);
 			break;
