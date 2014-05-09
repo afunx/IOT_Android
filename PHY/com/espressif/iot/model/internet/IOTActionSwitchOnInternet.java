@@ -23,13 +23,14 @@ public class IOTActionSwitchOnInternet extends IOTAction<Boolean> {
 	@Override
 	protected boolean action() {
 		// TODO Auto-generated method stub
-		return false;
+		String token = mIOTDevice.getDeviceKey();
+		return result = IOTDeviceHelper.plugSwitch(true, token, true);
 	}
 
 	@Override
 	protected Boolean getResult() {
 		// TODO Auto-generated method stub
-		return null;
+		return result;
 	}
 
 }

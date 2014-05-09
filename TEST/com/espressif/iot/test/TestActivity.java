@@ -1,6 +1,5 @@
 package com.espressif.iot.test;
 
-import java.util.List;
 
 import com.espressif.iot.R;
 import com.espressif.iot.model.device.IOTDevice;
@@ -11,7 +10,6 @@ import com.espressif.iot.util.Logger;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 
 public class TestActivity extends Activity {
 	
@@ -48,8 +46,8 @@ public class TestActivity extends Activity {
 		}.start();
 	}
 	private void testPlugSwitch(){
-		IOTDeviceHelper.plugSwitch(true, "be83e4661db6f548ecac67f14a9560f6111bb5d5" , false);
-		IOTDeviceHelper.plugSwitch(false, "be83e4661db6f548ecac67f14a9560f6111bb5d5", false);
+//		IOTDeviceHelper.plugSwitch(true, "be83e4661db6f548ecac67f14a9560f6111bb5d5" , false);
+//		IOTDeviceHelper.plugSwitch(false, "be83e4661db6f548ecac67f14a9560f6111bb5d5", false);
 
 	}
 	private void testGetTemHumData(){

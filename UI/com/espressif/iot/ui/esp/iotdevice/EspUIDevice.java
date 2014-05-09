@@ -19,14 +19,12 @@ import com.espressif.iot.ui.android.device.DevicePlugControlLocalActivity;
 import com.espressif.iot.ui.android.device.DeviceSettingActivity;
 import com.espressif.iot.ui.android.device.DeviceTemHumControlInternetActivity;
 import com.espressif.iot.ui.android.device.FragmentDevice;
-import com.espressif.iot.util.BSSIDUtil;
 import com.espressif.iot.util.Logger;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;

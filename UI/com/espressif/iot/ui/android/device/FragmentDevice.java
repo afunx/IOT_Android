@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,7 +31,6 @@ import com.espressif.iot.model.device.IOTAddress;
 import com.espressif.iot.model.device.IOTDevice;
 import com.espressif.iot.model.device.IOTDevice.STATUS;
 import com.espressif.iot.model.device.IOTDevice.TYPE;
-import com.espressif.iot.model.device.IOTDevicesManager;
 import com.espressif.iot.model.internet.IOTDeviceHelper;
 import com.espressif.iot.model.internet.User;
 import com.espressif.iot.net.lan.wifi.WifiAdmin;
@@ -237,7 +235,7 @@ public class FragmentDevice extends AbsFragment {
 	}
 	
 	
-	private IOTDevicesManager mIOTDevicesManager;
+//	private IOTDevicesManager mIOTDevicesManager;
 	
 	/**
 	 * deviceToken : be83e4661db6f548ecac67f14a9560f6111bb5d5
@@ -251,7 +249,8 @@ public class FragmentDevice extends AbsFragment {
 		String type = device.getType().toString().toLowerCase();
 		String token = device.getDeviceKey();
 		if(type.equals(IOTDevice.getIOTDeviceType(TYPE.PLUG))){
-			isOnline = IOTDeviceHelper.plugSwitch(false, token, false);
+//			isOnline = IOTDeviceHelper.plugSwitch(false, token, false);
+			isOnline = device.executeAction(IOTActionEnum.IOT_ACTION_GET_SWITCH_INTERNET);
 			Logger.d(TAG,"checkIOTDeviceInternet() PLUG is " + isOnline);
 //			return isOnline;
 		}

@@ -15,7 +15,10 @@ import com.espressif.iot.model.device.sta_softap.IOTActionSetWifiConfigure;
 import com.espressif.iot.model.device.sta_softap.IOTActionSwitchOff;
 import com.espressif.iot.model.device.sta_softap.IOTActionSwitchOn;
 import com.espressif.iot.model.device.sta_softap.IOTCommonStatus;
-import com.espressif.iot.model.internet.IOTActionGetTemHumInternet;
+import com.espressif.iot.model.internet.IOTActionTemHumGet100Internet;
+import com.espressif.iot.model.internet.IOTActionSwitchGetInternet;
+import com.espressif.iot.model.internet.IOTActionSwitchOffInternet;
+import com.espressif.iot.model.internet.IOTActionSwitchOnInternet;
 import com.espressif.iot.util.BSSIDUtil;
 import com.espressif.iot.util.Logger;
 
@@ -300,8 +303,20 @@ public class IOTDevice {
 			break;
 	
 		case IOT_ACTION_GET_TEM_HUM_100_INTERNET:
-			mAction = new IOTActionGetTemHumInternet(this);
+			mAction = new IOTActionTemHumGet100Internet(this);
 			break;
+		
+		case IOT_ACTION_GET_SWITCH_INTERNET:
+			mAction = new IOTActionSwitchGetInternet(this);
+			
+		case IOT_ACTION_SWITCH_ON_INTERNET:
+			mAction = new IOTActionSwitchOnInternet(this);
+			break;
+			
+		case IOT_ACTION_SWITCH_OFF_INTERNET:
+			mAction = new IOTActionSwitchOffInternet(this);
+			break;
+			
 		default:
 			Logger.e(TAG,
 					"it should never happen: the actionEnum is not supported.");

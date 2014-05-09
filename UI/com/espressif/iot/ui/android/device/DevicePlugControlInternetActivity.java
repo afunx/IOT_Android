@@ -1,6 +1,7 @@
 package com.espressif.iot.ui.android.device;
 
 import com.espressif.iot.R;
+import com.espressif.iot.model.device.IOTActionEnum;
 import com.espressif.iot.model.device.IOTDevice;
 import com.espressif.iot.model.internet.IOTDeviceHelper;
 import com.espressif.iot.ui.android.MessageStatic;
@@ -86,7 +87,8 @@ public class DevicePlugControlInternetActivity extends Activity {
 				if(isBtnOpPressed){
 					isBtnOpPressed = false;
 					Logger.d(TAG, "Switch off");
-					if(IOTDeviceHelper.plugSwitch(false, token, true)){
+//					if(IOTDeviceHelper.plugSwitch(false, token, true)){
+					if(iotDevice.executeAction(IOTActionEnum.IOT_ACTION_SWITCH_OFF_INTERNET)){
 						btnOp.setBackgroundResource(R.drawable.key_off);
 						imgStatus.setBackgroundResource(R.drawable.img_off);
 					}
@@ -94,7 +96,8 @@ public class DevicePlugControlInternetActivity extends Activity {
 				else{
 					isBtnOpPressed = true;
 					Logger.d(TAG, "Switch on");
-					if(IOTDeviceHelper.plugSwitch(true, token, true)){
+//					if(IOTDeviceHelper.plugSwitch(true, token, true)){
+					if(iotDevice.executeAction(IOTActionEnum.IOT_ACTION_SWITCH_ON_INTERNET)){
 					btnOp.setBackgroundResource(R.drawable.key_on);
 					imgStatus.setBackgroundResource(R.drawable.img_on);
 				}

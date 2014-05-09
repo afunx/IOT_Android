@@ -331,7 +331,7 @@ public class IOTDeviceHelper{
 	 *            whether it is post or get
 	 * 
 	 */
-	public static boolean plugSwitch(boolean switchOn, String token,
+	static boolean plugSwitch(boolean switchOn, String token,
 			boolean post) {
 		JSONObject jsonObject = new JSONObject();
 		JSONObject jsonObjectX = new JSONObject();
