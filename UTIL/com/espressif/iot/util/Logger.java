@@ -10,6 +10,10 @@ public class Logger {
 	public static int DEBUG = 4;
 	public static int VERBOS = 5;
 
+	public static void t(String tag, String msg) {
+		Log.e(tag, msg);
+	}
+	
 	public static void e(String tag, String msg) {
 		if (LOG_LEVEL > ERROR)
 			Log.e(tag, msg);

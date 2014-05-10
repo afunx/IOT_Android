@@ -8,10 +8,12 @@ import com.espressif.iot.model.internet.LoginResponse;
 import com.espressif.iot.model.internet.User;
 import com.espressif.iot.ui.android.MyFragmentsActivity;
 import com.espressif.iot.ui.android.UtilActivity;
+import com.espressif.iot.util.Timer;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -39,7 +41,9 @@ public class LoginActivity extends Activity {
 	private String mEmailStr, mPasswordStr;
 	private SharedPreferences mSp;
 	private ProgressDialog mProgressDialog;
-
+//	private boolean mIsCanceled = false;
+	private volatile boolean mIsFinished = false;
+	
 	private static final String EMAIL = "EMAIL";
 	private static final String PASSWORD = "PASSWORD";
 
@@ -47,6 +51,7 @@ public class LoginActivity extends Activity {
 	private static final String LOGIN_AUTO = "LOGIN_AUTO";
 	private static final int MSG_LOGIN_SUC = 0;
 	private static final int MSG_LOGIN_FAIL = 1;
+	private static final int MSG_LOGIN_CANCEL = 2;
 	// the login message from server
 	private static String loginMessage;
 	
@@ -60,11 +65,20 @@ public class LoginActivity extends Activity {
 			case MSG_LOGIN_FAIL:
 				loginFailAction();
 				break;
+			case MSG_LOGIN_CANCEL:
+				loginCancelAction();
+				break;
 			}
 		}
 	};
 	
 	private void loginSucAction(){
+		
+		if(mIsFinished)
+			return;
+		
+		mIsFinished = true;
+		
 		mProgressDialog.dismiss();
 		// login succeed and remember mEdtPassword is true
 		if (mCbRememberPassword.isChecked()) {
@@ -88,12 +102,21 @@ public class LoginActivity extends Activity {
 		Toast.makeText(LoginActivity.this, loginMessage,
 				Toast.LENGTH_SHORT).show();
 	}
-	private void loginFailAction(){
+
+	private void loginFailAction() {
+		if(mIsFinished)
+			return;
+
 		mProgressDialog.dismiss();
-		Toast.makeText(LoginActivity.this, loginMessage,
-				Toast.LENGTH_LONG).show();
+		Toast.makeText(LoginActivity.this, loginMessage, Toast.LENGTH_LONG)
+				.show();
 		mSp.edit().putBoolean(REMEMBER_PASSWORD, false).commit();
 		mSp.edit().putBoolean(LOGIN_AUTO, false).commit();
+	}
+	private void loginCancelAction(){
+		if(mIsFinished)
+			return;
+		mProgressDialog.dismiss();
 	}
 	
 	private void sendMessage(int what){
@@ -112,6 +135,20 @@ public class LoginActivity extends Activity {
 
 	}
 
+//	private volatile boolean login = true;
+	
+	private Thread loginTask = new Thread(){
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			login();
+		}
+		
+	};
+	
+	
+	
 	// restore the preference according to the previous one
 	private void restorePreference() {
 		// check whether the mEdtPassword remembering is enabled
@@ -128,7 +165,10 @@ public class LoginActivity extends Activity {
 				/**
 				 * change!!!
 				 */
+//				Util.Sleep(3000);
+//				if(login)
 				login();
+				
 //				Intent intent = new Intent(LoginActivity.this,
 //						LogoActivity.class);
 //				LoginActivity.this.startActivity(intent);
@@ -146,6 +186,43 @@ public class LoginActivity extends Activity {
 		editor.putString(EMAIL, mEmailStr);
 		editor.commit();
 	}
+
+	private class LoginTask extends Thread{
+		public boolean isCancel = false;
+		public void setCancel(boolean isCancel){
+			this.isCancel = isCancel;
+		}
+		public void run(){
+			Timer timer = new Timer();
+			timer.setMinTime(3000);
+			timer.start();
+			
+			LoginResponse response = IOTDeviceHelper.getUserKey(mEmailStr, mPasswordStr);
+			boolean suc = response.getStatus() == HttpStatus.SC_OK;
+			String message = response.getMessage();
+			loginMessage = message;
+			
+			timer.stop();
+			
+//			if (mIsCanceled&&suc) {
+			if (isCancel) {
+				sendMessage(MSG_LOGIN_CANCEL);
+			} else {
+//				if (!mIsFinished) {
+					/**
+					 * it should check from the server
+					 */
+					if (suc) {
+//						mIsFinished = true;
+						sendMessage(MSG_LOGIN_SUC);
+					} else {
+						sendMessage(MSG_LOGIN_FAIL);
+					}
+//				}
+			}
+		}
+	}
+	
 	private void login(){
 		mEmailStr = mEdtEmail.getText().toString();
 		mPasswordStr = mEdtPassword.getText().toString();
@@ -155,27 +232,62 @@ public class LoginActivity extends Activity {
 		 */
 		saveEmail();
 		
+		final LoginTask loginTask = new LoginTask();
+//		mIsCanceled = false;
+//		mIsFinished = false;
 		/**
 		 * waiting some time, simulating the real login situation
 		 */
-		mProgressDialog = ProgressDialog.show(LoginActivity.this,
-				"登陆中...", "请等待...");
+//		mProgressDialog = ProgressDialog.show(LoginActivity.this,
+//				"登陆中...", "请等待...");
+		mProgressDialog = new ProgressDialog(this);
+		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); 
+		mProgressDialog.setTitle("登陆中...");
+		mProgressDialog.setMessage("请等待...");
+		mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener(){
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+//				mIsCanceled = true;
+				loginTask.setCancel(true);
+				loginTask.interrupt();
+			}
+		
+		});
+		mProgressDialog.show();
+		loginTask.start();
+		/*
 		new Thread() {
 			public void run() {
+				Timer timer = new Timer();
+				timer.setMinTime(3000);
+				timer.start();
+				
 				LoginResponse response = IOTDeviceHelper.getUserKey(mEmailStr, mPasswordStr);
 				boolean suc = response.getStatus() == HttpStatus.SC_OK;
 				String message = response.getMessage();
 				loginMessage = message;
-				/**
-				 * it should check from the server
-				 */
+				
+				timer.stop();
+				
+//				if (mIsCanceled&&suc) {
 				if (suc) {
-					sendMessage(MSG_LOGIN_SUC);
+					sendMessage(MSG_LOGIN_CANCEL);
 				} else {
-					sendMessage(MSG_LOGIN_FAIL);
+//					if (!mIsFinished) {
+						// it should check from the server
+						if (suc) {
+//							mIsFinished = true;
+							sendMessage(MSG_LOGIN_SUC);
+						} else {
+							sendMessage(MSG_LOGIN_FAIL);
+						}
+//					}
 				}
 			}
 		}.start();
+		*/
 	}
 	
 	private void init() {

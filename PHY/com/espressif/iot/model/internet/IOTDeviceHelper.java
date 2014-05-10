@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,7 +29,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-import android.util.Log;
 
 import com.espressif.iot.model.device.IOTAddress;
 import com.espressif.iot.model.device.IOTDevice;
@@ -546,7 +544,7 @@ public class IOTDeviceHelper{
 						Date now = new Date();
 						long dateLong = date.getTime();
 						long nowLong = now.getTime();
-						Log.e(TAG, "dateLong-nowLong="+(dateLong-nowLong));
+//						Log.e(TAG, "dateLong-nowLong="+(dateLong-nowLong));
 						if(Math.abs(dateLong-nowLong)<10000){
 //						if(dateLong-nowLong<30000||nowLong-dateLong<30000){
 							return true;

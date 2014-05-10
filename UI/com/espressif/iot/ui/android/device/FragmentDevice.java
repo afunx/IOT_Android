@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -140,7 +141,7 @@ public class FragmentDevice extends AbsFragment {
 			
 		});
 		
-		getDataTask1Exc();
+//		getDataTask1Exc();
 		
 		leakThis = this;
 		
@@ -158,7 +159,7 @@ public class FragmentDevice extends AbsFragment {
 	 * for the reason that fragment's onResume() is not like what we think it
 	 */
 	public static void onResumeAlike(){
-		leakThis.getDataTask1Exc();
+//		leakThis.getDataTask1Exc();
 	}
 	
 	private void getDataTask1Exc(){
@@ -224,6 +225,7 @@ public class FragmentDevice extends AbsFragment {
 	public void onResume(){
 		super.onResume();
 		this.mIsStop = false;
+		getDataTask1Exc();
 //		Log.e(TAG, "onResume");
 	}
 	
@@ -437,14 +439,24 @@ public class FragmentDevice extends AbsFragment {
 		
 //		synchronized(lock){
 //		mIOTDeviceConnectingList.remove(index);
-		boolean deviceDelete = mIOTDeviceConnectingList.remove(toRemovedDevice);
+		
+		//boolean deviceDelete = mIOTDeviceConnectingList.remove(toRemovedDevice);
+		boolean deviceDelete = false;
+		for(IOTDevice iotdevice: mIOTDeviceConnectingList){
+			String iotdeviceBssid = iotdevice.getIOTAddress().getBSSID();
+			String toRemoveBssid = toRemovedDevice.getIOTAddress().getBSSID();
+			if(iotdeviceBssid.equals(toRemoveBssid)){
+				deviceDelete = mIOTDeviceConnectingList.remove(iotdevice);
+				break;
+			}
+		}
 		if(!deviceDelete){
-			Logger.w(TAG, "device delete fail");
+			Logger.t(TAG, "device delete fail");
 		}
 //		mIOTDeviceConnectingPosList.remove(index);
 		boolean posDelete = mIOTDeviceConnectingPosList.remove(toRemovedDevicePos);
 		if(!posDelete){
-			Logger.w(TAG, "pos delete fail");
+			Logger.t(TAG, "pos delete fail");
 		}
 		lock.unlock();
 //		}
@@ -629,7 +641,7 @@ public class FragmentDevice extends AbsFragment {
 	private void scanUI(){
 		Logger.d(TAG, "scanUI()");
 		if(mIsStop){
-//			return;
+			return;
 		}
 		mLayout.removeAllViews();
 		MessageStatic.clearIOTDeviceList();

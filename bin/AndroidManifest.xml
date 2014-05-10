@@ -27,7 +27,7 @@
 
     <application
         android:allowBackup="true"
-        android:label="IOT_Espressif_0.4.4"
+        android:label="IOT_Espressif_0.4.5.2"
         android:theme="@*android:style/Theme.Light.NoTitleBar" >
         <activity
             android:name="com.espressif.iot.ui.android.device.ConfigTableActivity"
