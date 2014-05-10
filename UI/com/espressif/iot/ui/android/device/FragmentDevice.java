@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,7 +31,6 @@ import com.espressif.iot.model.device.IOTAddress;
 import com.espressif.iot.model.device.IOTDevice;
 import com.espressif.iot.model.device.IOTDevice.STATUS;
 import com.espressif.iot.model.device.IOTDevice.TYPE;
-import com.espressif.iot.model.internet.IOTDeviceHelper;
 import com.espressif.iot.model.internet.User;
 import com.espressif.iot.net.lan.wifi.WifiAdmin;
 import com.espressif.iot.net.lan.wifi.WifiScanResult;
@@ -528,8 +526,8 @@ public class FragmentDevice extends AbsFragment {
 			device.getIOTSoftAP().setSSID(SSID);
 			
 			// it is not in the db, which means it is new device found
-//			if(!sIOTDeviceDBManager.isDeviceExistByBSSID(BSSID)){
-			if(true){
+			if(!sIOTDeviceDBManager.isDeviceExistByBSSID(BSSID)){
+//			if(true){
 				// device new
 				device.setStatus(STATUS.NEW);
 				mIOTDeviceNewList.add(device);

@@ -3,7 +3,7 @@ package com.espressif.iot.util;
 import android.util.Log;
 
 public class Logger {
-	public static int LOG_LEVEL = 6;
+	public static int LOG_LEVEL = 0;
 	public static int ERROR = 1;
 	public static int WARN = 2;
 	public static int INFO = 3;

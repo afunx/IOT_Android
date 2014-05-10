@@ -4,7 +4,6 @@ import java.lang.ref.WeakReference;
 
 import com.espressif.iot.constants.WIFI_ENUM;
 import com.espressif.iot.net.lan.wifi.WifiAdmin;
-import com.espressif.iot.thread.single.SingleTaskWifiConnectAsyn;
 import com.espressif.iot.util.Logger;
 
 import android.app.AlertDialog;
@@ -13,7 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.InputType;
-import android.util.Log;
 import android.widget.EditText;
 
 public class MyFragmentsActivity extends MyFragmentsActivityUI {
@@ -111,15 +109,16 @@ public class MyFragmentsActivity extends MyFragmentsActivityUI {
 								// TODO Auto-generated method stub
 							}
 
-						})
-						
-				.setOnDismissListener(new DialogInterface.OnDismissListener(){
+						}).show();
+			/*
+			.setOnDismissListener(new DialogInterface.OnDismissListener(){
 
 					@Override
 					public void onDismiss(DialogInterface dialog) {
 						// TODO Auto-generated method stub
 					}
 					
-				}).show();
+			}).show();
+			*/
 	}
 }
