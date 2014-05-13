@@ -137,15 +137,6 @@ public class LoginActivity extends Activity {
 
 //	private volatile boolean login = true;
 	
-	private Thread loginTask = new Thread(){
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			login();
-		}
-		
-	};
 	
 	
 	

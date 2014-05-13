@@ -54,19 +54,22 @@ public class RestGet {
 	 * 						it will be null if no response
 	 */
 	public JSONObject restGetJson(String uriString, String headerKey, String headerValue){
+		HttpClient httpClient = new DefaultHttpClient();
+		InputStream inputStream = null;
+		BufferedReader bufferedReader = null;
 		try {
 			URI uri = new URI(uriString);
 			Logger.d(TAG, "restGetJson entrance");
 			Logger.d(TAG, "uri:"+uri);
 			Logger.d(TAG, "headerKey:"+headerKey+";headerValue:"+headerValue);
 			
-			HttpClient httpClient = new DefaultHttpClient();
+			
 			HttpGet httpGet  = new HttpGet();
 			HttpResponse response;
 			HttpEntity httpEntity;
-			BufferedReader bufferedReader;
+//			BufferedReader bufferedReader;
 			StringBuilder builder = new StringBuilder();
-			InputStream inputStream;
+//			InputStream inputStream;
 			// set uri
 			httpGet.setURI(uri);
 			// add header
@@ -80,17 +83,22 @@ public class RestGet {
 			if(httpEntity!=null){
 				builder = new StringBuilder();
 				inputStream = httpEntity.getContent();
+				
 	            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 	            for (String line = null; (line = bufferedReader.readLine()) != null;) {
 	                builder.append(line).append("\n");
 	            }
 	            // get the Json object
-	            JSONObject jsonObject = new JSONObject(builder.toString());
+	            JSONObject jsonObjectResult = null;
+				if(builder.length()>0)
+					jsonObjectResult = new JSONObject(builder.toString());
+				else
+					jsonObjectResult = new JSONObject();
 	            
-	            Logger.d(TAG, "jsonObject:" + jsonObject);
+	            Logger.d(TAG, "jsonObjectResult:" + jsonObjectResult);
 	            
 	            Logger.d(TAG, "restGetJson exit normally");
-	            return jsonObject;
+	            return jsonObjectResult;
 			}
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
@@ -104,6 +112,24 @@ public class RestGet {
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally{
+			if(inputStream!=null){
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(bufferedReader!=null){
+				try {
+					bufferedReader.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			httpClient.getConnectionManager().shutdown();
 		}
 		Logger.d(TAG, "restGetJson exit abnormally with null return");
 		return null;
@@ -117,18 +143,21 @@ public class RestGet {
 	 * 						it will be null if no response
 	 */
 	public JSONObject restGetJson(String uriString){
+		HttpClient httpClient = new DefaultHttpClient();
+		BufferedReader bufferedReader = null;
+		InputStream inputStream = null;
 		try {
 			URI uri = new URI(uriString);
 			Logger.d(TAG, "restGetJson entrance");
 			Logger.d(TAG, "uri:"+uri);
 			
-			HttpClient httpClient = new DefaultHttpClient();
+			
 			HttpGet httpGet  = new HttpGet();
 			HttpResponse response;
 			HttpEntity httpEntity;
-			BufferedReader bufferedReader;
+//			BufferedReader bufferedReader;
 			StringBuilder builder = new StringBuilder();
-			InputStream inputStream;
+//			InputStream inputStream;
 			// set uri
 			httpGet.setURI(uri);
 			
@@ -145,13 +174,18 @@ public class RestGet {
 	            for (String line = null; (line = bufferedReader.readLine()) != null;) {
 	                builder.append(line).append("\n");
 	            }
-	            // get the Json object
-	            JSONObject jsonObject = new JSONObject(builder.toString());
 	            
-	            Logger.d(TAG, "jsonObject:" + jsonObject);
+	         // get the Json object
+	            JSONObject jsonObjectResult = null;
+				if(builder.length()>0)
+					jsonObjectResult = new JSONObject(builder.toString());
+				else
+					jsonObjectResult = new JSONObject();
+				
+	            Logger.d(TAG, "jsonObjectResult:" + jsonObjectResult);
 	            
 	            Logger.d(TAG, "restGetJson exit normally");
-	            return jsonObject;
+	            return jsonObjectResult;
 			}
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
@@ -165,6 +199,24 @@ public class RestGet {
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally{
+			if(inputStream!=null){
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(bufferedReader!=null){
+				try {
+					bufferedReader.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			httpClient.getConnectionManager().shutdown();
 		}
 		Logger.d(TAG, "restGetJson exit abnormally with null return");
 		return null;

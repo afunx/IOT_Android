@@ -184,7 +184,7 @@ public class ShareCaptureActivity extends Activity implements Callback
 			Drawable drawable = new BitmapDrawable(barcode);
 			dialog.setIcon(drawable);
 		}
-		dialog.setTitle("获得此设备的分享");
+		dialog.setTitle("分享该设备");
 //		dialog.setMessage(obj.getText());
 		dialog.setNegativeButton("取消", new DialogInterface.OnClickListener()
 		{
@@ -214,7 +214,7 @@ public class ShareCaptureActivity extends Activity implements Callback
 				Logger.d(TAG, "share is suc = " + suc);
 				if(suc){
 					SynchronizeServerLocalHelper.synchronize(userKey);
-					Toast.makeText(ShareCaptureActivity.this, "分享成功,下拉刷新即可获得新设备",
+					Toast.makeText(ShareCaptureActivity.this, "分享成功",
 							Toast.LENGTH_LONG).show();
 				}
 				else{

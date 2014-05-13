@@ -3,6 +3,11 @@ package com.espressif.iot.util;
 //98:fe:34:77:ce:00
 public class BSSIDUtil {
 	
+	// reverse method of restoreRealBSSID
+//	public static String restoreLocalBSSID(String BSSID){
+		
+//	}
+	
 	/**
 	 * for the reason, we use some bit to differ whether it is 
 	 * softap or sta. so, we may get the polluted bssid.

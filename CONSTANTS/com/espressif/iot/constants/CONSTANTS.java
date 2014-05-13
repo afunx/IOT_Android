@@ -55,11 +55,11 @@ public interface CONSTANTS {
 	// *************InternetAvailableHelper.java*************
 
 	// *************RestGetHelper.java***************
-	final int REST_GET_JSON_TIMEOUT_MILLISECONDS = 20000;
+	final int REST_GET_JSON_TIMEOUT_MILLISECONDS = 8000;
 	// *************RestGetHelper.java***************
 
 	// *************RestPostHelper.java***************
-	final int REST_POST_JSON_TIMEOUT_MILLISECONDS = 20000;
+	final int REST_POST_JSON_TIMEOUT_MILLISECONDS = 8000;
 	// *************RestPostHelper.java***************
 	
 	// *************CheckAPConnectedForeverTask.java***************

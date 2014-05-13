@@ -250,6 +250,7 @@ public class UDPSocketTask extends AbsTaskSyn<List<IOTAddress>> {
 //			e.printStackTrace();
 		} finally {
 			if (socket != null) {
+				socket.disconnect();
 				socket.close();
 				Logger.d(TAG+":"+taskName, "socket closed in finally");
 			} else {

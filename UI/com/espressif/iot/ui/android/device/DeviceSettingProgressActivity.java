@@ -31,13 +31,13 @@ import com.espressif.iot.util.BSSIDUtil;
 import com.espressif.iot.util.Logger;
 import com.espressif.iot.util.MathUtil;
 import com.espressif.iot.util.Reflect;
+import com.espressif.iot.util.Timer;
 import com.espressif.iot.util.Util;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -49,10 +49,18 @@ public class DeviceSettingProgressActivity extends Activity {
 	private static final int START = 0;
 	private static final int NEXT = 1;
 	private static final int STOP = 2;
+	private static final int CONNECT_DEVICE_SUC = 3;
+	private static final int CONNECT_DEVICE_FAIL = 4;
+	private static final int CONNECT_AP_SUC = 5;
+	private static final int CONNECT_AP_FAIL = 6;
+	private static final int CHECK_LOCAL_SUC = 7;
+	private static final int CHECK_DEVICE_FAIL = 8;
+	private static final int CHECK_INTERNET_SUC = 9;
+	private static final int CHECK_INTERNET_FAIL = 10;
 	
 	private ProgressBar mProgressBar;
 	private TextView mTvTitle;
-	private int mProgressBarCount = 0;
+	private volatile int mProgressBarCount = 0;
 	private boolean mLocked = true;
 	private static final String TAG = "DeviceSettingProgressActivity";
 	private Thread mClockThread = null;
@@ -67,9 +75,14 @@ public class DeviceSettingProgressActivity extends Activity {
 	
 	private static boolean isDebug = true;
 	
+//	private volatile boolean isFinished = false;
+	
 	private String getProgressTitle(){
 		if(ConfigState.isIOTDeviceInternetFinished){
 			if(ConfigState.isIOTDeviceInternetSucceed){
+//				while(!isFinished){
+//					Util.Sleep(10);
+//				}
 				this.finish();
 				DeviceSettingActivity.finishS();
 //				FragmentDevice.onResumeAlike();
@@ -124,8 +137,9 @@ public class DeviceSettingProgressActivity extends Activity {
 				mProgressBar.setProgress(0);
 				break;
 			case NEXT:
-				if (!mClockThread.isInterrupted())
+				if (!mClockThread.isInterrupted()){
 					mProgressBar.setProgress(mProgressBarCount);
+				}
 				break;
 			case STOP:
 				mClockThread.interrupt();
@@ -150,7 +164,16 @@ public class DeviceSettingProgressActivity extends Activity {
 					Logger.e(TAG, "*******************next iotdevice config*******************");
 					config();
 				}
-				return;
+				break;
+//				private static final int CONNECT_DEVICE_SUC = 3;
+//				private static final int CONNECT_DEVICE_FAIL = 4;
+//				private static final int CONNECT_AP_SUC = 5;
+//				private static final int CONNECT_AP_FAIL = 6;
+//				private static final int CHECK_LOCAL_SUC = 7;
+//				private static final int CHECK_DEVICE_FAIL = 8;
+//				private static final int CHECK_INTERNET_SUC = 9;
+//				private static final int CHECK_INTERNET_FAIL = 10;
+//				return;
 //				break;
 			}
 			
@@ -217,7 +240,7 @@ public class DeviceSettingProgressActivity extends Activity {
 	 * at this moment
 	 * it need modifying later
 	 */
-	private void configDevice() {
+	private boolean configDevice() {
 		
 		String staGateWay = mIotDeviceCurrent.getIOTSta().getGateWay();
 		String staIp = mIotDeviceCurrent.getIOTSta().getIP();
@@ -235,7 +258,7 @@ public class DeviceSettingProgressActivity extends Activity {
 		String token = RandomUtil.random40();
 		Logger.d(TAG, "random token:" + token);
 		mIotDeviceCurrent.getIOTSta().setToken(token);
-		mIotDeviceCurrent.executeAction(IOTActionEnum.IOT_ACTION_SET_STA_CONFIGURE);
+		return mIotDeviceCurrent.executeAction(IOTActionEnum.IOT_ACTION_SET_STA_CONFIGURE);
 	}
 	
 	/**
@@ -357,7 +380,7 @@ public class DeviceSettingProgressActivity extends Activity {
 		 */
 		private static float[] portion = new float[]{
 			//isConnectIOTDevice,  isConnectAP,  isIOTDeviceLocal,  isIOTDeviceInternet
-			0.2f,				   0.3f,	     0.2f,	            0.3f
+			0.1f,				   0.2f,	     0.3f,	            0.4f
 		};
 		private static int transPortionInt(float[] portion,int number){
 			int sum = 0;
@@ -370,7 +393,7 @@ public class DeviceSettingProgressActivity extends Activity {
 			transPortionInt(portion,1),
 			transPortionInt(portion,2),
 			transPortionInt(portion,3),
-			PROGRESS_BAR_MAX// sometimes transPortionInt(portion,3) maybe less than PROGRESS_BAR_MAX
+			PROGRESS_BAR_MAX-5// sometimes transPortionInt(portion,3) maybe less than PROGRESS_BAR_MAX
 		};
 		
 		static void clearAll(){
@@ -395,22 +418,36 @@ public class DeviceSettingProgressActivity extends Activity {
 		
 		ConfigState.clearAll();
 		
+//		isFinished = false;
+		
 		if (mWorkThread == null) {
 			mWorkThread = new Thread(new Runnable() {
 				public void run() {
+					Timer timer = new Timer();
+					timer.start();
+					timer.setMinTime(0);
+					
 					Logger.d(TAG, "ssid:"+MessageStatic.device_ap_connected_ssid);
 					Logger.d(TAG, "password:"+MessageStatic.device_ap_connected_password);
 //					mIotDeviceCurrent = MessageStatic.nextIOTDevice();
-					ConfigState.isConnectIOTDeviceSucceed = connectIOTDevice();
+//					ConfigState.isConnectIOTDeviceSucceed = connectIOTDevice();
+					boolean suc0 = Reflect.Retry(3, CLASS_NAME,
+							DeviceSettingProgressActivity.this,
+							"connectIOTDevice", 0);
+//					boolean suc0 = connectIOTDevice();
+					if(suc0){
+						ConfigState.isConnectIOTDeviceSucceed = configDevice();
+						Logger.t(TAG, "ConfigState.isConnectIOTDeviceSucceed = " + ConfigState.isConnectIOTDeviceSucceed);
+					}
 					ConfigState.isConnectIOTDeviceFinished = true;
 					
 					if(ConfigState.isConnectIOTDeviceSucceed){
 						
 						Logger.e(TAG, "connectIOTDevice() suc");
 						
-						configDevice();
+//						configDevice();
 						
-						ConfigState.isConnectAPSucceed = Reflect.Retry(1, CLASS_NAME,
+						ConfigState.isConnectAPSucceed = Reflect.Retry(3, CLASS_NAME,
 								DeviceSettingProgressActivity.this,
 								"connectAPSyn", 0);
 						ConfigState.isConnectAPFinished = true;
@@ -426,29 +463,31 @@ public class DeviceSettingProgressActivity extends Activity {
 									DeviceSettingProgressActivity.this,
 									"checkIOTDeviceLocal", 0);
 							*/
-							for (int tryTime = 0; tryTime < 5; tryTime++) {
+							for (int tryTime = 0; tryTime < 6; tryTime++) {
 								Logger.e(TAG, "tryTime="+tryTime);
+								Timer timer2 = new Timer();
+								timer2.start();
 								switch (tryTime) {
 								case 0:
-									CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 24;
-									break;
 								case 1:
-									CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 12;
-									break;
-								case 2:
 									CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 4;
 									break;
+								case 2:
 								case 3:
 									CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT / 2;
 									break;
 								case 4:
+								case 5:
 									CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT ;
+									break;
 								}
 								ConfigState.isIOTDeviceLocalSucceed = 
 										DeviceSettingProgressActivity.this.checkIOTDeviceLocal();
+								timer2.stop();
 								if(ConfigState.isIOTDeviceLocalSucceed){
 									break;
 								}
+								Util.Sleep(500);
 							}
 							CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT;
 							
@@ -459,11 +498,18 @@ public class DeviceSettingProgressActivity extends Activity {
 							
 							// local succeed
 							if(ConfigState.isIOTDeviceLocalSucceed){
-								ConfigState.isIOTDeviceInternetSucceed = Reflect.Retry(10, CLASS_NAME,
+//								Util.Sleep(5000);
+								timer.stop();
+								boolean isIOTDeviceInternetSucceed_pre = Reflect.Retry(30, CLASS_NAME,
 										DeviceSettingProgressActivity.this,
-										"checkIOTDeviceInternet", 2000);
-								ConfigState.isIOTDeviceInternetFinished = true;
-								if(ConfigState.isIOTDeviceInternetSucceed){
+										"checkIOTDeviceInternet", 3000);
+								/*
+								ConfigState.isIOTDeviceInternetSucceed = Reflect.Retry(30, CLASS_NAME,
+										DeviceSettingProgressActivity.this,
+										"checkIOTDeviceInternet", 3000);
+								*/
+//								ConfigState.isIOTDeviceInternetFinished = true;
+								if(isIOTDeviceInternetSucceed_pre){
 									Logger.e(TAG, "internet config suc");
 									String deviceKey = mIotDeviceCurrent.getDeviceKey();
 									String BSSID = mIotDeviceCurrent.getIOTAddress().getBSSID();
@@ -492,24 +538,34 @@ public class DeviceSettingProgressActivity extends Activity {
 											break;
 										suc = IOTDeviceHelper.putMetadata(deviceKey, BSSID, type);
 									}
-									
+									if(!suc){
+//										ConfigState.isIOTDeviceInternetSucceed = false;
+										Logger.t(TAG, "PUT METADATA FAIL!!!");
+										return;
+									}
 									// add the device to local db
 									mIOTDeviceDBManager.
 									addDevice(BSSID, typeStr, status, isOwner, deviceKey, true, deviceId
 											,User.id );
 									
-									
+									ConfigState.isIOTDeviceInternetSucceed = true;
+//									isFinished = true;
+									timer.spend();
 								}
 								else{
 									Logger.e(TAG, "checkIOTDeviceInternet() fail");
 									ConfigState.isFail = true;
 								}
+								ConfigState.isIOTDeviceInternetFinished = true;
 							}
 							// only local
 							if(!ConfigState.isIOTDeviceInternetSucceed){
 								ConfigState.isFail = true;
+//								ConfigState.isIOTDeviceInternetFinished = true;
 								Logger.d(TAG, "local fail or internet fail");
 							}
+							
+//							ConfigState.isIOTDeviceInternetFinished = true;
 						}
 						else{
 							ConfigState.isFail = true;
@@ -637,8 +693,8 @@ public class DeviceSettingProgressActivity extends Activity {
 					for (int i = 1; i <= PROGRESS_BAR_MAX; i++) {
 						if (!mLocked)
 							break;
-							mProgressBarCount = i ;
-							mProgressBarCount = transferProgres(mProgressBarCount);
+//							mProgressBarCount = i ;
+							mProgressBarCount = transferProgres(i);
 							Logger.d(TAG, "progressCount = " + mProgressBarCount);
 							Util.Sleep((long)(1.0 * ONE_DEVICE_SETTING_TIME_SECONDS
 									/ PROGRESS_BAR_MAX * 1000));

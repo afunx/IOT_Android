@@ -13,14 +13,15 @@ import android.util.Log;
 
 public class FixedThreadPool {
 
-	private static final int POLLZ_SIZE = 8;
+	private static final int POLLZ_SIZE = 16;
 
 	private static final String TAG = "FixedThreadPoll";
 
 	private static FixedThreadPool singleton = new FixedThreadPool();
 
-	private ExecutorService exec = Executors.newFixedThreadPool(POLLZ_SIZE);
-
+//	private ExecutorService exec = Executors.newFixedThreadPool(POLLZ_SIZE);
+	private ExecutorService exec = Executors.newCachedThreadPool();
+	
 	// singleton pattern
 	private FixedThreadPool() {
 	}
@@ -83,6 +84,8 @@ public class FixedThreadPool {
 			Logger.w(TAG + ":" + task.getTaskName(), "TimeoutException");
 			task.setReason("TimeoutException");
 			// e.printStackTrace();
+		} finally{
+			future.cancel(true);
 		}
 		if (taskResult) {
 			Logger.d(TAG + ":" + task.getTaskName(), "taskResult = " + taskResult);

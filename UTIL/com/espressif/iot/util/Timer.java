@@ -22,9 +22,13 @@ public class Timer {
 	public void stop(){
 		this.stopTime = System.currentTimeMillis();
 		long sleepTime = minMilliSeconds-(stopTime-startTime);
-//		Logger.t(TAG, "sleepTime is " + sleepTime + " ms");
+		Logger.t(TAG, "sleepTime is " + sleepTime + " ms");
 		if(sleepTime>0){
 			Util.Sleep(sleepTime);
 		}
+	}
+	public void spend(){
+		this.stopTime = System.currentTimeMillis();
+		Logger.t(TAG, "=====*****spend " + ((stopTime-startTime)/1000) + " s*****=====");
 	}
 }

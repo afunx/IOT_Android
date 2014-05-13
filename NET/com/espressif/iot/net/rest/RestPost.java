@@ -52,15 +52,16 @@ public class RestPost {
 	 */
 	public JSONObject restPost(String uriString, JSONObject jsonObject,
 			String headerKey, String headerValue) {
+		HttpClient httpClient = new DefaultHttpClient();
+		BufferedReader bufferedReader = null;
+		InputStream inputStream = null;
 		try {
 			URI uri = new URI(uriString);
-			HttpClient httpClient = new DefaultHttpClient();
+//			HttpClient httpClient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost();
 			HttpResponse response;
 			HttpEntity httpEntity;
-			BufferedReader bufferedReader;
 			StringBuilder builder = new StringBuilder();
-			InputStream inputStream;
 
 			Logger.d(TAG, "restPostJson entrance");
 			Logger.d(TAG, "uri:" + uri);
@@ -77,7 +78,7 @@ public class RestPost {
 				StringEntity se = new StringEntity(jsonObject.toString());
 				httpPost.setEntity(se);
 			}
-
+			
 			// send Get request and get the response
 			response = httpClient.execute(httpPost);
 
@@ -101,8 +102,12 @@ public class RestPost {
 				for (String line = null; (line = bufferedReader.readLine()) != null;) {
 					builder.append(line).append("\n");
 				}
+				JSONObject jsonObjectResult = null;
 				// get the Json object
-				JSONObject jsonObjectResult = new JSONObject(builder.toString());
+				if(builder.length()>0)
+					jsonObjectResult = new JSONObject(builder.toString());
+				else
+					jsonObjectResult = new JSONObject();
 
 				Logger.d(TAG, "jsonObjectResult:" + jsonObjectResult);
 
@@ -125,6 +130,24 @@ public class RestPost {
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally{
+			if(inputStream!=null){ 
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(bufferedReader!=null){
+				try {
+					bufferedReader.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			httpClient.getConnectionManager().shutdown();
 		}
 		Logger.d(TAG, "restPostJson exit abnormally with null return");
 		return null;
@@ -138,22 +161,26 @@ public class RestPost {
 	 * @return restGetJson(URI uri)
 	 */
 	public JSONObject restPost(String uriString, JSONObject jsonObject) {
+		HttpClient httpClient = new DefaultHttpClient();
+		BufferedReader bufferedReader = null;
+		InputStream inputStream = null;
 		try {
 			URI uri = new URI(uriString);
-			HttpClient httpClient = new DefaultHttpClient();
+//			HttpClient httpClient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost();
 			HttpResponse response;
 			HttpEntity httpEntity;
-			BufferedReader bufferedReader;
+			
 			StringBuilder builder = new StringBuilder();
-			InputStream inputStream;
+			
 
 			Logger.d(TAG, "restPostJson entrance");
 			Logger.d(TAG, "uri:" + uri);
 
 			// set uri
 			httpPost.setURI(uri);
-
+			
+			
 			// System.out.println(jsonObject);
 			Logger.d(TAG, "jsonObject:" + jsonObject);
 
@@ -165,7 +192,7 @@ public class RestPost {
 
 			// send Get request and get the response
 			response = httpClient.execute(httpPost);
-
+			
 			// process the response
 			httpEntity = response.getEntity();
 
@@ -188,7 +215,9 @@ public class RestPost {
 				JSONObject jsonObjectResult = null;
 				if(builder.length()>0)
 					jsonObjectResult = new JSONObject(builder.toString());
-
+				else
+					jsonObjectResult = new JSONObject();
+				
 				Logger.d(TAG, "jsonObjectResult:" + jsonObjectResult);
 
 				Logger.d(TAG, "restPostJson exit normally");
@@ -210,6 +239,24 @@ public class RestPost {
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally{
+			if(inputStream!=null){
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(bufferedReader!=null){
+				try {
+					bufferedReader.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			httpClient.getConnectionManager().shutdown();
 		}
 		Logger.d(TAG, "restPostJson exit abnormally with null return");
 		return null;

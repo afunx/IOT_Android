@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -375,7 +374,7 @@ public class FragmentDevice extends AbsFragment {
 		/**
 		 * JUST FOR TEST
 		 */
-//		isLocal = false;
+		isLocal = false;
 		IOTAddress iotAddress = new IOTAddress(BSSID,null);
 		device = IOTDevice.createIOTDevice(iotAddress);
 		device.setTypeStr(type);
@@ -386,7 +385,10 @@ public class FragmentDevice extends AbsFragment {
 		
 		if(isLocal){
 //			device = IOTDevice.createIOTDevice(mLocalIOTAddress);
-			device.setIOTAddress(mLocalIOTAddress);
+			/**
+			 * noted by afunx, 2014-05-10
+			 */
+//			device.setIOTAddress(mLocalIOTAddress);
 			device.setStatus(STATUS.LOCAL);
 //			device.setTypeStr(type);
 			lock.lock();
