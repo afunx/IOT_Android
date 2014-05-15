@@ -269,15 +269,17 @@ public class FragmentDevice extends AbsFragment {
 	 * when it comes to local device, the IOTAddress will
 	 * be set the current IOTAddress
 	 */
-	private IOTAddress mLocalIOTAddress = null;
+//	private IOTAddress mLocalIOTAddress = null;
 	/**
 	 * !NOTE it require modifying later
 	 * @param currentSSID
-	 * @return
+	 * @return	IOTAddress 	if checkIOTDeviceLocal suc,
+	 * 						else null
 	 */
-	private boolean checkIOTDeviceLocal(String currentBSSID){
+	private IOTAddress checkIOTDeviceLocal(String currentBSSID){
 		// connect to the AP the mIotDeviceCurrent is connected to
 		// check whether the device is exist on the AP
+		IOTAddress localIOTAddress = null;
 		List<IOTAddress> iotAddressList = oApiIntermediator.scanSTAsLANSyn();
 		Logger.e(TAG, "iotAddressList.size = " + iotAddressList.size());
 		for(IOTAddress iotAddress : iotAddressList){
@@ -288,12 +290,14 @@ public class FragmentDevice extends AbsFragment {
 			Logger.i(TAG, "currentBSSID(device):"+currentBSSID+", BSSID(receive):"+BSSID);
 			if(BSSID.equals(currentBSSID)
 					||currentBSSID.equals(BSSIDUtil.restoreRealBSSID(BSSID))){
-				mLocalIOTAddress = iotAddress;
+				localIOTAddress = iotAddress;
 				Logger.i(TAG, "checkIOTDeviceLocal() is true");
-				return true;
+				break;
+//				return true;
 			}
 		}
-		return false;
+		return localIOTAddress;
+//		return false;
 	}
 	
 	private void clearList(){
@@ -340,7 +344,7 @@ public class FragmentDevice extends AbsFragment {
 //		device.setTypeStr(type);
 		// check whether it is local
 		boolean isLocal = false;
-		
+		IOTAddress iotAddress = null;
 		/**
 		 * !NOTE: temperature shouldn't have local status
 		 */
@@ -363,19 +367,26 @@ public class FragmentDevice extends AbsFragment {
 				case 4:
 					CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT ;
 				}
-				if (checkIOTDeviceLocal(BSSID)) {
+				iotAddress = checkIOTDeviceLocal(BSSID);
+				Logger.e(TAG, "iotAddress="+iotAddress);
+				if (iotAddress!=null) {
 					isLocal = true;
 					break;
 				}
 			}
 			CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT;
 		}
-		
+		else{
+			iotAddress = new IOTAddress(BSSID,null);
+		}
+		if(!isLocal){
+			iotAddress = new IOTAddress(BSSID,null);
+		}
 		/**
 		 * JUST FOR TEST
 		 */
-		isLocal = false;
-		IOTAddress iotAddress = new IOTAddress(BSSID,null);
+//		isLocal = false;
+//		IOTAddress iotAddress = new IOTAddress(BSSID,null);
 		device = IOTDevice.createIOTDevice(iotAddress);
 		device.setTypeStr(type);
 		device.setDeviceKey(deviceKey);
@@ -389,6 +400,9 @@ public class FragmentDevice extends AbsFragment {
 			 * noted by afunx, 2014-05-10
 			 */
 //			device.setIOTAddress(mLocalIOTAddress);
+//			device.setIOTAddress(iotAddress);
+			device.setIOTAddress(iotAddress);
+//			device.getIOTAddress().setInetAddr(iotAddress.getInetAddress());
 			device.setStatus(STATUS.LOCAL);
 //			device.setTypeStr(type);
 			lock.lock();

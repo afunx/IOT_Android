@@ -137,12 +137,13 @@ public class DeviceSettingProgressActivity extends Activity {
 				mProgressBar.setProgress(0);
 				break;
 			case NEXT:
-				if (!mClockThread.isInterrupted()){
+				if (mClockThread!=null&&!mClockThread.isInterrupted()){
 					mProgressBar.setProgress(mProgressBarCount);
 				}
 				break;
 			case STOP:
-				mClockThread.interrupt();
+				if (mClockThread!=null)
+					mClockThread.interrupt();
 				mLocked = false;
 				if(!ConfigState.isFail){
 					// config succeed
@@ -204,6 +205,16 @@ public class DeviceSettingProgressActivity extends Activity {
 			return super.onTouchEvent(event);
 	}
 
+	protected void onStop(){
+		super.onStop();
+		Logger.t(TAG, "onStop()");
+		this.mClockThread.interrupt();
+		this.mClockThread = null;
+		this.mWorkThread.interrupt();
+		this.mWorkThread = null;
+	}
+	
+	@Override
 	protected void onResume() {
 		super.onResume();
 		MessageStatic.clearIOTDeviceListIndex();
@@ -380,7 +391,7 @@ public class DeviceSettingProgressActivity extends Activity {
 		 */
 		private static float[] portion = new float[]{
 			//isConnectIOTDevice,  isConnectAP,  isIOTDeviceLocal,  isIOTDeviceInternet
-			0.1f,				   0.2f,	     0.3f,	            0.4f
+			0.2f,				   0.3f,	     0.2f,	            0.3f
 		};
 		private static int transPortionInt(float[] portion,int number){
 			int sum = 0;
@@ -434,28 +445,46 @@ public class DeviceSettingProgressActivity extends Activity {
 					boolean suc0 = Reflect.Retry(3, CLASS_NAME,
 							DeviceSettingProgressActivity.this,
 							"connectIOTDevice", 0);
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						return;
+					}
 //					boolean suc0 = connectIOTDevice();
 					if(suc0){
 						ConfigState.isConnectIOTDeviceSucceed = configDevice();
 						Logger.t(TAG, "ConfigState.isConnectIOTDeviceSucceed = " + ConfigState.isConnectIOTDeviceSucceed);
 					}
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						return;
+					}
 					ConfigState.isConnectIOTDeviceFinished = true;
-					
 					if(ConfigState.isConnectIOTDeviceSucceed){
 						
 						Logger.e(TAG, "connectIOTDevice() suc");
 						
+						Util.Sleep(1000);
 //						configDevice();
 						
 						ConfigState.isConnectAPSucceed = Reflect.Retry(3, CLASS_NAME,
 								DeviceSettingProgressActivity.this,
 								"connectAPSyn", 0);
+						try {
+							Thread.sleep(1);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							return;
+						}
+						
 						ConfigState.isConnectAPFinished = true;
 						
 						if(ConfigState.isConnectAPSucceed){
 							
 							Logger.e(TAG, "connectAPSyn() suc");
-							
 //							Util.Sleep(5000);
 							
 							/*
@@ -487,12 +516,25 @@ public class DeviceSettingProgressActivity extends Activity {
 								if(ConfigState.isIOTDeviceLocalSucceed){
 									break;
 								}
+								try {
+									Thread.sleep(1);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									return;
+								}
 								Util.Sleep(500);
 							}
 							CONSTANTS_DYNAMIC.UDP_BROADCAST_TIMEOUT_DYNAMIC = CONSTANTS.UDP_BROADCAST_TIMEOUT;
 							
 //							ConfigState.isIOTDeviceLocalSucceed = true;
 							ConfigState.isIOTDeviceLocalFinished = true;
+							
+							try {
+								Thread.sleep(1);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								return;
+							}
 							
 							Logger.e(TAG, "localSuc=" + ConfigState.isIOTDeviceLocalSucceed);
 							
@@ -503,6 +545,14 @@ public class DeviceSettingProgressActivity extends Activity {
 								boolean isIOTDeviceInternetSucceed_pre = Reflect.Retry(30, CLASS_NAME,
 										DeviceSettingProgressActivity.this,
 										"checkIOTDeviceInternet", 3000);
+								
+								try {
+									Thread.sleep(1);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									return;
+								}
+								
 								/*
 								ConfigState.isIOTDeviceInternetSucceed = Reflect.Retry(30, CLASS_NAME,
 										DeviceSettingProgressActivity.this,
@@ -525,6 +575,14 @@ public class DeviceSettingProgressActivity extends Activity {
 									// add by afunx
 									boolean isOwner= mIotDeviceCurrent.getIsOwner();
 									long deviceId = mIotDeviceCurrent.getDeviceId();
+									
+									
+									try {
+										Thread.sleep(1);
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										return;
+									}
 									
 									/**
 									 * put the bssid and device type via device's metadata on Server
@@ -696,8 +754,13 @@ public class DeviceSettingProgressActivity extends Activity {
 //							mProgressBarCount = i ;
 							mProgressBarCount = transferProgres(i);
 							Logger.d(TAG, "progressCount = " + mProgressBarCount);
-							Util.Sleep((long)(1.0 * ONE_DEVICE_SETTING_TIME_SECONDS
-									/ PROGRESS_BAR_MAX * 1000));
+							try {
+								Thread.sleep((long)(1.0 * ONE_DEVICE_SETTING_TIME_SECONDS
+										/ PROGRESS_BAR_MAX * 1000));
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								return;
+							}
 							if (mProgressBarCount == PROGRESS_BAR_MAX) {
 								sendMessage(STOP);
 								break;

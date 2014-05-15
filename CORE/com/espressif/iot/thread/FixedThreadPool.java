@@ -9,7 +9,6 @@ import java.util.concurrent.TimeoutException;
 
 import com.espressif.iot.util.Logger;
 
-import android.util.Log;
 
 public class FixedThreadPool {
 

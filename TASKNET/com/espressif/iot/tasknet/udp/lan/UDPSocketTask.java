@@ -141,7 +141,9 @@ public class UDPSocketTask extends AbsTaskSyn<List<IOTAddress>> {
 	// filter the ip address from the response
 	// "I'm Plug.98:fe:34:77:ce:00 192.168.4.1"
 	// "I'm Temperature.98:fe:34:77:ce:00 192.168.4.1"
-	private String filterIpAddress(byte[] data,TYPE type){
+	private String filterIpAddress_old(byte[] data,TYPE type){
+		Logger.t(TAG, "data=" + new String(data));
+		int count = 0;
 		int i = 0;
 		int rubbish = 0;
 		switch(type){
@@ -158,13 +160,45 @@ public class UDPSocketTask extends AbsTaskSyn<List<IOTAddress>> {
 		default:
 			break;
 		}
+		count+=rubbish;
 //		int i = RESPONSE_IP_RUBBISH_LEN;
 		int j = i;
 		while('0'<=data[i]&&data[i]<='9'||data[i]=='.'){
+			count++;
 			i++;
 		}
 //		return new String(data,j,i-RESPONSE_IP_RUBBISH_LEN);
 		return new String(data,j,i-rubbish);
+	}
+	
+	// filter the ip address from the response
+	// "I'm Plug.98:fe:34:77:ce:00 192.168.4.1"
+	// "I'm Temperature.98:fe:34:77:ce:00 192.168.4.1"
+	private String filterIpAddress(String data, TYPE type) {
+//		Logger.t(TAG, "data=" + new String(data));
+		int i = 0;
+		int rubbish = 0;
+		switch (type) {
+		case LIGHT:
+			break;
+		case PLUG:
+			i = PLUG_RESPONSE_IP_RUBBISH_LEN;
+			rubbish = PLUG_RESPONSE_IP_RUBBISH_LEN;
+			break;
+		case TEMPERATURE:
+			i = TEMHUM_RESPONSE_IP_RUBBISH_LEN;
+			rubbish = TEMHUM_RESPONSE_IP_RUBBISH_LEN;
+			break;
+		default:
+			break;
+		}
+		// int i = RESPONSE_IP_RUBBISH_LEN;
+		int j = i;
+//		while (i<data.length() && '0' <= data.charAt(i) && data.charAt(i) <= '9' || data.charAt(i) == '.' ) {
+//			i++;
+//		}
+		// return new String(data,j,i-RESPONSE_IP_RUBBISH_LEN);
+		return data.substring(rubbish);
 	}
 	
 	// filter BSSID from the response
@@ -217,8 +251,9 @@ public class UDPSocketTask extends AbsTaskSyn<List<IOTAddress>> {
 			do {
 				socket.receive(pack);
 				Logger.d(TAG+":"+taskName, "one socket received");
-				Logger.d(TAG+":"+taskName, new String(pack.getData(), pack.getOffset(),
-						pack.getLength()));
+				String receiveContent = new String(pack.getData(), pack.getOffset(),
+						pack.getLength());
+				Logger.d(TAG+":"+taskName+"recContent", receiveContent);
 				
 				TYPE type = filterType(pack.getData());
 				if(type==null){
@@ -226,10 +261,13 @@ public class UDPSocketTask extends AbsTaskSyn<List<IOTAddress>> {
 					continue;
 				}
 				
-				InetAddress responseAddr = InetAddress.getByName(filterIpAddress(pack.getData(),type));
-				Logger.d(TAG,pack.getData().toString());
+//				String hostname = filterIpAddress(pack.getData(),type,pack.getLength());
+				String hostname = filterIpAddress(receiveContent,type);
+				Logger.t(TAG, "hostname="+hostname);
+				InetAddress responseAddr = InetAddress.getByName(hostname);
+				Logger.d(TAG, pack.getData().toString());
 				String responseBSSID = filterBSSID(pack.getData(),type);
-				Logger.d(TAG+":"+taskName, "responseAddr = " + responseAddr +",responseBSSID = " + responseBSSID);
+				Logger.e(TAG+":"+taskName, "responseAddr = " + responseAddr +",responseBSSID = " + responseBSSID);
 				// add one response to the response list
 //				responseList.add(response);
 				IOTAddress iotAddress = new IOTAddress(responseBSSID,responseAddr);

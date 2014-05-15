@@ -49,12 +49,14 @@ public class FragmentConfig extends AbsFragment {
 			Bundle savedInstanceState) {
 		View view = inflater
 				.inflate(R.layout.activity_device_setting, container, false);
+		/*
 		adapter = new ArrayAdapter<String>(this.getActivity(),
 				android.R.layout.simple_expandable_list_item_1, getData());
 		mWifiAdmin = new WifiAdmin(this.getActivity());
 		
 		scanWifi();
 		init(view);
+		*/
 		return view;
 	}
 	
